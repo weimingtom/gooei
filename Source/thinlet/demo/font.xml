@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel>
+	<label weightx="1" weighty="1" text="Hallo" alignment="center" font="SansSerif 150"/>
+</panel>

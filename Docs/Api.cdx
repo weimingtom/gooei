@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slime:DocumentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:slime="http://de.mvmsoft.slimeuml.model.slimemodel">
+  <children xsi:type="slime:ClassModel" x="193" y="95" width="52" height="81" incomingConnections="//@children.1/@outgoingConnections.0 //@children.5/@outgoingConnections.0 //@children.2/@outgoingConnections.0 //@children.8/@outgoingConnections.0 //@children.4/@outgoingConnections.0" classText="Widget"/>
+  <children xsi:type="slime:ClassModel" x="21" y="171" width="85" height="81" classText="ModalWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="347" y="155" width="121" height="96" classText="ContainerWidget&#xA;&lt;T extends Widget>">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="512" y="47" width="75" height="81" incomingConnections="//@children.9/@outgoingConnections.0" classText="IconWidget"/>
+  <children xsi:type="slime:ClassModel" x="17" y="263" width="108" height="81" classText="ScrollableWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="11" y="80" width="106" height="81" classText="FocusableWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="35" y="441" width="90" height="81" classText="ToolTipOwner"/>
+  <children xsi:type="slime:ClassModel" x="521" y="444" width="105" height="81" classText="MenuListWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.10" type="DEPENDENCY" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="347" y="49" width="125" height="96" classText="DataWidget&#xA;&lt;T extends Element>">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="682" y="48" width="56" height="81" incomingConnections="//@children.10/@outgoingConnections.0 //@children.11/@outgoingConnections.0" classText="Element">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.3" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="664" y="226" width="87" height="81" incomingConnections="//@children.7/@outgoingConnections.0" classText="MenuElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.9" type="GENERALIZATION" toNavigable="true"/>
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.13" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="547" y="215" width="81" height="81" classText="DataElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.9" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="134" y="441" width="82" height="81" classText="UIController"/>
+  <children xsi:type="slime:ClassModel" x="223" y="441" width="109" height="81" incomingConnections="//@children.10/@outgoingConnections.1" classText="MnemonicWidget"/>
+</slime:DocumentModel>

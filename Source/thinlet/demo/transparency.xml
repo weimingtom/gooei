@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1">
+	<menubar weightx="1">
+		<menu text="File">
+		 <menuitem text="Exit" accelerator="Ctrl Q" />
+		</menu>
+	</menubar>
+	<panel columns="1" top="4" left="4" bottom="4" right="4" weightx="1" weighty="1">
+	</panel>
+</panel>

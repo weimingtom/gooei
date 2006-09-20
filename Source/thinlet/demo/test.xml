@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1" gap="4">
+	<menubar weightx="1">
+		<menu text="File" mnemonic="0">
+		 <menuitem text="New" icon="/icon/new.gif" mnemonic="0" />
+		 <separator />
+		 <menuitem text="Exit" />
+		</menu>
+		<menu text="Help">
+		 <menuitem text="Help Topics" icon="/icon/help.gif" />
+		 <separator />
+		 <menuitem text="About" icon="/icon/about.gif" />
+		</menu>
+	</menubar>
+	<tabbedpane selected="1" weightx="1" weighty="1">
+		<tab text="Texts">
+			<panel columns="5" top="4" left="4" bottom="4" right="4" gap="4">
+			</panel>
+		</tab>
+
+		<tab text="Lists" mnemonic="0">
+			<table selection="multiple">
+				<header>
+					<column text="Column" icon="/icon/library.gif" width="120" />
+					<column text="Column" alignment="center" />
+					<column text="Column" alignment="center" />
+				</header>
+				<row>
+					<cell text="Cell" />
+					<cell text="Cell" />
+					<cell text="Cell" icon="/icon/library.gif" />
+				</row>
+				<row selected="true">
+					<cell text="Cell" icon="/icon/library.gif" />
+					<cell text="Cell" />
+					<cell text="Cell" />
+				</row>
+				<row>
+					<cell text="Cell" />
+					<cell text="Cell" icon="/icon/library.gif" enabled="false" />
+					<cell text="Cell" />
+				</row>
+			</table>
+		</tab>
+	</tabbedpane>
+</panel>
