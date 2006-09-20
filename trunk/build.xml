@@ -1,0 +1,48 @@
+<project name="utils" default="dist" basedir=".">
+	<description>gltk Build</description>
+	
+	<property name="build" location="Build" />
+	<property name="libdir" location="Libraries" />
+	
+	<path id="project.classpath">
+		<pathelement location="${libdir}/geom.jar" />
+		<pathelement location="${libdir}/lwjgl.jar" />
+		<pathelement location="${libdir}/utils.jar" />
+	</path>
+	
+	<patternset id="project.ressources">
+		<include name="**/*.txt"/>
+	</patternset>
+	
+	<target name="init" description="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+	</target>
+	
+	<target name="compile_source" depends="init" description="compile the source">
+		<javac srcdir="Source" destdir="${build}"
+			classpathref="project.classpath" encoding="ISO-8859-1" source="1.5" target="1.5" debug="true" />
+		
+		<copy todir="${build}">
+			<fileset dir="Source"><patternset refid="project.ressources"/></fileset>
+		</copy>
+	</target>
+	
+	<target name="dist" depends="compile_source" description="generate the distribution">
+		<jar jarfile="gltk.jar" basedir="${build}" manifest="MANIFEST" />
+	</target>
+	
+	<target name="compile_test" depends="compile_source" description="compile the tests">
+		<javac srcdir="Test" destdir="${build}"
+			encoding="ISO-8859-1" source="1.5" target="1.5" debug="true">
+			<classpath>
+				<path refid="project.classpath" />
+				<pathelement location="${libdir}/junit.jar" />
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="clean" description="clean up">
+		<delete dir="${build}"/>
+	</target>
+</project>

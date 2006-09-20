@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slime:DocumentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:slime="http://de.mvmsoft.slimeuml.model.slimemodel">
+  <children xsi:type="slime:ClassModel" x="220" y="119" width="103" height="81" incomingConnections="//@children.3/@outgoingConnections.0 //@children.4/@outgoingConnections.0 //@children.1/@outgoingConnections.0 //@children.7/@outgoingConnections.0 //@children.11/@outgoingConnections.0 //@children.13/@outgoingConnections.0" classText="AbstractElement"/>
+  <children xsi:type="slime:ClassModel" x="43" y="43" width="94" height="81" classText="ComboBoxItem">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="607" y="328" width="134" height="81" incomingConnections="//@children.8/@outgoingConnections.0 //@children.9/@outgoingConnections.0 //@children.10/@outgoingConnections.0" classText="AbstractMenuElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.13" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="98" y="333" width="64" height="81" classText="TableCell">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="173" y="332" width="84" height="81" classText="TableColumn">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="324" y="331" width="80" height="81" classText="TableHeader">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.13" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="434" y="329" width="64" height="81" classText="TableRow">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.13" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="59" y="144" width="64" height="81" classText="TreeNode">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="632" y="525" width="107" height="81" incomingConnections="//@children.12/@outgoingConnections.0" classText="MenuItemWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.2" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="751" y="524" width="83" height="81" classText="MenuWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.2" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="507" y="526" width="106" height="81" classText="SeparatorWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.2" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="65" y="236" width="58" height="81" classText="ListItem">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="605" y="666" width="164" height="81" classText="CheckBoxMenuItemWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.8" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+  <children xsi:type="slime:ClassModel" x="434" y="122" width="128" height="81" incomingConnections="//@children.2/@outgoingConnections.0 //@children.5/@outgoingConnections.0 //@children.6/@outgoingConnections.0" classText="AbstractDataElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  </children>
+</slime:DocumentModel>

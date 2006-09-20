@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1">
+	<menubar weightx="1">
+		<menu text="Multi-Player">
+			<menuitem text="Connect to Server" icon="/icon/connection.gif" action="connectServer()" />
+		</menu>
+		<menu text="Single-Player">
+			<menuitem text="Chess" icon="/icon/chess.gif" action="startChess()" />
+			<menuitem text="Robots" icon="/icon/robots.gif" action="startRobots()" />
+		</menu>
+		<menu text="Help">
+			<menuitem text="Contents" icon="/icon/help.gif" />
+			<menuitem text="About" icon="/icon/about.gif" />
+		</menu>
+	</menubar>
+	
+	<panel />
+</panel>

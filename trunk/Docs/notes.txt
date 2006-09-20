@@ -1,0 +1,7 @@
+Panels backgrounds are only painted if the panel has a background-color set
+Desktop's background is always painted - observes background-color now
+
+
+list -> item
+tree -> node
+table -> row / cell (header / column)
