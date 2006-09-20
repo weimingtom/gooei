@@ -12,6 +12,7 @@
 	
 	<patternset id="project.ressources">
 		<include name="**/*.txt"/>
+		<include name="**/*.xml"/>
 	</patternset>
 	
 	<target name="init" description="init">
