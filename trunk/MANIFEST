@@ -1,0 +1,2 @@
+Main-Class: thinlet.demo.Demo
+Class-Path: Libraries/lwjgl.jar Libraries/geom.jar Libraries/utils.jar
