@@ -13,11 +13,7 @@ import thinlet.lwjgl.GLColor;
 import thinlet.lwjgl.GLFont;
 import thinlet.lwjgl.GLFontMetrics;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
-import de.ofahrt.utils.input.InputEventType;
-import de.ofahrt.utils.input.KeyboardEvent;
-import de.ofahrt.utils.input.MouseEvent;
+import de.ofahrt.utils.input.*;
 
 public class TextFieldWidget extends AbstractWidget implements FocusableWidget
 {

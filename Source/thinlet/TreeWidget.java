@@ -8,11 +8,7 @@ import thinlet.api.Element;
 import thinlet.help.MethodInvoker;
 import thinlet.help.MouseInteraction;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
-import de.ofahrt.utils.input.InputEventType;
-import de.ofahrt.utils.input.KeyboardEvent;
-import de.ofahrt.utils.input.MouseEvent;
+import de.ofahrt.utils.input.*;
 
 public final class TreeWidget extends AbstractDataWidget<TreeNode>
 {

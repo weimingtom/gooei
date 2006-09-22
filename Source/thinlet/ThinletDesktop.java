@@ -13,12 +13,7 @@ import thinlet.api.*;
 import thinlet.help.*;
 import thinlet.lwjgl.LwjglWidgetRenderer;
 import thinlet.xml.SimpleXMLParser;
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
-import de.ofahrt.utils.input.InputEventType;
-import de.ofahrt.utils.input.KeyboardEvent;
-import de.ofahrt.utils.input.MouseEvent;
-import de.ofahrt.utils.input.MouseWheelEvent;
+import de.ofahrt.utils.input.*;
 
 public abstract class ThinletDesktop
 {

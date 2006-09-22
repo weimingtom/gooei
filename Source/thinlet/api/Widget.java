@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import thinlet.PopupMenuElement;
 import thinlet.help.MouseInteraction;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Keys;
+import de.ofahrt.utils.input.Keys;
 import de.ofahrt.utils.input.MouseEvent;
 
 public interface Widget

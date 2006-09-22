@@ -8,7 +8,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.glu.GLU;
 
-import de.ofahrt.utils.camera.Camera;
+import de.yvert.camera.Camera;
 import de.yvert.geometry.Matrix4;
 import de.yvert.geometry.Vector3;
 

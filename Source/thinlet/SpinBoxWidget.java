@@ -7,9 +7,9 @@ import thinlet.help.MouseInteraction;
 import thinlet.help.TimerEventType;
 import thinlet.lwjgl.LwjglWidgetRenderer;
 
-import de.ofahrt.utils.games.Keys;
 import de.ofahrt.utils.input.InputEventType;
 import de.ofahrt.utils.input.KeyboardEvent;
+import de.ofahrt.utils.input.Keys;
 import de.ofahrt.utils.input.MouseEvent;
 
 public final class SpinBoxWidget extends TextFieldWidget

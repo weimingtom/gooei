@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 import org.lwjgl.input.Keyboard;
 
-import de.ofahrt.utils.games.Keys;
+import de.ofahrt.utils.input.Keys;
 
 import thinlet.api.MnemonicWidget;
 import thinlet.help.MethodInvoker;

@@ -4,8 +4,8 @@ import java.awt.Rectangle;
 
 import thinlet.api.*;
 import thinlet.help.*;
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
+import de.ofahrt.utils.input.Keys;
+import de.ofahrt.utils.input.Modifiers;
 
 public abstract class AbstractElement implements Element, ToolTipOwner
 {

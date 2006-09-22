@@ -7,9 +7,9 @@ import thinlet.api.*;
 import thinlet.help.*;
 import thinlet.lwjgl.GLColor;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
 import de.ofahrt.utils.input.InputEventType;
+import de.ofahrt.utils.input.Keys;
+import de.ofahrt.utils.input.Modifiers;
 import de.ofahrt.utils.input.MouseEvent;
 
 public abstract class AbstractWidget implements Widget, ToolTipOwner

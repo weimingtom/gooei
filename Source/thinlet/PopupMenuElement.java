@@ -8,8 +8,8 @@ import thinlet.api.MenuElement;
 import thinlet.api.Widget;
 import thinlet.help.MethodInvoker;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Keys;
 import de.ofahrt.utils.input.KeyboardEvent;
+import de.ofahrt.utils.input.Keys;
 
 public final class PopupMenuElement extends AbstractDataElement<MenuElement> implements PopupOwner, MenuContainerElement<MenuElement>
 {

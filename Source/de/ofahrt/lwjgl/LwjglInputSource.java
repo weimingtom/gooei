@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
 import de.ofahrt.utils.input.*;
 
 public class LwjglInputSource implements InputSource

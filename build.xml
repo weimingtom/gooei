@@ -1,8 +1,9 @@
 <project name="utils" default="dist" basedir=".">
-	<description>gltk Build</description>
+	<description>gooei Build</description>
 	
 	<property name="build" location="Build" />
 	<property name="libdir" location="Libraries" />
+	<property name="jarfile" location="gooei.jar" />
 	
 	<path id="project.classpath">
 		<pathelement location="${libdir}/geom.jar" />
@@ -30,7 +31,8 @@
 	</target>
 	
 	<target name="dist" depends="compile_source" description="generate the distribution">
-		<jar jarfile="gltk.jar" basedir="${build}" manifest="MANIFEST" />
+		<jar jarfile="${jarfile}" basedir="${build}" manifest="MANIFEST" />
+		<signjar jar="${jarfile}" alias="me" storepass="123456" keystore="/home/ulfjack/Playground/data/myKeyStore" />
 	</target>
 	
 	<target name="compile_test" depends="compile_source" description="compile the tests">
