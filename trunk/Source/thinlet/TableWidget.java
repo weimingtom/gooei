@@ -9,9 +9,9 @@ import java.util.List;
 import thinlet.api.Element;
 import thinlet.help.MouseInteraction;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Modifiers;
 import de.ofahrt.utils.input.InputEventType;
 import de.ofahrt.utils.input.KeyboardEvent;
+import de.ofahrt.utils.input.Modifiers;
 import de.ofahrt.utils.input.MouseEvent;
 
 public final class TableWidget extends AbstractDataWidget<TableRow>

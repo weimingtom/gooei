@@ -2,7 +2,7 @@ package thinlet.api;
 
 import java.awt.Rectangle;
 
-import de.ofahrt.utils.games.Keys;
+import de.ofahrt.utils.input.Keys;
 
 public interface Element extends IconWidget
 {

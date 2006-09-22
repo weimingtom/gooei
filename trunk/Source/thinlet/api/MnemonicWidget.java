@@ -1,6 +1,6 @@
 package thinlet.api;
 
-import de.ofahrt.utils.games.Keys;
+import de.ofahrt.utils.input.Keys;
 
 public interface MnemonicWidget
 {

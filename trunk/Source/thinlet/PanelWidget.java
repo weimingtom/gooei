@@ -3,7 +3,7 @@ package thinlet;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
-import de.ofahrt.utils.games.Keys;
+import de.ofahrt.utils.input.Keys;
 
 import thinlet.api.IconWidget;
 import thinlet.api.ScrollableWidget;

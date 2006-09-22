@@ -5,9 +5,9 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import de.ofahrt.utils.games.Keys;
-import de.ofahrt.utils.games.Modifiers;
 import de.ofahrt.utils.input.KeyboardEvent;
+import de.ofahrt.utils.input.Keys;
+import de.ofahrt.utils.input.Modifiers;
 import de.ofahrt.utils.input.MouseEvent;
 import thinlet.api.DataWidget;
 import thinlet.api.Element;

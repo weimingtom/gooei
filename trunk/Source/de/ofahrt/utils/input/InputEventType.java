@@ -1,0 +1,21 @@
+package de.ofahrt.utils.input;
+
+public enum InputEventType
+{
+
+KEY_DOWN,
+KEY_TYPED,
+KEY_UP,
+
+MOUSE_PRESSED,
+MOUSE_RELEASED,
+MOUSE_WHEEL,
+MOUSE_DRAGGED,
+MOUSE_MOVED,
+
+MOUSE_ENTERED,
+MOUSE_EXITED,
+DRAG_ENTERED,
+DRAG_EXITED;
+
+}

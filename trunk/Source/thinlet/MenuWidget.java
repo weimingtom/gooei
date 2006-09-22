@@ -8,7 +8,7 @@ import java.util.List;
 
 import thinlet.api.*;
 import thinlet.lwjgl.LwjglWidgetRenderer;
-import de.ofahrt.utils.games.Keys;
+import de.ofahrt.utils.input.Keys;
 
 public final class MenuWidget extends AbstractMenuElement implements DataElement<MenuElement>, MnemonicWidget, MenuContainerElement<MenuElement>
 {
