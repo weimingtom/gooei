@@ -8,7 +8,6 @@
 	<path id="project.classpath">
 		<pathelement location="${libdir}/geom.jar" />
 		<pathelement location="${libdir}/lwjgl.jar" />
-		<pathelement location="${libdir}/utils.jar" />
 	</path>
 	
 	<patternset id="project.ressources">
@@ -43,6 +42,9 @@
 				<pathelement location="${libdir}/junit.jar" />
 			</classpath>
 		</javac>
+	</target>
+	
+	<target name="JNLP">
 	</target>
 	
 	<target name="clean" description="clean up">

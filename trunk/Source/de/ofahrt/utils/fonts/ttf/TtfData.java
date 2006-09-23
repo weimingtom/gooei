@@ -4,9 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import de.ofahrt.utils.io.ConverterInputStream;
-import de.ofahrt.utils.io.SeekableInputStream;
-
 @SuppressWarnings("unused")
 public class TtfData
 {
@@ -95,7 +92,7 @@ private TableEntry find(char[] tag)
 	return null;
 }
 
-private void readHeader(ConverterInputStream in) throws IOException
+private void readHeader(Buffer in) throws IOException
 {
 	TableEntry head = find(HEAD);
 	in.seek(head.offset);
@@ -125,7 +122,7 @@ private void readHeader(ConverterInputStream in) throws IOException
 	dataformat = in.readUnsignedShort();
 }
 
-private void readMaxP(ConverterInputStream in) throws IOException
+private void readMaxP(Buffer in) throws IOException
 {
 	TableEntry head = find(MAXP);
 	in.seek(head.offset);
@@ -138,7 +135,7 @@ private void readMaxP(ConverterInputStream in) throws IOException
 //	System.out.println("NumGlyphs: "+numGlyphs);
 }
 
-private void readHorizontalMetrics(ConverterInputStream in) throws IOException
+private void readHorizontalMetrics(Buffer in) throws IOException
 {
 	TableEntry head = find(HHEA);
 	in.seek(head.offset);
@@ -177,7 +174,7 @@ private void readHorizontalMetrics(ConverterInputStream in) throws IOException
 	}
 }
 
-private void readCMap(ConverterInputStream in) throws IOException
+private void readCMap(Buffer in) throws IOException
 {
 	TableEntry head = find(CMAP);
 	in.seek(head.offset);
@@ -276,7 +273,7 @@ private void readCMap(ConverterInputStream in) throws IOException
 		throw new RuntimeException("Argh!");
 }
 
-private TtfGlyph readGlyph(ConverterInputStream in, int c) throws IOException
+private TtfGlyph readGlyph(Buffer in, int c) throws IOException
 {
 	TableEntry head = find(GLYF);
 	in.seek(head.offset+locs[c]);
@@ -414,7 +411,7 @@ private TtfGlyph readGlyph(ConverterInputStream in, int c) throws IOException
 	return result;
 }
 
-private void readGlyphs(ConverterInputStream in) throws IOException
+private void readGlyphs(Buffer in) throws IOException
 {
 	for (int i = 0; i < 256; i++)
 	{
@@ -429,7 +426,7 @@ private void readGlyphs(ConverterInputStream in) throws IOException
 	}
 }
 
-private void read(ConverterInputStream in) throws IOException
+private void read(Buffer in) throws IOException
 {
 	int versionHi = in.readUnsignedShort();
 	int versionLo = in.readUnsignedShort();
@@ -476,7 +473,7 @@ private static HashMap initSystemFonts()
 
 private static TtfData load(String name, byte[] data) throws IOException
 {
-	ConverterInputStream in = new ConverterInputStream(new SeekableInputStream(data));
+	Buffer in = new Buffer(data);
 	TtfData result = new TtfData(name);
 	result.read(in);
 	return result;

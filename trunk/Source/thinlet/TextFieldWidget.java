@@ -3,8 +3,7 @@ package thinlet;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
 
 import thinlet.api.Element;
 import thinlet.api.FocusableWidget;
@@ -347,12 +346,9 @@ public boolean handleKeyPress(KeyboardEvent event)
 		{
 			String clipboard = text.substring(Math.min(start, end), Math.max(start, end));
 			try
-			{
-				desktop.getSystemClipboard().setContents(
-					new StringSelection(clipboard), null);
-			}
-			catch (Exception exc)
-			{ exc.printStackTrace(); }
+			{ desktop.getSystemClipboard().copy(clipboard); }
+			catch (IOException e)
+			{ e.printStackTrace(); }
 			if (keycode == Keys.X)
 				insert = "";
 			else
@@ -362,15 +358,9 @@ public boolean handleKeyPress(KeyboardEvent event)
 	else if (editable && controldown && (keycode == Keys.V))
 	{
 		try
-		{
-			insert = (String) desktop.getSystemClipboard().
-				getContents(this).getTransferData(DataFlavor.stringFlavor);
-		}
-		catch (Exception exc)
-		{
-			exc.printStackTrace();
-//			insert = clipboard;
-		}
+		{ insert = desktop.getSystemClipboard().get(); }
+		catch (IOException e)
+		{ e.printStackTrace(); }
 		if (insert != null)
 		{ // no text on system clipboard nor internal clipboard text
 			insert = filter(insert);
