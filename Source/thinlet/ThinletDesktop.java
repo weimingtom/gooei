@@ -3,7 +3,6 @@ package thinlet;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -15,7 +14,7 @@ import thinlet.lwjgl.LwjglWidgetRenderer;
 import thinlet.xml.SimpleXMLParser;
 import de.ofahrt.utils.input.*;
 
-public abstract class ThinletDesktop
+public abstract class ThinletDesktop implements Desktop
 {
 
 private final DesktopPaneWidget pane = new DesktopPaneWidget(this);
@@ -83,8 +82,8 @@ public abstract TLColor createColor(int red, int green, int blue);
 public abstract TLColor createColor(int red, int green, int blue, int alpha);
 public abstract int getBlockSize();
 public abstract void show();
-public abstract Clipboard getSystemClipboard();
-public abstract void requestDesktopFocus();
+public abstract SimpleClipboard getSystemClipboard();
+public abstract void requestFocus();
 public abstract void transferFocus();
 public abstract void transferFocusBackward();
 public abstract boolean isDesktopEnabled();
@@ -166,7 +165,7 @@ public boolean setFocus(Widget component)
 	if (!(component instanceof FocusableWidget)) throw new IllegalArgumentException();
 	if (!focusinside)
 	{ // request focus for the thinlet component
-		requestDesktopFocus();
+		requestFocus();
 	}
 	if (focusowner != component)
 	{
@@ -322,7 +321,7 @@ public void onResize()
 	pane.setBounds(0, 0, d.width, d.height);
 	pane.validate();
 	closeup();
-	if (!focusinside) requestDesktopFocus();
+	if (!focusinside) requestFocus();
 }
 
 /** Returns whether this widget can become focusowner. */

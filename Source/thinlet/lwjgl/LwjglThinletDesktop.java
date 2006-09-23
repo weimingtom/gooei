@@ -3,7 +3,6 @@ package thinlet.lwjgl;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
 import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
@@ -11,6 +10,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import thinlet.ThinletDesktop;
+import thinlet.api.SimpleClipboard;
+import thinlet.awt.AWTClipboard;
 import thinlet.help.*;
 import de.ofahrt.lwjgl.GLTools;
 import de.ofahrt.lwjgl.LwjglInputSource;
@@ -97,11 +98,11 @@ public void show()
 { showContainer(); }
 
 @Override
-public Clipboard getSystemClipboard()
-{ return Toolkit.getDefaultToolkit().getSystemClipboard(); }
+public SimpleClipboard getSystemClipboard()
+{ return new AWTClipboard(Toolkit.getDefaultToolkit().getSystemClipboard()); }
 
 @Override
-public void requestDesktopFocus()
+public void requestFocus()
 { // FIXME: Implement!
 }
 
