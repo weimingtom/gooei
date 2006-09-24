@@ -24,8 +24,8 @@ import de.ofahrt.utils.input.InputEventType;
 import de.ofahrt.utils.input.KeyboardEvent;
 import de.ofahrt.utils.input.MouseEvent;
 import de.yvert.camera.CameraTools;
-import de.yvert.camera.Plane;
 import de.yvert.camera.TargetCamera;
+import de.yvert.geometry.Plane;
 import de.yvert.geometry.Ray;
 import de.yvert.geometry.Vector3;
 
