@@ -13,6 +13,8 @@
 	<patternset id="project.ressources">
 		<include name="**/*.txt"/>
 		<include name="**/*.xml"/>
+		<include name="**/*.TXT"/>
+		<include name="**/*.ttf"/>
 	</patternset>
 	
 	<target name="init" description="init">
@@ -26,6 +28,7 @@
 		
 		<copy todir="${build}">
 			<fileset dir="Source"><patternset refid="project.ressources"/></fileset>
+			<fileset dir="Fonts"><patternset refid="project.ressources"/></fileset>
 		</copy>
 	</target>
 	
