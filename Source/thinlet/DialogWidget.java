@@ -23,6 +23,13 @@ private boolean iconifiable = false;
 public DialogWidget(ThinletDesktop desktop)
 { super(desktop); }
 
+@Override
+public void setVisible(boolean visible)
+{
+	super.setVisible(visible);
+	desktop.checkLocation();
+}
+
 public boolean isModal()
 { return modal; }
 

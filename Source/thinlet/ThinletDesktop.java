@@ -149,7 +149,8 @@ public long findtime;
 
 public final MouseInteraction currentMouseInteraction = new MouseInteraction();
 
-private int mousex, mousey;
+private long mousetime;
+private int mousemods, mousex, mousey;
 private FocusableWidget focusowner;
 private boolean focusinside;
 private PopupOwner popupowner;
@@ -192,13 +193,16 @@ public boolean setFocus(Widget component)
 public void setPopupOwner(PopupOwner widget)
 { popupowner = widget; }
 
+// should this be deprecated?
 public void checkLocation(Widget component)
 {
 	if (currentMouseInteraction.mouseinside == component)
-	{ // parameter added by scolebourne
-		pane.findComponent(currentMouseInteraction, mousex, mousey);
-		handleMouseEvent(currentMouseInteraction.mouseinside, currentMouseInteraction.insidepart, currentMouseInteraction, new MouseEvent(InputEventType.MOUSE_ENTERED, 0, 0, mousex, mousex));
-	}
+		checkLocation();
+}
+
+public void checkLocation()
+{
+	onMouse(new MouseMotionEvent(mousetime, mousemods, mousex, mousey));
 }
 
 public void closeup()
@@ -499,6 +503,8 @@ public boolean onKey(KeyboardEvent event, boolean actionKey)
 
 public void onMouse(MouseEvent event)
 {
+	mousetime = event.getTime();
+	mousemods = event.getModifiers();
 	mousex = event.getX();
 	mousey = event.getY();
 	
