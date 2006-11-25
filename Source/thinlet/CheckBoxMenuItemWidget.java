@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import thinlet.api.MenuContainerElement;
 import thinlet.api.MenuElement;
+import thinlet.lwjgl.GLColor;
 import thinlet.lwjgl.LwjglWidgetRenderer;
 
 public final class CheckBoxMenuItemWidget extends MenuItemWidget
@@ -78,20 +79,15 @@ public void paint(LwjglWidgetRenderer renderer, boolean armed)
 	boolean menuenabled = isEnabled();
 	renderer.pushState();
 	renderer.translate(r.x + 4, r.y + 2);
-	renderer.setColor(menuenabled ? renderer.c_border : renderer.c_disable);
+	GLColor border = menuenabled ? renderer.c_border : renderer.c_disable;
 	if (getGroup() == null)
 	{
-		renderer.drawRect(1, 1, block - 3, block - 3);
-		if (checked)
-		{
-			renderer.setColor(menuenabled ? renderer.c_text : renderer.c_disable);
-			renderer.fillRect(3, block - 9, 2, 6);
-			renderer.drawLine(3, block - 4, block - 4, 3);
-			renderer.drawLine(4, block - 4, block - 4, 4);
-		}
+		GLColor check = menuenabled ? renderer.c_text : renderer.c_disable;
+		renderer.paintCheckbox(1, 1, checked, border, null, check);
 	}
 	else
 	{
+		renderer.setColor(border);
 		renderer.drawOval(1, 1, block - 3, block - 3);
 		if (checked)
 		{

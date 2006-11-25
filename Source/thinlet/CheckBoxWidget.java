@@ -138,31 +138,22 @@ public void paint(LwjglWidgetRenderer renderer, boolean enabled)
 		(pressed ? renderer.c_press : renderer.c_ctrl)) : renderer.c_bg;
 	int dy = (bounds.height - block + 2) / 2;
 	
+	boolean checked = (!selected && inside && pressed) ||
+			(selected && (!inside || !pressed));
 	if (group == null)
 	{
-		renderer.paintRect(1, dy + 1, block - 2, block - 2,
-			border, foreground, true, true, true, true, true);
+		GLColor check = enabled ? renderer.c_text : renderer.c_disable;
+		renderer.paintCheckbox(1, dy+1, checked, border, foreground, check);
 	}
 	else
 	{
-		renderer.setColor(((foreground != renderer.c_ctrl) ? foreground : renderer.c_bg));
+		renderer.setColor((foreground != renderer.c_ctrl) ? foreground : renderer.c_bg);
 		renderer.fillOval(1, dy + 1, block - 3, block - 3);
 		renderer.setColor(border);
 		renderer.drawOval(1, dy + 1, block - 3, block - 3);
-	}
-	
-	if ((!selected && inside && pressed) ||
-			(selected && (!inside || !pressed)))
-	{
-		renderer.setColor((enabled ? renderer.c_text : renderer.c_disable));
-		if (group == null)
+		if (checked)
 		{
-			renderer.fillRect(3, dy + block - 9, 2, 6);
-			renderer.drawLine(3, dy + block - 4, block - 4, dy + 3);
-			renderer.drawLine(4, dy + block - 4, block - 4, dy + 4);
-		}
-		else
-		{
+			renderer.setColor(enabled ? renderer.c_text : renderer.c_disable);
 			renderer.fillOval(5, dy + 5, block - 10, block - 10);
 			renderer.drawOval(4, dy + 4, block - 9, block - 9);
 		}
