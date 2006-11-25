@@ -476,6 +476,34 @@ public void paintRect(int x, int y, int width, int height,
 	}
 }
 
+public void paintCheckbox(int x, int y, boolean checked, GLColor border, GLColor content, GLColor check)
+{
+	if (content != null)
+	{
+		paintRect(x, y, block - 2, block - 2,
+			border, content, true, true, true, true, true);
+	}
+	else
+	{
+		setColor(border);
+		drawRect(x, y, block-2, block-2);
+	}
+	if (checked)
+	{
+		setColor(check);
+		fillRect(x+2, y+block-10, 2, 6);
+		
+		GL11.glBegin(GL11.GL_QUADS);
+			GL11.glVertex2f(x+2, y+block-4);
+			GL11.glVertex2f(x+4, y+block-4);
+			GL11.glVertex2f(x+block-4, y+4);
+			GL11.glVertex2f(x+block-4, y+2);
+		GL11.glEnd();
+//		drawLine(x+2, y-1 + block - 4, x-1+block - 4, y-1 + 3);
+//		drawLine(x+3, y-1 + block - 4, x-1+block - 4, y-1 + 4);
+	}
+}
+
 public void paintArrow(int x, int y, int width, int height, char dir)
 {
 	int cx = x + width / 2 - 2;
