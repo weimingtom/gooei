@@ -33,8 +33,7 @@ public Font deriveFontByPointSize(int newPointSize)
 
 public Font deriveFontByPixelSize(int pixelSize)
 {
-	float cfak = (pixelSize-0.5f)/(fontData.getAscender()-fontData.getDescender());
-	float size = (cfak*72.0f*fontData.getUpem())/96.0f;
+	float size = fontData.pixelToPointSize(pixelSize);
 	return new TriFont(fontData, size);
 }
 

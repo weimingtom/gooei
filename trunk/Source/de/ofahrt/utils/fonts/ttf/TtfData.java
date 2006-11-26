@@ -72,6 +72,13 @@ public int getAscender()
 public int getDescender()
 { return descender; }
 
+public float pixelToPointSize(int pixelSize)
+{
+	float cfak = (pixelSize-0.5f)/(getAscender()-getDescender());
+	float size = (cfak*72.0f*getUpem())/96.0f;
+	return size;
+}
+
 public MetricInfo[] getMetrics()
 { return metrics.clone(); }
 

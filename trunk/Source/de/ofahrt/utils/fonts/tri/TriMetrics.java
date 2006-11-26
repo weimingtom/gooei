@@ -67,6 +67,9 @@ public int charsWidth(char[] chars, int off, int len)
 public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq)
 { throw new UnsupportedOperationException(); }
 
+public void drawString(FontDrawInterface graphics, int x, int y, char[] chars, int off, int len)
+{ throw new UnsupportedOperationException(); }
+
 public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq)
 {
 	for (int i = 0; i < csq.length(); i++)

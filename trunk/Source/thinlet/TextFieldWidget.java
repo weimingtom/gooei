@@ -477,6 +477,7 @@ public void paintField(LwjglWidgetRenderer renderer,
 	
 //	String text = component.getText();
 //	int offset = component.getOffset();
+	GLFont font = renderer.getCurrentFont();
 	GLFont myfont = (GLFont) getFont(desktop.getDefaultFont());
 	renderer.setCurrentFont(myfont);
 	GLFontMetrics fm = renderer.getFontMetrics();
@@ -518,7 +519,7 @@ public void paintField(LwjglWidgetRenderer renderer,
 		renderer.drawString(text, fx, fy);
 	}
 	
-	if (myfont != null) renderer.setCurrentFont(renderer.font);
+	if (myfont != null) renderer.setCurrentFont(font);
 	renderer.popState();
 //	renderer.setClip(clipx, clipy, clipwidth, clipheight);
 	
