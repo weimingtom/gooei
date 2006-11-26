@@ -43,4 +43,11 @@ public int getDescender()
 public TriGlyph getGlyph(int c)
 { return glyphs[c]; }
 
+public float pixelToPointSize(int pixelSize)
+{
+	float cfak = (pixelSize-0.5f)/(getAscender()-getDescender());
+	float size = (cfak*72.0f*getUpem())/96.0f;
+	return size;
+}
+
 }

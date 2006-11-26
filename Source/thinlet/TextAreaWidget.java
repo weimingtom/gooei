@@ -234,7 +234,7 @@ public void paintScrollableContent(LwjglWidgetRenderer renderer, boolean enabled
 	int end = focus ? getEnd() : 0;
 	int is = Math.min(start, end);
 	int ie = Math.max(start, end);
-	GLFont font = renderer.font;
+	GLFont font = renderer.getCurrentFont();
 	GLFont customfont = (GLFont) getFont(desktop.getDefaultFont());
 	renderer.setCurrentFont(customfont);
 	TLFontMetrics fm = renderer.getFontMetrics();

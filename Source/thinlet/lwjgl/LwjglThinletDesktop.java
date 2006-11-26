@@ -12,13 +12,17 @@ import org.lwjgl.opengl.GL11;
 import thinlet.ThinletDesktop;
 import thinlet.api.SimpleClipboard;
 import thinlet.awt.AWTClipboard;
-import thinlet.help.*;
+import thinlet.fonts.BmpFontProvider;
+import thinlet.fonts.FontProvider;
+import thinlet.fonts.TriFontProvider;
+import thinlet.fonts.TtFontProvider;
+import thinlet.help.Icon;
+import thinlet.help.TLColor;
+import thinlet.help.TLFont;
+import thinlet.help.TLFontMetrics;
+import thinlet.help.TimerEventType;
 import de.ofahrt.lwjgl.GLTools;
 import de.ofahrt.lwjgl.LwjglInputSource;
-import de.ofahrt.utils.fonts.tri.TriData;
-import de.ofahrt.utils.fonts.tri.TriFont;
-import de.ofahrt.utils.fonts.ttf.TtFont;
-import de.ofahrt.utils.fonts.ttf.TtfData;
 import de.ofahrt.utils.input.InputEvent;
 import de.ofahrt.utils.input.InputEventType;
 import de.ofahrt.utils.input.KeyboardEvent;
@@ -32,9 +36,10 @@ import de.yvert.geometry.Vector3;
 public class LwjglThinletDesktop extends ThinletDesktop
 {
 
-protected final boolean useCamera = false;
-protected final boolean useTriFont = true;
+private final boolean useCamera = false;
+private final boolean useTriFont = true;
 
+protected final FontProvider fontProvider;
 protected int offsetX = 0;
 protected int offsetY = 0;
 protected final Dimension size = new Dimension();
@@ -46,7 +51,17 @@ private final LwjglInputSource inputSource = new LwjglInputSource();
 public LwjglThinletDesktop()
 {
 	super();
-	renderer = new LwjglWidgetRenderer(this);
+	if (false)
+		fontProvider = new BmpFontProvider();
+	else
+	{
+		if (useTriFont)
+			fontProvider = new TriFontProvider();
+		else
+			fontProvider = new TtFontProvider();
+	}
+	TLFont defaultFont = createFont("SansSerif", 0, 18);
+	renderer = new LwjglWidgetRenderer(this, defaultFont);
 	camera = new TargetCamera(new Vector3(260, 260, 0), 300);
 }
 
@@ -64,15 +79,10 @@ public TLFontMetrics getFontMetrics(TLFont font)
 { return font.getFontMetrics(); }
 
 @Override
-public TLFont createFont(String name, int style, int fontSize)
+public TLFont createFont(String name, int style, int pixelSize)
 {
 	try
-	{
-		if (useTriFont)
-			return new GLFont(new TriFont(new TriData(TtfData.load(name)), fontSize));
-		else
-			return new GLFont(new TtFont(TtfData.load(name), fontSize));
-	}
+	{ return fontProvider.getFont(name, style, pixelSize); }
 	catch (IOException e)
 	{ throw new RuntimeException(name, e); }
 }
@@ -210,6 +220,22 @@ protected void convertPosition(MouseEvent event)
 	event.translate(nx-event.getX(), ny-event.getY());
 }
 
+public void handleEvent(InputEvent event)
+{
+	if (event instanceof MouseEvent)
+	{
+		MouseEvent mouseevent = (MouseEvent) event;
+		convertPosition(mouseevent);
+		onMouse(mouseevent);
+	}
+	else if (event instanceof KeyboardEvent)
+	{
+		KeyboardEvent keyevent = (KeyboardEvent) event;
+		if (keyevent.getType() == InputEventType.KEY_DOWN)
+			onKey(keyevent, false);
+	}
+}
+
 public void handleInput()
 {
 	if (useCamera)
@@ -226,18 +252,7 @@ public void handleInput()
 	while (inputSource.hasNext())
 	{
 		InputEvent event = inputSource.next();
-		if (event instanceof MouseEvent)
-		{
-			MouseEvent mouseevent = (MouseEvent) event;
-			convertPosition(mouseevent);
-			onMouse(mouseevent);
-		}
-		else if (event instanceof KeyboardEvent)
-		{
-			KeyboardEvent keyevent = (KeyboardEvent) event;
-			if (keyevent.getType() == InputEventType.KEY_DOWN)
-				onKey(keyevent, false);
-		}
+		handleEvent(event);
 	}
 }
 

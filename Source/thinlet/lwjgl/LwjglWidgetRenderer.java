@@ -19,7 +19,6 @@ import de.ofahrt.utils.fonts.FontDrawInterface;
 import de.ofahrt.utils.fonts.FontTriangleInterface;
 import de.ofahrt.utils.fonts.tri.TriGlyph;
 import de.ofahrt.utils.fonts.tri.TriMetrics;
-import de.ofahrt.utils.fonts.ttf.TtfMetrics;
 import de.yvert.geometry.Vector2;
 
 public final class LwjglWidgetRenderer
@@ -30,7 +29,7 @@ private static DoubleBuffer doubleBuffer = byteBuffer.asDoubleBuffer();
 
 private final LwjglThinletDesktop desktop;
 
-public GLFont font;
+private GLFont font;
 public GLColor c_bg;
 public GLColor c_text;
 public GLColor c_textbg;
@@ -40,7 +39,7 @@ public GLColor c_hover;
 public GLColor c_press;
 public GLColor c_focus;
 public GLColor c_select;
-public GLColor c_ctrl = null;
+public GLColor c_ctrl;
 
 private GLFont currentFont;
 private GLColor currentColor;
@@ -50,13 +49,13 @@ private int block;
 
 private ClipStack clipStack = new ClipStack();
 
-public LwjglWidgetRenderer(LwjglThinletDesktop desktop)
+public LwjglWidgetRenderer(LwjglThinletDesktop desktop, TLFont defaultFont)
 {
 	this.desktop = desktop;
 	
 	setColors(0xe6e6e6, 0x000000, 0xffffff, 0x909090, 
 			0xb0b0b0, 0xededed, 0xb9b9b9, 0x89899a, 0xc5c5dd);
-	setDefaultFont(desktop.createFont("SansSerif", 0, 11));
+	setDefaultFont(defaultFont);
 	
 	currentFont = font;
 	currentColor = c_bg;
@@ -96,6 +95,9 @@ public void setColors(int background, int text, int textbackground,
 	c_focus = createColor(focus);
 	c_select = createColor(select);
 }
+
+public GLFont getCurrentFont()
+{ return currentFont; }
 
 public void setCurrentFont(GLFont newfont)
 { this.currentFont = newfont; }
@@ -225,9 +227,9 @@ public void drawString(String s, int atx, final int aty)
 {
 	GLFontMetrics metrics = getFontMetrics();
 	final int baseline = metrics.getDescent();
-	if (metrics.metrics instanceof TtfMetrics)
+	if (!(metrics.metrics instanceof TriMetrics))
 	{
-		((TtfMetrics) metrics.metrics).drawString(new FontDrawInterface()
+		metrics.metrics.drawString(new FontDrawInterface()
 			{
 				public void drawPixel(int i, int j, float frac)
 				{
@@ -271,9 +273,9 @@ public void drawChars(char[] chars, int off, int len, int atx, final int aty)
 {
 	GLFontMetrics metrics = getFontMetrics();
 	final int baseline = metrics.getDescent();
-	if (metrics.metrics instanceof TtfMetrics)
+	if (!(metrics.metrics instanceof TriMetrics))
 	{
-		((TtfMetrics) metrics.metrics).drawString(new FontDrawInterface()
+		metrics.metrics.drawString(new FontDrawInterface()
 			{
 				public void drawPixel(int i, int j, float frac)
 				{
