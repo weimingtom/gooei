@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="Source"/>
 	<classpathentry kind="src" path="Fonts"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/lwjgl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/geom"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jingle"/>
+	<classpathentry kind="lib" path="Libraries/geom.jar"/>
+	<classpathentry kind="lib" path="Libraries/jingle.jar"/>
+	<classpathentry kind="lib" path="Libraries/lwjgl.jar"/>
 	<classpathentry kind="output" path="Classes"/>
 </classpath>

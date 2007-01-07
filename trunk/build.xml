@@ -7,6 +7,7 @@
 	
 	<path id="project.classpath">
 		<pathelement location="${libdir}/geom.jar" />
+		<pathelement location="${libdir}/jingle.jar" />
 		<pathelement location="${libdir}/lwjgl.jar" />
 	</path>
 	
@@ -36,6 +37,9 @@
 	
 	<target name="dist" depends="compile_source" description="generate the distribution">
 		<jar jarfile="${jarfile}" basedir="${build}" manifest="MANIFEST" />
+	</target>
+	
+	<target name="sign" depends="dist" description="sign the generated jar">
 		<signjar jar="${jarfile}" alias="me" storepass="123456" keystore="/home/ulfjack/Playground/data/myKeyStore" />
 	</target>
 	
@@ -47,9 +51,6 @@
 				<pathelement location="${libdir}/junit.jar" />
 			</classpath>
 		</javac>
-	</target>
-	
-	<target name="JNLP">
 	</target>
 	
 	<target name="clean" description="clean up">
