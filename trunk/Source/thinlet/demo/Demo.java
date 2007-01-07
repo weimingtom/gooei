@@ -19,9 +19,6 @@ public class Demo implements UIController
 
 public static void main(String[] args) throws Exception
 {
-	if (args.length == 0)
-		System.setProperty("org.lwjgl.librarypath", "load_from_resource");
-	
 	ThinletDesktop desktop = new LwjglThinletDesktop();
 	desktop.parseAndAdd(new Demo(desktop), "thinlet/demo/demo.xml");
 	desktop.show();
