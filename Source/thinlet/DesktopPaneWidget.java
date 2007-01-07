@@ -45,6 +45,7 @@ public final void addChild(Widget child, int index)
 {
 	insertItem(child, index);
 	child.update("validate");
+	validate();
 }
 
 public void removeChild(Widget child)
