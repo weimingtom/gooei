@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<slime:DocumentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:slime="http://de.mvmsoft.slimeuml.model.slimemodel">
-  <children xsi:type="slime:ClassModel" x="193" y="95" width="52" height="81" incomingConnections="//@children.1/@outgoingConnections.0 //@children.5/@outgoingConnections.0 //@children.2/@outgoingConnections.0 //@children.8/@outgoingConnections.0 //@children.4/@outgoingConnections.0" classText="Widget"/>
-  <children xsi:type="slime:ClassModel" x="21" y="171" width="85" height="81" classText="ModalWidget">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+<slime:DocumentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:slime="http://de.mvmsoft.slimeuml.model.slimemodel" x="46" y="37">
+  <children xsi:type="slime:ClassModel" x="467" y="595" width="132" height="111" name="FocusableWidget" classText="FocusableWidget" methodText="  invokeFocusLost()&#xA;  invokeFocusGained()&#xA;  handleKeyPress()" qualifiedClassName="thinlet.FocusableWidget" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{FocusableWidget.java[FocusableWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.11" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="347" y="155" width="121" height="96" classText="ContainerWidget&#xA;&lt;T extends Widget>">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="180" y="485" width="114" height="111" incomingConnections="//@children.12/@outgoingConnections.0" name="MenuElement" classText="MenuElement" methodText="  getSize()&#xA;  paint()&#xA;  checkMnemonic()" qualifiedClassName="thinlet.MenuElement" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{MenuElement.java[MenuElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.14" type="GENERALIZATION" toNavigable="true"/>
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.16" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="512" y="47" width="75" height="81" incomingConnections="//@children.9/@outgoingConnections.0" classText="IconWidget"/>
-  <children xsi:type="slime:ClassModel" x="17" y="263" width="108" height="81" classText="ScrollableWidget">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="782" y="421" width="114" height="81" name="MnemonicWidget" classText="MnemonicWidget" methodText="  checkMnemonic()" qualifiedClassName="thinlet.MnemonicWidget" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{MnemonicWidget.java[MnemonicWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.11" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="11" y="80" width="106" height="81" classText="FocusableWidget">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="162" y="3" width="113" height="96" name="PopupOwner" classText="PopupOwner" methodText="  closePopup()&#xA;  handleKeyPress()" qualifiedClassName="thinlet.PopupOwner" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{PopupOwner.java[PopupOwner"/>
+  <children xsi:type="slime:ClassModel" x="411" y="402" width="118" height="171" name="ContainerWidget" classText="ContainerWidget" methodText="  iterator()&#xA;  addChild()&#xA;  removeChild()&#xA;  isChildFocusable()&#xA;  checkMnemonic()&#xA;  validate()&#xA;  paint()" qualifiedClassName="thinlet.ContainerWidget" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{ContainerWidget.java[ContainerWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.11" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="35" y="441" width="90" height="81" classText="ToolTipOwner"/>
-  <children xsi:type="slime:ClassModel" x="521" y="444" width="105" height="81" classText="MenuListWidget">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.10" type="DEPENDENCY" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="621" y="595" width="85" height="96" name="ModalWidget" classText="ModalWidget" methodText="  isModal()&#xA;  setModal()" qualifiedClassName="thinlet.ModalWidget" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{ModalWidget.java[ModalWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.11" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="347" y="49" width="125" height="96" classText="DataWidget&#xA;&lt;T extends Element>">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.0" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="726" y="595" width="108" height="111" name="ScrollableWidget" classText="ScrollableWidget" methodText="  getPort()&#xA;  getView()&#xA;  processScroll()" qualifiedClassName="thinlet.ScrollableWidget" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{ScrollableWidget.java[ScrollableWidget">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.11" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="682" y="48" width="56" height="81" incomingConnections="//@children.10/@outgoingConnections.0 //@children.11/@outgoingConnections.0" classText="Element">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.3" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="2" y="3" width="152" height="126" name="Desktop" classText="Desktop" methodText="  getSystemClipboard()&#xA;  requestFocus()&#xA;  transferFocus()&#xA;  transferFocusBackward()" qualifiedClassName="thinlet.Desktop" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{Desktop.java[Desktop"/>
+  <children xsi:type="slime:ClassModel" x="302" y="209" width="118" height="141" incomingConnections="//@children.12/@outgoingConnections.1" name="ElementContainer" classText="ElementContainer" methodText="  getElementCount()&#xA;  iterator()&#xA;  addChild()&#xA;  removeChild()&#xA;  validate()" qualifiedClassName="thinlet.ElementContainer" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{ElementContainer.java[ElementContainer"/>
+  <children xsi:type="slime:ClassModel" x="419" y="3" width="103" height="96" name="SimpleClipboard" classText="SimpleClipboard" methodText="  copy()&#xA;  get()" qualifiedClassName="thinlet.SimpleClipboard" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{SimpleClipboard.java[SimpleClipboard"/>
+  <children xsi:type="slime:ClassModel" x="283" y="3" width="128" height="126" name="ToolTipOwner" classText="ToolTipOwner" methodText="  getToolTipBounds()&#xA;  getToolTip()&#xA;  setToolTipBounds()&#xA;  setToolTipBounds()" qualifiedClassName="thinlet.ToolTipOwner" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{ToolTipOwner.java[ToolTipOwner"/>
+  <children xsi:type="slime:ClassModel" x="581" y="144" width="150" height="276" incomingConnections="//@children.0/@outgoingConnections.0 //@children.4/@outgoingConnections.0 //@children.5/@outgoingConnections.0 //@children.6/@outgoingConnections.0 //@children.2/@outgoingConnections.0" name="Widget" classText="Widget" methodText="  parent()&#xA;  setParent()&#xA;  getName()&#xA;  isVisible()&#xA;  isEnabled()&#xA;  getBounds()&#xA;  setBounds()&#xA;  getPopupMenuWidget()&#xA;  setPopupMenuWidget()&#xA;  getPreferredSize()&#xA;  paint()&#xA;  repaint()&#xA;  findComponent()&#xA;  handleMouseEvent()" qualifiedClassName="thinlet.Widget" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{Widget.java[Widget"/>
+  <children xsi:type="slime:ClassModel" x="232" y="695" width="142" height="81" name="MenuContainerElement" classText="MenuContainerElement" methodText="  getChild()" qualifiedClassName="thinlet.MenuContainerElement" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{MenuContainerElement.java[MenuContainerElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.1" type="GENERALIZATION" toNavigable="true"/>
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.8" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="664" y="226" width="87" height="81" incomingConnections="//@children.7/@outgoingConnections.0" classText="MenuElement">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.9" type="GENERALIZATION" toNavigable="true"/>
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.13" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="530" y="3" width="82" height="81" name="UIController" classText="UIController" qualifiedClassName="thinlet.UIController" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{UIController.java[UIController"/>
+  <children xsi:type="slime:ClassModel" x="52" y="337" width="85" height="171" incomingConnections="//@children.1/@outgoingConnections.0 //@children.15/@outgoingConnections.0" name="Element" classText="Element" methodText="  parent()&#xA;  setParent()&#xA;  getName()&#xA;  isEnabled()&#xA;  isVisible()&#xA;  getBounds()&#xA;  setBounds()" qualifiedClassName="thinlet.Element" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{Element.java[Element">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.17" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="547" y="215" width="81" height="81" classText="DataElement">
-    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.9" type="GENERALIZATION" toNavigable="true"/>
+  <children xsi:type="slime:ClassModel" x="17" y="595" width="112" height="96" name="SelectableElement" classText="SelectableElement" methodText="  isSelected()&#xA;  setSelected()" qualifiedClassName="thinlet.SelectableElement" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{SelectableElement.java[SelectableElement">
+    <outgoingConnections xsi:type="slime:ClassConnectionModel" target="//@children.14" type="GENERALIZATION" toNavigable="true"/>
   </children>
-  <children xsi:type="slime:ClassModel" x="134" y="441" width="82" height="81" classText="UIController"/>
-  <children xsi:type="slime:ClassModel" x="223" y="441" width="109" height="81" incomingConnections="//@children.10/@outgoingConnections.1" classText="MnemonicWidget"/>
+  <children xsi:type="slime:ClassModel" x="155" y="141" width="100" height="96" incomingConnections="//@children.1/@outgoingConnections.1" name="Mnemonic" classText="Mnemonic" methodText="  getMnemonic()&#xA;  getText()" qualifiedClassName="thinlet.Mnemonic" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{Mnemonic.java[Mnemonic"/>
+  <children xsi:type="slime:ClassModel" x="41" y="141" width="108" height="156" incomingConnections="//@children.14/@outgoingConnections.0" name="IconAndText" classText="IconAndText" methodText="  getText()&#xA;  getIcon()&#xA;  getAlignment()&#xA;  getFont()&#xA;  getForeground()&#xA;  getBackground()" qualifiedClassName="thinlet.IconAndText" javaProjectName="gooei" type="=gooei/Source&lt;thinlet{IconAndText.java[IconAndText"/>
 </slime:DocumentModel>

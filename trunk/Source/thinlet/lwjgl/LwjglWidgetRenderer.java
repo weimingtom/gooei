@@ -8,9 +8,10 @@ import java.nio.DoubleBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import thinlet.api.IconWidget;
-import thinlet.api.MnemonicWidget;
-import thinlet.api.Widget;
+import thinlet.IconAndText;
+import thinlet.Mnemonic;
+import thinlet.Widget;
+import thinlet.WidgetRenderer;
 import thinlet.help.Alignment;
 import thinlet.help.Icon;
 import thinlet.help.TLColor;
@@ -21,7 +22,7 @@ import de.ofahrt.utils.fonts.tri.TriGlyph;
 import de.ofahrt.utils.fonts.tri.TriMetrics;
 import de.yvert.geometry.Vector2;
 
-public final class LwjglWidgetRenderer
+public final class LwjglWidgetRenderer implements WidgetRenderer
 {
 
 private static ByteBuffer byteBuffer = BufferUtils.createByteBuffer(1024);
@@ -115,7 +116,7 @@ public void render()
 	Dimension dim = desktop.getSize();
 	clipStack.init(0, 0, dim.width, dim.height);
 	updateClip();
-	desktop.render(this, desktop.isEnabled());
+	desktop.paint(this);
 	
 	GL11.glDisable(GL11.GL_CLIP_PLANE0);
 	GL11.glDisable(GL11.GL_CLIP_PLANE1);
@@ -199,6 +200,7 @@ public int getClipHeight()
  */
 public boolean moveCoordSystem(Rectangle bounds)
 {
+	if (bounds.width < 0) throw new IllegalArgumentException();
 	final int clipx = getClipX(), clipy = getClipY();
 	final int clipwidth = getClipWidth(), clipheight = getClipHeight();
 	
@@ -602,12 +604,12 @@ public void paintBorderAndBackground(int x, int y, int width, int height,
 public void paintBorderAndBackground(Widget component, int x, int y, int width, int height,
 		boolean top, boolean left, boolean bottom, boolean right, char mode)
 {
-	GLColor background = (GLColor) ((IconWidget) component).getBackground(null);
+	GLColor background = (GLColor) ((IconAndText) component).getBackground(null);
 	paintBorderAndBackground(x, y, width, height, top, left, bottom, right, mode, background);
 }
 
 /** Paint component icon and text. */
-public void paintIconAndText(final IconWidget component, int x, int y, int width, int height,
+public void paintIconAndText(final IconAndText component, int x, int y, int width, int height,
 		boolean top, boolean left, boolean bottom, boolean right,
 		int toppadding, int leftpadding, int bottompadding, int rightpadding,
 		boolean focus, char mode, boolean underline)
@@ -680,9 +682,9 @@ public void paintIconAndText(final IconWidget component, int x, int y, int width
 		setColor(foreground);
 		int cy = y + (height - th) / 2 + ta;
 		drawString(text, cx, cy);
-		if (component instanceof MnemonicWidget)
+		if (component instanceof Mnemonic)
 		{
-			int imnemonic = ((MnemonicWidget) component).getMnemonic();
+			int imnemonic = ((Mnemonic) component).getMnemonic();
 			if ((imnemonic != -1) && (imnemonic < text.length()))
 			{
 				int mx = cx + fm.stringWidth(text.substring(0, imnemonic));

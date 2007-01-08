@@ -1,7 +1,7 @@
 package thinlet.demo;
 
-import thinlet.ThinletDesktop;
-import thinlet.api.UIController;
+import thinlet.UIController;
+import thinlet.impl.ThinletDesktop;
 import thinlet.lwjgl.LwjglThinletDesktop;
 
 /**

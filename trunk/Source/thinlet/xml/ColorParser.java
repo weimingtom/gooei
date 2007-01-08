@@ -2,8 +2,8 @@ package thinlet.xml;
 
 import java.util.StringTokenizer;
 
-import thinlet.ThinletDesktop;
 import thinlet.help.TLColor;
+import thinlet.impl.ThinletDesktop;
 
 public class ColorParser
 {

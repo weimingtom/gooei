@@ -2,8 +2,8 @@ package thinlet.xml;
 
 import java.util.StringTokenizer;
 
-import thinlet.ThinletDesktop;
 import thinlet.help.TLFont;
+import thinlet.impl.ThinletDesktop;
 
 public class FontParser
 {

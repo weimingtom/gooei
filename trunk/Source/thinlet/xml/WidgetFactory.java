@@ -1,6 +1,37 @@
 package thinlet.xml;
 
-import thinlet.*;
+import thinlet.impl.ButtonWidget;
+import thinlet.impl.CheckBoxMenuElement;
+import thinlet.impl.CheckBoxWidget;
+import thinlet.impl.ComboBoxItem;
+import thinlet.impl.ComboBoxWidget;
+import thinlet.impl.DialogWidget;
+import thinlet.impl.LabelWidget;
+import thinlet.impl.ListItem;
+import thinlet.impl.ListWidget;
+import thinlet.impl.MenuBarWidget;
+import thinlet.impl.ActionMenuElement;
+import thinlet.impl.SimpleMenuContainer;
+import thinlet.impl.PanelWidget;
+import thinlet.impl.PopupMenuElement;
+import thinlet.impl.ProgressBarWidget;
+import thinlet.impl.SeparatorMenuElement;
+import thinlet.impl.SliderWidget;
+import thinlet.impl.SpacerWidget;
+import thinlet.impl.SpinBoxWidget;
+import thinlet.impl.SplitPaneWidget;
+import thinlet.impl.TabWidget;
+import thinlet.impl.TabbedPaneWidget;
+import thinlet.impl.TableCell;
+import thinlet.impl.TableColumn;
+import thinlet.impl.TableHeader;
+import thinlet.impl.TableRow;
+import thinlet.impl.TableWidget;
+import thinlet.impl.TextAreaWidget;
+import thinlet.impl.TextFieldWidget;
+import thinlet.impl.ThinletDesktop;
+import thinlet.impl.TreeNode;
+import thinlet.impl.TreeWidget;
 
 public class WidgetFactory
 {
@@ -29,10 +60,10 @@ public Object createWidget(ThinletDesktop desktop, String classname)
 	if ("tree".equals(classname)) return new TreeWidget(desktop);
 	
 	// elements: menu items
-	if ("separator".equals(classname)) return new SeparatorWidget();
-	if ("menu".equals(classname)) return new MenuWidget();
-	if ("menuitem".equals(classname)) return new MenuItemWidget();
-	if ("checkboxmenuitem".equals(classname)) return new CheckBoxMenuItemWidget();
+	if ("separator".equals(classname)) return new SeparatorMenuElement();
+	if ("menu".equals(classname)) return new SimpleMenuContainer();
+	if ("menuitem".equals(classname)) return new ActionMenuElement();
+	if ("checkboxmenuitem".equals(classname)) return new CheckBoxMenuElement();
 	
 	// elements: other
 	if ("header".equals(classname)) return new TableHeader();
