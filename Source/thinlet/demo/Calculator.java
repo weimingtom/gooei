@@ -2,10 +2,10 @@ package thinlet.demo;
 
 import java.awt.Toolkit;
 
-import thinlet.TextFieldWidget;
-import thinlet.ThinletDesktop;
-import thinlet.api.UIController;
-import thinlet.api.Widget;
+import thinlet.UIController;
+import thinlet.Widget;
+import thinlet.impl.TextFieldWidget;
+import thinlet.impl.ThinletDesktop;
 import thinlet.lwjgl.LwjglThinletDesktop;
 
 public class Calculator implements UIController

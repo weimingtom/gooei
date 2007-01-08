@@ -6,9 +6,20 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import thinlet.*;
-import thinlet.api.UIController;
-import thinlet.api.Widget;
 import thinlet.help.SelectionType;
+import thinlet.impl.ButtonWidget;
+import thinlet.impl.ComboBoxItem;
+import thinlet.impl.ComboBoxWidget;
+import thinlet.impl.DialogWidget;
+import thinlet.impl.LabelWidget;
+import thinlet.impl.ListItem;
+import thinlet.impl.ListWidget;
+import thinlet.impl.ProgressBarWidget;
+import thinlet.impl.SliderWidget;
+import thinlet.impl.SpinBoxWidget;
+import thinlet.impl.TextAreaWidget;
+import thinlet.impl.TextFieldWidget;
+import thinlet.impl.ThinletDesktop;
 import thinlet.lwjgl.LwjglThinletDesktop;
 
 /**

@@ -5,7 +5,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 
-import thinlet.api.SimpleClipboard;
+import thinlet.SimpleClipboard;
 
 public class AWTClipboard implements SimpleClipboard
 {

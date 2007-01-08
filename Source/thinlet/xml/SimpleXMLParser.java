@@ -1,17 +1,37 @@
 package thinlet.xml;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-import thinlet.*;
-import thinlet.api.*;
+import thinlet.ContainerWidget;
+import thinlet.Element;
+import thinlet.ElementContainer;
+import thinlet.UIController;
+import thinlet.Widget;
 import thinlet.help.Icon;
 import thinlet.help.MethodInvoker;
 import thinlet.help.TLColor;
 import thinlet.help.TLFont;
+import thinlet.impl.ComboBoxItem;
+import thinlet.impl.ComboBoxWidget;
+import thinlet.impl.ListItem;
+import thinlet.impl.ListWidget;
+import thinlet.impl.PopupMenuElement;
+import thinlet.impl.TabWidget;
+import thinlet.impl.TabbedPaneWidget;
+import thinlet.impl.TableHeader;
+import thinlet.impl.TableWidget;
+import thinlet.impl.ThinletDesktop;
+import thinlet.impl.TreeNode;
+import thinlet.impl.TreeWidget;
 
 public class SimpleXMLParser
 {
@@ -239,10 +259,8 @@ private Object addElement(Object parent, String name)
 		((TableWidget) parent).setHeaderWidget((TableHeader) child);
 	else if ((parent instanceof ContainerWidget) && (child instanceof Widget))
 		((ContainerWidget) parent).addChild((Widget) child, -1);
-	else if ((parent instanceof DataWidget) && (child instanceof Element))
-		((DataWidget) parent).addChild((Element) child, -1);
-	else if ((parent instanceof DataElement) && (child instanceof Element))
-		((DataElement) parent).addChild((Element) child, -1);
+	else if ((parent instanceof ElementContainer) && (child instanceof Element))
+		((ElementContainer) parent).addChild((Element) child, -1);
 	else
 		throw new IllegalArgumentException("cannot add "+child+" to "+parent);
 	return child;

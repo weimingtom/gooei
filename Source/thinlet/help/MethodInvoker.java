@@ -2,9 +2,9 @@ package thinlet.help;
 
 import java.lang.reflect.Method;
 
-import thinlet.api.UIController;
+import thinlet.UIController;
 
-public class MethodInvoker
+public final class MethodInvoker
 {
 
 private final UIController controller;

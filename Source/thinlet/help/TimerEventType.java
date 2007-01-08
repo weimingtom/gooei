@@ -1,6 +1,6 @@
 package thinlet.help;
 
-public class TimerEventType
+public final class TimerEventType
 {
 
 public static final TimerEventType SCROLL = new TimerEventType();

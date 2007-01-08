@@ -9,8 +9,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-import thinlet.ThinletDesktop;
-import thinlet.api.SimpleClipboard;
+import thinlet.SimpleClipboard;
 import thinlet.awt.AWTClipboard;
 import thinlet.fonts.BmpFontProvider;
 import thinlet.fonts.FontProvider;
@@ -21,6 +20,7 @@ import thinlet.help.TLColor;
 import thinlet.help.TLFont;
 import thinlet.help.TLFontMetrics;
 import thinlet.help.TimerEventType;
+import thinlet.impl.ThinletDesktop;
 import de.ofahrt.lwjgl.GLTools;
 import de.ofahrt.lwjgl.LwjglInputSource;
 import de.ofahrt.utils.input.InputEvent;
