@@ -5,9 +5,9 @@ import java.awt.Rectangle;
 public interface ToolTipOwner
 {
 
-Rectangle getToolTipBounds();
 String getToolTip();
+Rectangle getToolTipBounds();
 void setToolTipBounds(int x, int y, int width, int height);
-void setToolTipBounds(Rectangle rect);
+void removeToolTipBounds();
 
 }

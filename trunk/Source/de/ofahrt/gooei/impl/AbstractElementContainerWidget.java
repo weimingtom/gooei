@@ -28,7 +28,10 @@ private MethodInvoker actionMethod, performMethod;
 
 protected boolean needsLayout = true;
 
-public AbstractElementContainerWidget(ThinletDesktop desktop)
+private long findtime = 0;
+private String findtext = "";
+
+public AbstractElementContainerWidget(Desktop desktop)
 { super(desktop); }
 
 @Override
@@ -200,12 +203,12 @@ protected Element findText(char keychar)
 	if (keychar != 0)
 	{
 		long current = System.currentTimeMillis();
-		int i = (current > desktop.findtime + 1000) ? 1 : 0; // clear the starting string after a second
-		desktop.findtime = current;
+		int i = (current > findtime + 1000) ? 1 : 0; // clear the starting string after a second
+		findtime = current;
 		Element lead = getLeadWidget();
 		for (; i < 2; i++)
 		{ // 0: find the long text, 1: the stating character only
-			desktop.findprefix = (i == 0) ? (desktop.findprefix + keychar) : String.valueOf(keychar);
+			findtext = (i == 0) ? (findtext + keychar) : String.valueOf(keychar);
 			Element block = lead;
 			for (final Element item : this)
 			{
@@ -214,13 +217,13 @@ protected Element findText(char keychar)
 					if (block == item) block = null;
 					continue;
 				}
-				if (item.getText().regionMatches(true, 0, desktop.findprefix, 0, desktop.findprefix.length()))
+				if (item.getText().regionMatches(true, 0, findtext, 0, findtext.length()))
 					return item;
 			}
 			for (final Element item : this)
 			{
 				if (item == lead) break;
-				if (item.getText().regionMatches(true, 0, desktop.findprefix, 0, desktop.findprefix.length()))
+				if (item.getText().regionMatches(true, 0, findtext, 0, findtext.length()))
 					return item;
 			}
 		}

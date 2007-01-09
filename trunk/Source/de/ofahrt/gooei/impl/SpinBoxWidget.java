@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.MouseInteraction;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
@@ -20,7 +21,7 @@ private int maximum = Integer.MAX_VALUE;
 private int step = 1;
 private int value = 0;
 
-public SpinBoxWidget(ThinletDesktop desktop)
+public SpinBoxWidget(Desktop desktop)
 { super(desktop); }
 
 public int getMinimum()

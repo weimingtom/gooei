@@ -1,8 +1,8 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.IconAndText;
 import gooei.Widget;
-import gooei.input.Keys;
 import gooei.utils.Alignment;
 import gooei.utils.Icon;
 
@@ -18,7 +18,7 @@ private Icon icon = null;
 private Alignment alignment = Alignment.LEFT;
 private int mnemonic = -1;
 
-public TabWidget(ThinletDesktop desktop)
+public TabWidget(Desktop desktop)
 { super(desktop); }
 
 public Widget getContent()
@@ -67,17 +67,5 @@ public void doLayout()
 @Override
 public void paint(LwjglRenderer renderer)
 { throw new UnsupportedOperationException(); }
-
-@Override
-public boolean checkMnemonic(Object checked, Keys keycode, int modifiers)
-{
-	if (!isVisible() || !isEnabled()) return false;
-	for (Widget comp : this)
-	{
-		if (checkMnemonic(comp, checked, keycode, modifiers))
-			return true;
-	}
-	return false;
-}
 
 }

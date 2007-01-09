@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.Element;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
@@ -37,7 +38,7 @@ private Alignment alignment = Alignment.LEFT;
 private int offset;
 private MethodInvoker actionMethod, insertMethod, removeMethod, caretMethod, performMethod;
 
-public TextFieldWidget(ThinletDesktop desktop)
+public TextFieldWidget(Desktop desktop)
 { super(desktop); }
 
 public int getColumns()

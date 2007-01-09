@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.Element;
 import gooei.MouseInteraction;
 import gooei.input.InputEventType;
@@ -20,7 +21,7 @@ public final class ListWidget extends AbstractElementContainerWidget<ListItem>
 
 private List<ListItem> data = new ArrayList<ListItem>();
 
-public ListWidget(ThinletDesktop desktop)
+public ListWidget(Desktop desktop)
 { super(desktop); }
 
 @Override

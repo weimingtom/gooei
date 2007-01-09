@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.utils.Orientation;
 
 import java.awt.Dimension;
@@ -16,7 +17,7 @@ private int value = 0;
 
 private Orientation orientation = Orientation.HORIZONTAL;
 
-public ProgressBarWidget(ThinletDesktop desktop)
+public ProgressBarWidget(Desktop desktop)
 { super(desktop); }
 
 public int getMinimum()

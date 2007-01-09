@@ -12,12 +12,12 @@ import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 public final class PopupMenuElementImpl extends AbstractContainerElement<MenuElement> implements PopupOwner, PopupMenuElement
 {
 
-private final ThinletDesktop desktop;
+private final Desktop desktop;
 
 private PopupWidgetImpl popupWidget;
 private MethodInvoker menushownMethod;
 
-public PopupMenuElementImpl(ThinletDesktop desktop)
+public PopupMenuElementImpl(Desktop desktop)
 { this.desktop = desktop; }
 
 public PopupWidgetImpl getPopupWidget()
@@ -72,7 +72,7 @@ public void closePopup()
 		popup.repaint();
 		desktop.removeChild(popup);
 		setPopupWidget(null);
-		desktop.checkLocation(popup);
+		desktop.checkLocation();
 		popup.popupMenu(); // remove recursively
 	}
 }
@@ -82,8 +82,7 @@ public PopupWidgetImpl popupPopup(int x, int y)
 	// :popup.menu -> popupmenu, popupmenu.:popup -> :popup
 	PopupWidgetImpl popup = new PopupWidgetImpl(desktop, this);
 	setPopupWidget(popup);
-	desktop.insertItem(popup, 0);
-	desktop.setPopupOwner(this);
+	desktop.setPopup(popup, this);
 	
 	popup.popup('D', x, y, 0, 0, 0);
 	
@@ -92,7 +91,7 @@ public PopupWidgetImpl popupPopup(int x, int y)
 	return popup;
 }
 
-public Dimension getSize(ThinletDesktop unused_dktp, int dx, int dy)
+public Dimension getSize(Desktop unused_dktp, int dx, int dy)
 { throw new UnsupportedOperationException(); }
 
 public void paint(LwjglRenderer renderer, boolean armed)
@@ -161,7 +160,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 			else
 				((ActionMenuElement) selected).invokeAction();
 		}
-		desktop.closeup();
+		desktop.closePopup();
 	}
 	else
 		return false;

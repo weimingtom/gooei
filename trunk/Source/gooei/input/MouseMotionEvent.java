@@ -1,6 +1,5 @@
 package gooei.input;
 
-
 public final class MouseMotionEvent extends MouseEvent
 {
 

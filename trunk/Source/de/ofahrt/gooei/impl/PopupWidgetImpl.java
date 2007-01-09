@@ -14,7 +14,7 @@ private boolean modal = false;
 
 private MenuContainerElement<?> menuWidget;
 
-PopupWidgetImpl(ThinletDesktop desktop, MenuContainerElement<?> menuWidget)
+PopupWidgetImpl(Desktop desktop, MenuContainerElement<?> menuWidget)
 {
 	super(desktop);
 	this.menuWidget = menuWidget;

@@ -1,6 +1,7 @@
 package de.ofahrt.gooei.impl;
 
 import gooei.ContainerWidget;
+import gooei.Desktop;
 import gooei.Element;
 import gooei.ElementContainer;
 import gooei.FocusableWidget;
@@ -30,7 +31,7 @@ import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 public abstract class AbstractWidget implements Widget, ToolTipOwner
 {
 
-protected final ThinletDesktop desktop;
+protected final Desktop desktop;
 
 private String name;
 private boolean enabled = true;
@@ -47,7 +48,7 @@ private TLColor background = null;
 
 protected ContainerWidget parentWidget;
 
-private Rectangle bounds;
+private Rectangle bounds = new Rectangle();
 private Rectangle port, view;
 private Rectangle tooltipbounds;
 private Rectangle horizontal, vertical;
@@ -56,7 +57,7 @@ private PopupMenuElement popupmenuWidget;
 
 private MethodInvoker initMethod, focusgainedMethod, focuslostMethod;
 
-public AbstractWidget(ThinletDesktop desktop)
+public AbstractWidget(Desktop desktop)
 { this.desktop = desktop; }
 
 public PopupMenuElement getPopupMenu()
@@ -205,7 +206,7 @@ public Rectangle getBounds()
 { return bounds; }
 
 public void setBounds(int x, int y, int width, int height)
-{ bounds = updateRect(bounds, x, y, width, height); }
+{ bounds.setBounds(x, y, width, height); }
 
 public Rectangle getPort()
 { return port; }
@@ -228,11 +229,11 @@ public void setView(int x, int y, int width, int height)
 public Rectangle getToolTipBounds()
 { return tooltipbounds; }
 
-public void setToolTipBounds(Rectangle tooltipbounds)
-{ this.tooltipbounds = tooltipbounds; }
-
 public void setToolTipBounds(int x, int y, int width, int height)
 { tooltipbounds = updateRect(tooltipbounds, x, y, width, height); }
+
+public void removeToolTipBounds()
+{ tooltipbounds = null; }
 
 /** Horizontal scrollbar, or null if none exists. */
 public Rectangle getHorizontal()
@@ -302,13 +303,13 @@ public static boolean isAccelerator(Keys keycode, int modifiers, String text, in
 }
 
 public final boolean isMousePressed()
-{ return desktop.currentMouseInteraction.mousepressed == this; }
+{ return desktop.getMouseInteraction().mousepressed == this; }
 
 public final boolean isMouseInside()
 {
-	return (desktop.currentMouseInteraction.mouseinside == this) &&
-		((desktop.currentMouseInteraction.mousepressed == null) ||
-			(desktop.currentMouseInteraction.mousepressed == this));
+	return (desktop.getMouseInteraction().mouseinside == this) &&
+		((desktop.getMouseInteraction().mousepressed == null) ||
+			(desktop.getMouseInteraction().mousepressed == this));
 }
 
 
@@ -665,6 +666,8 @@ public final boolean processScroll(Object part)
 
 protected void paintScrollableContent(LwjglRenderer renderer, boolean isenabled)
 {
+	if (this instanceof ScrollableWidget)
+		throw new UnsupportedOperationException();
 	throw new UnsupportedOperationException();
 }
 

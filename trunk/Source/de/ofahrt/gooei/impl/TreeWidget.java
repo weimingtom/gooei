@@ -1,8 +1,13 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.Element;
 import gooei.MouseInteraction;
-import gooei.input.*;
+import gooei.input.InputEventType;
+import gooei.input.KeyboardEvent;
+import gooei.input.Keys;
+import gooei.input.Modifiers;
+import gooei.input.MouseEvent;
 import gooei.utils.MethodInvoker;
 
 import java.awt.Dimension;
@@ -19,7 +24,7 @@ private MethodInvoker expandMethod, collapseMethod;
 
 private TreeNode dataElement;
 
-public TreeWidget(ThinletDesktop desktop)
+public TreeWidget(Desktop desktop)
 { super(desktop); }
 
 public boolean hasAngle()

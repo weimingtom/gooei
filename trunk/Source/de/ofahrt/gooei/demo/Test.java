@@ -13,7 +13,7 @@ public class Test implements UIController
 public static void main(String[] args) throws Exception
 {
 	ThinletDesktop desktop = new LwjglDesktop();
-	desktop.parseAndAdd(new Test(), "thinlet/demo/test.xml");
+	desktop.parseAndAdd(new Test(), "de/ofahrt/gooei/demo/test.xml");
 	desktop.show();
 }
 

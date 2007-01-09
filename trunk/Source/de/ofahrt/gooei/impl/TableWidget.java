@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.Element;
 import gooei.MouseInteraction;
 import gooei.input.InputEventType;
@@ -22,7 +23,7 @@ private int[] widths;
 private List<TableRow> data = new ArrayList<TableRow>();
 private TableHeader headerWidget = null;
 
-public TableWidget(ThinletDesktop desktop)
+public TableWidget(Desktop desktop)
 { super(desktop); }
 
 public int[] getWidths()

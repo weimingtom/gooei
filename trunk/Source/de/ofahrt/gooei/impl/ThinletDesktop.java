@@ -61,7 +61,6 @@ public Rectangle getBounds()
 public void setBackground(TLColor background)
 { pane.setBackground(background); }
 
-/** If the focus owner is a child of the removed widget, the focus needs to be updated. */
 public void updateFocusForRemove(Widget child)
 {
 	for (Widget comp = focusowner; comp != null; comp = comp.parent())
@@ -206,11 +205,7 @@ public void parseAndAdd(UIController controller, String path) throws IOException
 
 // UI management
 
-// enter the starting characters of a list item text within a short time to select
-public String findprefix = "";
-public long findtime;
-
-public final MouseInteraction currentMouseInteraction = new MouseInteraction();
+private final MouseInteraction currentMouseInteraction = new MouseInteraction();
 
 private long mousetime;
 private int mousemods, mousex, mousey;
@@ -218,6 +213,9 @@ private FocusableWidget focusowner;
 private boolean focusinside;
 private PopupOwner popupowner;
 private ToolTipOwner tooltipowner;
+
+public MouseInteraction getMouseInteraction()
+{ return currentMouseInteraction; }
 
 /**
  * Request focus for the given component
@@ -256,11 +254,10 @@ public boolean setFocus(Widget component)
 public void setPopupOwner(PopupOwner widget)
 { popupowner = widget; }
 
-// should this be deprecated?
-public void checkLocation(Widget component)
+public void setPopup(Widget widget, PopupOwner owner)
 {
-	if (currentMouseInteraction.mouseinside == component)
-		checkLocation();
+	insertItem(widget, 0);
+	setPopupOwner(owner);
 }
 
 public void checkLocation()
@@ -268,7 +265,7 @@ public void checkLocation()
 	onMouse(new MouseMotionEvent(mousetime, mousemods, mousex, mousey));
 }
 
-public void closeup()
+public void closePopup()
 {
 	if (popupowner != null)
 	{
@@ -308,7 +305,7 @@ private void hideTip()
 	if (tooltipowner != null)
 	{
 		Rectangle bounds = tooltipowner.getToolTipBounds();
-		tooltipowner.setToolTipBounds(null);
+		tooltipowner.removeToolTipBounds();
 		tooltipowner = null;
 		repaintDesktop(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
@@ -378,7 +375,7 @@ public void onFocusLost()
 	focusinside = false;
 	if (focusowner != null)
 		focusowner.repaint();
-	closeup();
+	closePopup();
 }
 
 public void onFocusGained()
@@ -394,7 +391,7 @@ public void onResize()
 {
 	Dimension d = getSize();
 	pane.setBounds(0, 0, d.width, d.height);
-	closeup();
+	closePopup();
 	if (!focusinside) requestFocus();
 }
 
@@ -544,7 +541,7 @@ public boolean onKey(KeyboardEvent event, boolean actionKey)
 					transferFocusBackward();
 			}
 			focusowner.repaint();
-			closeup();
+			closePopup();
 			return consumed;
 		}
 		
@@ -647,7 +644,7 @@ public void onMouse(MouseEvent event)
 			if ((popupowner != currentMouseInteraction.mouseinside) &&
 					!(currentMouseInteraction.mouseinside instanceof PopupWidgetImpl) && !(currentMouseInteraction.mouseinside instanceof ComboListWidget))
 			{
-				closeup();
+				closePopup();
 			}
 		}
 		hideTip(); // remove tooltip
@@ -724,7 +721,7 @@ public void onTimer(TimerEventType timerType)
 		showTip();
 }
 
-public void moveToFront(DialogWidget child)
+public void moveToFront(Widget child)
 { pane.moveToFront(child); }
 
 

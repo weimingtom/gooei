@@ -1,10 +1,10 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.IconAndText;
 import gooei.MouseInteraction;
 import gooei.ScrollableWidget;
 import gooei.Widget;
-import gooei.input.Keys;
 import gooei.utils.Alignment;
 import gooei.utils.HAlignment;
 import gooei.utils.Icon;
@@ -78,7 +78,7 @@ private int titleheight;
 private boolean border = false;
 private boolean scrollable = false;
 
-public PanelWidget(ThinletDesktop desktop)
+public PanelWidget(Desktop desktop)
 { super(desktop); }
 
 public int getColumns()
@@ -521,18 +521,6 @@ public void doLayout()
 	}
 	
 	needsLayout = false;
-}
-
-@Override
-public boolean checkMnemonic(Object checked, Keys keycode, int modifiers)
-{
-	if (!isVisible() || !isEnabled()) return false;
-	for (Widget comp : this)
-	{
-		if (checkMnemonic(comp, checked, keycode, modifiers))
-			return true;
-	}
-	return false;
 }
 
 @Override

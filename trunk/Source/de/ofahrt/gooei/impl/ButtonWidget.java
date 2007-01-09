@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
 import gooei.input.InputEventType;
@@ -23,7 +24,7 @@ public final class ButtonWidget extends LabelWidget implements FocusableWidget
 private Type type = Type.NORMAL;
 private MethodInvoker actionMethod;
 
-public ButtonWidget(ThinletDesktop desktop)
+public ButtonWidget(Desktop desktop)
 { super(desktop); }
 
 public Type getType()

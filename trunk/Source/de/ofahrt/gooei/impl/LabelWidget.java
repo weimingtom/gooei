@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.IconAndText;
 import gooei.Mnemonic;
 import gooei.MnemonicWidget;
@@ -22,7 +23,7 @@ private Alignment alignment = Alignment.LEFT;
 
 private AbstractWidget forWidget = null;
 
-public LabelWidget(ThinletDesktop desktop)
+public LabelWidget(Desktop desktop)
 { super(desktop); }
 
 public int getMnemonic()

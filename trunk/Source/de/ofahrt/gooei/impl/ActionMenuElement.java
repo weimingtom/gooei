@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.input.Keys;
 import gooei.utils.MethodInvoker;
 
@@ -107,7 +108,7 @@ public boolean checkMnemonic(Keys keycode, int modifiers)
 }
 
 @Override
-public Dimension getSize(ThinletDesktop desktop, int dx, int dy)
+public Dimension getSize(Desktop desktop, int dx, int dy)
 {
 	Dimension result = desktop.getSize(this, dx, dy);
 	String accelText = getAccelerator(); // add accelerator width

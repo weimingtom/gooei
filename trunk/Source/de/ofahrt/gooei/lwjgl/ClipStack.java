@@ -3,8 +3,8 @@ package de.ofahrt.gooei.lwjgl;
 public class ClipStack
 {
 
-int index = 0;
-int[] data = new int[100*6];
+private int index = 0;
+private int[] data = new int[100*6];
 
 public ClipStack()
 {/*OK*/}
