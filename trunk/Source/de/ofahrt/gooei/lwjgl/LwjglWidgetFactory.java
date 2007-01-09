@@ -43,7 +43,7 @@ import de.ofahrt.gooei.impl.TreeWidget;
 public class LwjglWidgetFactory implements WidgetFactory
 {
 
-private HashMap<String,Class> map = new HashMap<String,Class>();
+private HashMap<String,Class<?>> map = new HashMap<String,Class<?>>();
 
 public LwjglWidgetFactory()
 { init(); }

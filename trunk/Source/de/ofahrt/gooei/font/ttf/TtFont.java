@@ -48,7 +48,7 @@ public Font deriveFontByPixelSize(int pixelSize)
 int drawGlyph(FontDrawInterface graphics, int c, int xoff, int yoff)
 {
 	TtfGlyph glyph = fontData.getGlyph(c);
-	ArrayList splines = glyph.splines;
+	ArrayList<BezierSpline> splines = glyph.splines;
 	
 	float cfak = (pointSize*96.0f)/(72.0f*fontData.getUpem());
 	int lsb = glyph.metric.leftSideBearing;
@@ -66,7 +66,7 @@ int drawGlyph(FontDrawInterface graphics, int c, int xoff, int yoff)
 		int icount = 0;
 		for (int i = 0; i < splines.size(); i++)
 		{
-			BezierSpline bs = (BezierSpline) splines.get(i);
+			BezierSpline bs = splines.get(i);
 			if ((bs.getMinY() <= y) && (bs.getMaxY() > y))
 				current[count++] = bs;
 		}

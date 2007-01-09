@@ -452,7 +452,7 @@ public boolean setNextFocusable(Widget widget, boolean outgo)
 	Widget result = findFirstFocusable(widget, widget.parent());
 	
 	Widget previous = widget;
-	ContainerWidget container = widget.parent();
+	ContainerWidget<?> container = widget.parent();
 	while ((result == null) && (container != null))
 	{
 		result = findFirstFocusable(previous, container);
@@ -477,7 +477,7 @@ public final boolean setPreviousFocusable(Widget widget, boolean outgo)
 	Widget result = findLastFocusable(widget, widget.parent());
 	
 	Widget previous = widget;
-	ContainerWidget container = widget.parent();
+	ContainerWidget<?> container = widget.parent();
 	while ((result == null) && (container != null))
 	{
 		result = findLastFocusable(previous, container);

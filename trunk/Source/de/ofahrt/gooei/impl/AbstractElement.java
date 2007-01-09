@@ -37,7 +37,7 @@ private TLColor background = null;
 private HAlignment halign = HAlignment.FILL;
 private VAlignment valign = VAlignment.FILL;
 
-protected ElementContainer parentWidget;
+protected ElementContainer<?> parentWidget;
 
 private Rectangle bounds;
 private Rectangle port, view;
@@ -73,10 +73,10 @@ public void setAlignment(Alignment alignment)
 }
 
 
-public ElementContainer parent()
+public ElementContainer<?> parent()
 { return parentWidget; }
 
-public void setParent(ElementContainer parentWidget)
+public void setParent(ElementContainer<?> parentWidget)
 { this.parentWidget = parentWidget; }
 
 public String getName()
