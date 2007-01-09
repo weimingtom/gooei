@@ -6,8 +6,8 @@ public interface Element //extends IconAndText
 {
 
 // Parent ElementContainer
-ElementContainer parent();
-void setParent(ElementContainer parent);
+ElementContainer<?> parent();
+void setParent(ElementContainer<?> parent);
 
 // Properties
 String getName();

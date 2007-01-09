@@ -14,26 +14,26 @@ import java.util.List;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class MenuBarWidget extends MenuContainerWidget implements ElementContainer<MenuContainerElement>, MnemonicWidget, PopupOwner
+public final class MenuBarWidget extends MenuContainerWidget implements ElementContainer<MenuContainerElement<?>>, MnemonicWidget, PopupOwner
 {
 
-private List<MenuContainerElement> data = new ArrayList<MenuContainerElement>();
+private List<MenuContainerElement<?>> data = new ArrayList<MenuContainerElement<?>>();
 private boolean needsLayout = true;
 
 public MenuBarWidget(Desktop desktop)
 { super(desktop); }
 
-public MenuContainerElement getChild(int index)
+public MenuContainerElement<?> getChild(int index)
 { return data.get(index); }
 
 public int getElementCount()
 { return data.size(); }
 
-public Iterator<MenuContainerElement> iterator()
+public Iterator<MenuContainerElement<?>> iterator()
 { return data.iterator(); }
 
 /** Inserts item in child chain at specified index. Appends if index is negative. */
-protected void insertItem(MenuContainerElement child, int index)
+protected void insertItem(MenuContainerElement<?> child, int index)
 {
 	if ((index >= 0) && (index < data.size()))
 		data.add(index, child);
@@ -304,7 +304,7 @@ public void paint(LwjglRenderer renderer)
 	final boolean enabled = isEnabled();
 	
 	int lastx = 0;
-	for (final MenuContainerElement menu : this)
+	for (final MenuContainerElement<?> menu : this)
 	{
 		Rectangle mb = menu.getBounds();
 		if (maxx <= mb.x) break;

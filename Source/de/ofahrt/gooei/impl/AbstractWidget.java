@@ -46,7 +46,7 @@ private Font font = null;
 private TLColor foreground = null;
 private TLColor background = null;
 
-protected ContainerWidget parentWidget;
+protected ContainerWidget<?> parentWidget;
 
 private Rectangle bounds = new Rectangle();
 private Rectangle port, view;
@@ -131,7 +131,7 @@ public void paint(Renderer renderer)
 public ContainerWidget<?> parent()
 { return parentWidget; }
 
-public void setParent(ContainerWidget parentWidget)
+public void setParent(ContainerWidget<?> parentWidget)
 { this.parentWidget = parentWidget; }
 
 public String getName()

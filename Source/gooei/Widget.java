@@ -16,10 +16,10 @@ public interface Widget
 {
 
 /** Gets this components immediate parent. */
-ContainerWidget parent();
+ContainerWidget<?> parent();
 
 /** Sets this components immediate parent. */
-void setParent(ContainerWidget parent);
+void setParent(ContainerWidget<?> parent);
 
 
 /**

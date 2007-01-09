@@ -78,7 +78,7 @@ public SimpleXMLParser(ThinletDesktop desktop, UIController container, ResourceB
 public Widget find(String name)
 { return desktop.findWidget(name); }
 
-private Method findMethod(Class c, String mname)
+private Method findMethod(Class<?> c, String mname)
 {
 	if (c == null) return null;
 	Method[] ms = c.getDeclaredMethods();

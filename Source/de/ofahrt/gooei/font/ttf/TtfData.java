@@ -467,9 +467,9 @@ private void read(Buffer in) throws IOException
 	readGlyphs(in);
 }
 
-private static HashMap systemFonts = initSystemFonts();
+private static HashMap<String,String> systemFonts = initSystemFonts();
 
-private static HashMap initSystemFonts()
+private static HashMap<String,String> initSystemFonts()
 {
 	HashMap<String,String> result = new HashMap<String,String>();
 	result.put("SansSerif", "de/ofahrt/fonts/bitstreamvera/Vera.ttf");
@@ -498,7 +498,7 @@ private static TtfData load(String name, InputStream in) throws IOException
 
 public static TtfData load(String name) throws IOException
 {
-	String resname = (String) systemFonts.get(name);
+	String resname = systemFonts.get(name);
 	if (resname != null)
 		return load(name, TtfData.class.getClassLoader().getResourceAsStream(resname));
 	
