@@ -1,6 +1,11 @@
 package de.ofahrt.gooei.impl;
 
-import gooei.*;
+import gooei.ContainerWidget;
+import gooei.Desktop;
+import gooei.MnemonicWidget;
+import gooei.ModalWidget;
+import gooei.MouseInteraction;
+import gooei.Widget;
 import gooei.input.InputEventType;
 import gooei.input.Keys;
 import gooei.input.MouseEvent;
@@ -22,7 +27,7 @@ public final class DesktopPaneWidget extends AbstractWidget implements Container
 private final List<Widget> data = new ArrayList<Widget>();
 private boolean needsLayout = true;
 
-public DesktopPaneWidget(ThinletDesktop desktop)
+public DesktopPaneWidget(Desktop desktop)
 { super(desktop); }
 
 public Iterator<Widget> iterator()
@@ -67,7 +72,7 @@ public boolean isChildFocusable(Widget child)
 	return true;
 }
 
-public void moveToFront(DialogWidget child)
+public void moveToFront(Widget child)
 {
 	if (!(data.contains(child))) throw new IllegalArgumentException();
 	if (data.get(0) != child)

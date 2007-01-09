@@ -6,7 +6,6 @@ import java.util.StringTokenizer;
 
 import de.ofahrt.gooei.impl.ThinletDesktop;
 
-
 public class ColorParser
 {
 

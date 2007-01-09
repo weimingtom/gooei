@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.MouseInteraction;
 import gooei.ScrollableWidget;
 import gooei.font.Font;
@@ -22,7 +23,7 @@ private int rows = 1;
 private boolean border = true;
 private boolean wrap = false;
 
-public TextAreaWidget(ThinletDesktop desktop)
+public TextAreaWidget(Desktop desktop)
 { super(desktop); }
 
 public int getRows()

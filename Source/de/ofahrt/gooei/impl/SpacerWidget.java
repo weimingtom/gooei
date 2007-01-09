@@ -1,5 +1,7 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
+
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -8,7 +10,7 @@ import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 public final class SpacerWidget extends AbstractWidget
 {
 
-public SpacerWidget(ThinletDesktop desktop)
+public SpacerWidget(Desktop desktop)
 { super(desktop); }
 
 @Override

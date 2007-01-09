@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.ModalWidget;
 import gooei.MouseInteraction;
 import gooei.ScrollableWidget;
@@ -17,7 +18,7 @@ private boolean modal = false;
 private ComboBoxItem leadWidget = null;
 private ComboBoxWidget comboboxWidget = null;
 
-ComboListWidget(ThinletDesktop desktop)
+ComboListWidget(Desktop desktop)
 { super(desktop); }
 
 public boolean isModal()

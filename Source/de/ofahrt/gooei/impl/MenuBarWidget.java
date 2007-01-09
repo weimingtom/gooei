@@ -20,7 +20,7 @@ public final class MenuBarWidget extends MenuContainerWidget implements ElementC
 private List<MenuContainerElement> data = new ArrayList<MenuContainerElement>();
 private boolean needsLayout = true;
 
-public MenuBarWidget(ThinletDesktop desktop)
+public MenuBarWidget(Desktop desktop)
 { super(desktop); }
 
 public MenuContainerElement getChild(int index)
@@ -144,7 +144,7 @@ public boolean checkMnemonic(Keys keycode, int modifiers)
 		if (menu.checkMnemonic(keycode, modifiers) ||
 				((modifiers == 0) && (keycode == Keys.F10)))
 		{
-			desktop.closeup();
+			desktop.closePopup();
 			setSelectedWidget(menu);
 			popupMenu();
 			repaintComponent(menu);
@@ -245,7 +245,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 			else
 				((ActionMenuElement) selected).invokeAction();
 		}
-		desktop.closeup();
+		desktop.closePopup();
 	}
 	else
 		return false;
@@ -274,7 +274,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 	}
 	else if ((id == InputEventType.MOUSE_PRESSED) && (selected != null))
 	{
-		desktop.closeup();
+		desktop.closePopup();
 	}
 	else if (id == InputEventType.MOUSE_RELEASED)
 	{
@@ -288,7 +288,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 				else
 					((ActionMenuElement) mouseInteraction.insidepart).invokeAction();
 			}
-			desktop.closeup();
+			desktop.closePopup();
 		}
 	}
 }
@@ -311,7 +311,7 @@ public void paint(LwjglRenderer renderer)
 		if (minx >= mb.x + mb.width) continue;
 		boolean menuenabled = enabled && menu.isEnabled();
 		boolean armed = (selected == menu);
-		boolean hover = (selected == null) && (desktop.currentMouseInteraction.insidepart == menu);
+		boolean hover = (selected == null) && (desktop.getMouseInteraction().insidepart == menu);
 		renderer.paintIconAndText(menu, mb.x, 0, mb.width, bounds.height,
 			armed, armed, true, armed, 1, 3, 1, 3, false,
 			enabled ? (menuenabled ? (armed ? 's' : (hover ? 'h' : 'g')) : 'r') : 'd',

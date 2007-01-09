@@ -1,6 +1,7 @@
 package de.ofahrt.gooei.impl;
 
 import gooei.ContainerWidget;
+import gooei.Desktop;
 import gooei.MnemonicWidget;
 import gooei.Widget;
 import gooei.input.Keys;
@@ -18,7 +19,7 @@ private final List<T> data = new ArrayList<T>();
 private final List<Object> constraints = new ArrayList<Object>();
 protected boolean needsLayout = true;
 
-public AbstractContainerWidget(ThinletDesktop desktop)
+public AbstractContainerWidget(Desktop desktop)
 { super(desktop); }
 
 @Override
@@ -152,6 +153,15 @@ protected boolean checkMnemonic(Widget child, Object checked, Keys keycode, int 
 	return false;
 }
 
-public abstract boolean checkMnemonic(Object checked, Keys keycode, int modifiers);
+public boolean checkMnemonic(Object checked, Keys keycode, int modifiers)
+{
+	if (!isVisible() || !isEnabled()) return false;
+	for (final Widget comp : this)
+	{
+		if (checkMnemonic(comp, checked, keycode, modifiers))
+			return true;
+	}
+	return false;
+}
 
 }

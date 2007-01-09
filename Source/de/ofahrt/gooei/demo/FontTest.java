@@ -10,7 +10,7 @@ public class FontTest implements UIController
 public static void main(String[] args) throws Exception
 {
 	ThinletDesktop desktop = new LwjglDesktop();
-	desktop.parseAndAdd(new FontTest(desktop), "thinlet/demo/font.xml");
+	desktop.parseAndAdd(new FontTest(desktop), "de/ofahrt/gooei/demo/font.xml");
 	desktop.show();
 }
 

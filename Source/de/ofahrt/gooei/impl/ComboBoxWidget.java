@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.Element;
 import gooei.ElementContainer;
 import gooei.IconAndText;
@@ -33,7 +34,10 @@ private Icon icon;
 private ComboListWidget combolistWidget = null;
 private List<ComboBoxItem> data = new ArrayList<ComboBoxItem>();
 
-public ComboBoxWidget(ThinletDesktop desktop)
+private long findtime = 0;
+private String findtext = "";
+
+public ComboBoxWidget(Desktop desktop)
 { super(desktop); }
 
 public int getSelected()
@@ -205,8 +209,7 @@ ComboListWidget popupCombo()
 	setComboListWidget(combolist);
 	
 	// add :combolist to the root desktop and set the combobox as popupowner
-	desktop.setPopupOwner(this);
-	desktop.insertItem(combolist, 0);
+	desktop.setPopup(combolist, this);
 	// lay out choices verticaly and calculate max width and height sum
 	int pw = 0; int ph = 0;
 	for (final ComboBoxItem item : this)
@@ -256,7 +259,7 @@ void closeCombo(ComboListWidget combolist, ComboBoxItem item)
 	combolist.repaint();
 	combolist.setParent(null);
 	desktop.setPopupOwner(null);
-	desktop.checkLocation(combolist);
+	desktop.checkLocation();
 }
 
 public void closePopup()
@@ -335,12 +338,12 @@ private ComboBoxItem findText(char keychar, ComboListWidget leadowner)
 	if (keychar != 0)
 	{
 		long current = System.currentTimeMillis();
-		int i = (current > desktop.findtime + 1000) ? 1 : 0; // clear the starting string after a second
-		desktop.findtime = current;
+		int i = (current > findtime + 1000) ? 1 : 0; // clear the starting string after a second
+		findtime = current;
 		ComboBoxItem lead = leadowner.getLeadWidget();
 		for (; i < 2; i++)
 		{ // 0: find the long text, 1: the stating character only
-			desktop.findprefix = (i == 0) ? (desktop.findprefix + keychar) : String.valueOf(keychar);
+			findtext = (i == 0) ? (findtext + keychar) : String.valueOf(keychar);
 			ComboBoxItem block = lead;
 			for (ComboBoxItem item : this)
 			{
@@ -349,13 +352,13 @@ private ComboBoxItem findText(char keychar, ComboListWidget leadowner)
 					if (item == block) block = null;
 					continue;
 				}
-				if (item.getText().regionMatches(true, 0, desktop.findprefix, 0, desktop.findprefix.length()))
+				if (item.getText().regionMatches(true, 0, findtext, 0, findtext.length()))
 					return item;
 			}
 			for (ComboBoxItem item : this)
 			{
 				if (item == lead) break;
-				if (item.getText().regionMatches(true, 0, desktop.findprefix, 0, desktop.findprefix.length()))
+				if (item.getText().regionMatches(true, 0, findtext, 0, findtext.length()))
 					return item;
 			}
 		}

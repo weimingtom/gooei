@@ -533,8 +533,8 @@ public void paintArrow(int x, int y, int width, int height,
 		char dir, boolean enabled, boolean inside, boolean pressed, String part,
 		boolean top, boolean left, boolean bottom, boolean right, boolean horizontal)
 {
-	inside = inside && (desktop.currentMouseInteraction.insidepart == part);
-	pressed = pressed && (desktop.currentMouseInteraction.pressedpart == part);
+	inside = inside && (desktop.getMouseInteraction().insidepart == part);
+	pressed = pressed && (desktop.getMouseInteraction().pressedpart == part);
 	paintRect(x, y, width, height, enabled ? c_border : c_disable,
 		enabled ? ((inside != pressed) ? c_hover : (pressed ? c_press : c_ctrl)) : c_bg,
 		top, left, bottom, right, horizontal);

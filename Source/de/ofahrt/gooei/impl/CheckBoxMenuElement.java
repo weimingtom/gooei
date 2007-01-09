@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.MenuContainerElement;
 import gooei.MenuElement;
 
@@ -57,7 +58,7 @@ boolean changeCheck()
 }
 
 @Override
-public Dimension getSize(ThinletDesktop desktop, int dx, int dy)
+public Dimension getSize(Desktop desktop, int dx, int dy)
 {
 	Dimension result = super.getSize(desktop, dx, dy);
 	int block = desktop.getBlockSize();

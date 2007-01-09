@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
 import gooei.Widget;
@@ -22,7 +23,7 @@ private boolean selected = false;
 private String group = null;
 private MethodInvoker actionMethod;
 
-public CheckBoxWidget(ThinletDesktop desktop)
+public CheckBoxWidget(Desktop desktop)
 { super(desktop); }
 
 public boolean isSelected()

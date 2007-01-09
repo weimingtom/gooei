@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.MenuElement;
 
 import java.awt.Dimension;
@@ -12,7 +13,7 @@ public abstract class AbstractMenuElement extends AbstractElement implements Men
 protected AbstractMenuElement()
 {/*OK*/}
 
-public abstract Dimension getSize(ThinletDesktop desktop, int dx, int dy);
+public abstract Dimension getSize(Desktop desktop, int dx, int dy);
 public abstract void paint(LwjglRenderer renderer, boolean armed);
 
 }

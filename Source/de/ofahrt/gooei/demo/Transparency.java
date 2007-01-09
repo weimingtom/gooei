@@ -11,7 +11,7 @@ public static void main(String[] args) throws Exception
 {
 	ThinletDesktop desktop = new LwjglDesktop();
 	desktop.setBackground(desktop.createColor(0, 0, 0, 0));
-	desktop.parseAndAdd(new Transparency(), "thinlet/demo/transparency.xml");
+	desktop.parseAndAdd(new Transparency(), "de/ofahrt/gooei/demo/transparency.xml");
 	desktop.show();
 }
 

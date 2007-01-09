@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import de.ofahrt.gooei.impl.*;
 import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 
-
 /**
  * Simple demonstration of widgets and events
  */
@@ -22,7 +21,7 @@ public class Demo implements UIController
 public static void main(String[] args) throws Exception
 {
 	ThinletDesktop desktop = new LwjglDesktop();
-	desktop.parseAndAdd(new Demo(desktop), "thinlet/demo/demo.xml");
+	desktop.parseAndAdd(new Demo(desktop), "de/ofahrt/gooei/demo/demo.xml");
 	desktop.show();
 }
 

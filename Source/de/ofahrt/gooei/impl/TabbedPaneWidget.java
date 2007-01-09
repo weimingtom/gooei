@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
 import gooei.Widget;
@@ -26,7 +27,7 @@ private int selected = 0;
 private Placement placement = Placement.TOP;
 private MethodInvoker actionMethod;
 
-public TabbedPaneWidget(ThinletDesktop desktop)
+public TabbedPaneWidget(Desktop desktop)
 { super(desktop); }
 
 public int getSelected()
@@ -177,7 +178,7 @@ void checkOffset()
 			if (i == selected) dy += tab.getContent().getBounds().height + 2;
 			i++;
 		}
-		desktop.checkLocation(this); // layout changed, check the hovered tab
+		desktop.checkLocation(); // layout changed, check the hovered tab
 		return;
 	}
 	
@@ -221,7 +222,7 @@ void checkOffset()
 					rc.y -= d;
 			}
 		}
-		desktop.checkLocation(this); // layout changed, check the hovered tab
+		desktop.checkLocation(); // layout changed, check the hovered tab
 	}
 }
 
@@ -391,7 +392,8 @@ public void paint(LwjglRenderer renderer)
 		final Rectangle r = tab.getBounds();
 		if (selected != i)
 		{
-			boolean hover = inside && (desktop.currentMouseInteraction.mousepressed == null) && (desktop.currentMouseInteraction.insidepart == tab);
+			boolean hover = inside && (desktop.getMouseInteraction().mousepressed == null) &&
+					(desktop.getMouseInteraction().insidepart == tab);
 			boolean tabenabled = enabled && tab.isEnabled();
 			renderer.paintIconAndText(tab, r.x + bx, r.y + by, r.width - bw, r.height - bh,
 				(placement != Placement.BOTTOM), (placement != Placement.RIGHT),

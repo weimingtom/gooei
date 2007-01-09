@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.ModalWidget;
 import gooei.MouseInteraction;
 import gooei.Widget;
@@ -21,7 +22,7 @@ private boolean closable = false;
 private boolean maximizable = false;
 private boolean iconifiable = false;
 
-public DialogWidget(ThinletDesktop desktop)
+public DialogWidget(Desktop desktop)
 { super(desktop); }
 
 @Override

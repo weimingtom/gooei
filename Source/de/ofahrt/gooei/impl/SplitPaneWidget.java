@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
 import gooei.Widget;
@@ -22,7 +23,7 @@ private int divider = -1;
 
 private Orientation orientation = Orientation.HORIZONTAL;
 
-public SplitPaneWidget(ThinletDesktop desktop)
+public SplitPaneWidget(Desktop desktop)
 { super(desktop); }
 
 public int getDivider()
@@ -111,18 +112,6 @@ public void doLayout()
 	}
 	
 	needsLayout = false;
-}
-
-@Override
-public boolean checkMnemonic(Object checked, Keys keycode, int modifiers)
-{
-	if (!isVisible() || !isEnabled()) return false;
-	for (Widget comp : this)
-	{
-		if (checkMnemonic(comp, checked, keycode, modifiers))
-			return true;
-	}
-	return false;
 }
 
 public boolean handleKeyPress(KeyboardEvent event)

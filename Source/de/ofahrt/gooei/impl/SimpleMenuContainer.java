@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.Element;
 import gooei.ElementContainer;
 import gooei.MenuContainerElement;
@@ -81,7 +82,7 @@ public void removeChild(Element child)
 }
 
 @Override
-public Dimension getSize(ThinletDesktop desktop, int dx, int dy)
+public Dimension getSize(Desktop desktop, int dx, int dy)
 {
 	Dimension result = desktop.getSize(this, dx, dy);
 	result.width += desktop.getBlockSize();

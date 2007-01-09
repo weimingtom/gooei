@@ -16,7 +16,7 @@ public abstract class MenuContainerWidget extends AbstractWidget
 private PopupWidgetImpl popupWidget;
 private MenuElement selectedWidget;
 
-public MenuContainerWidget(ThinletDesktop desktop)
+public MenuContainerWidget(Desktop desktop)
 { super(desktop); }
 
 public PopupWidgetImpl getPopupWidget()
@@ -42,7 +42,7 @@ public PopupWidgetImpl popupMenu()
 		popup.repaint();
 		desktop.removeChild(popup);
 		setPopupWidget(null);
-		desktop.checkLocation(popup);
+		desktop.checkLocation();
 		popup.popupMenu(); // remove recursively
 	}
 	
@@ -127,7 +127,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 				else
 					((ActionMenuElement) mouseInteraction.insidepart).invokeAction();
 			}
-			desktop.closeup();
+			desktop.closePopup();
 		}
 	}
 	else if (((id == InputEventType.MOUSE_EXITED) || (id == InputEventType.DRAG_EXITED)) &&

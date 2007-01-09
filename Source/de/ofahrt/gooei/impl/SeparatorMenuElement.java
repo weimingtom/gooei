@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.input.Keys;
 
 import java.awt.Dimension;
@@ -18,7 +19,7 @@ public boolean isEnabled()
 { return false; }
 
 @Override
-public Dimension getSize(ThinletDesktop desktop, int dx, int dy)
+public Dimension getSize(Desktop desktop, int dx, int dy)
 { return new Dimension(1, 1); }
 
 @Override

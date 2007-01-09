@@ -1,6 +1,5 @@
 package gooei.input;
 
-
 public final class KeyboardEvent extends InputEvent
 {
 

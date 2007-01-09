@@ -209,11 +209,11 @@ public void setView(int x, int y, int width, int height)
 public Rectangle getToolTipBounds()
 { return tooltipbounds; }
 
-public void setToolTipBounds(Rectangle tooltipbounds)
-{ this.tooltipbounds = tooltipbounds; }
-
 public void setToolTipBounds(int x, int y, int width, int height)
 { tooltipbounds = updateRect(tooltipbounds, x, y, width, height); }
+
+public void removeToolTipBounds()
+{ tooltipbounds = null; }
 
 public Rectangle getHorizontal()
 { return horizontal; }

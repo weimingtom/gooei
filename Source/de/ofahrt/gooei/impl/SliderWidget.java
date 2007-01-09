@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.impl;
 
+import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
 import gooei.input.InputEventType;
@@ -21,7 +22,7 @@ private int unit = 5;
 private int block = 25;
 private MethodInvoker actionMethod;
 
-public SliderWidget(ThinletDesktop desktop)
+public SliderWidget(Desktop desktop)
 { super(desktop); }
 
 public int getUnit()
