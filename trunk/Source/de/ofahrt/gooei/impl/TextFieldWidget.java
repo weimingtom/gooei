@@ -4,6 +4,7 @@ import gooei.Desktop;
 import gooei.Element;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
+import gooei.MouseableWidget;
 import gooei.font.Font;
 import gooei.font.FontMetrics;
 import gooei.input.InputEventType;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public class TextFieldWidget extends AbstractWidget implements FocusableWidget
+public class TextFieldWidget extends AbstractWidget implements FocusableWidget, MouseableWidget
 {
 
 private int columns = 0;
@@ -30,8 +31,7 @@ private int start = 0;
 private int end = 0;
 private boolean editable = true;
 
-private String text = "";
-private char[] textchars;
+private StringBuffer textchars = new StringBuffer();
 
 private Alignment alignment = Alignment.LEFT;
 
@@ -66,10 +66,13 @@ public void setEditable(boolean editable)
 { this.editable = editable; }
 
 public String getText()
-{ return text; }
+{ return textchars.toString(); }
 
 public void setText(String text)
-{ this.text = text; }
+{
+	textchars.setLength(0);
+	textchars.append(text);
+}
 
 public Alignment getAlignment()
 { return alignment; }
@@ -118,10 +121,10 @@ public boolean invokePerform()
 public int getOffset()
 { return offset; }
 
-protected void setTextChars(char[] chars)
+protected void setTextChars(StringBuffer chars)
 { textchars = chars; }
 
-public char[] getTextChars()
+public StringBuffer getTextChars()
 { return textchars; }
 
 protected boolean isMultiline()
@@ -156,13 +159,13 @@ public Dimension getPreferredSize()
 protected void layoutField(int dw, int left)
 {
 	int width = getBounds().width - left -dw;
-	if (start > text.length()) start = text.length();
-	if (end > text.length()) end = text.length();
+	if (start > textchars.length()) start = textchars.length();
+	if (end > textchars.length()) end = textchars.length();
 	int off = offset;
 	Font currentfont = getFont(desktop.getDefaultFont());
 	FontMetrics fm = desktop.getFontMetrics(currentfont);
-	int textwidth = isHidden() ? (fm.charWidth('*') * text.length()) : fm.stringWidth(text);
-	int caret = isHidden() ? (fm.charWidth('*') * end) : fm.stringWidth(text.substring(0, end));
+	int textwidth = isHidden() ? (fm.charWidth('*') * textchars.length()) : fm.stringWidth(textchars);
+	int caret = isHidden() ? (fm.charWidth('*') * end) : fm.stringWidth(textchars.substring(0, end));
 	if (textwidth <= width - 4)
 	{ // text fits inside the available space
 		if (alignment == Alignment.LEFT)
@@ -195,28 +198,28 @@ int getCaretLocation(int x, int y)
 {
 	Font currentfont = getFont(desktop.getDefaultFont());
 	FontMetrics fm = desktop.getFontMetrics(currentfont);
-	char[] chars = isMultiline() ? getTextChars() : getText().toCharArray(); // update it
+	StringBuffer chars = getTextChars();
 	int linestart = 0;
 	if (isMultiline())
 	{
 		int height = fm.getHeight(); // find the line start by y value
-		for (int i = 0; (y >= height) && (i < chars.length); i++)
+		for (int i = 0; (y >= height) && (i < chars.length()); i++)
 		{
-			if ((chars[i] == '\n') || (chars[i] == '\t'))
+			if ((chars.charAt(i) == '\n') || (chars.charAt(i) == '\t'))
 			{
 				linestart = i + 1;
 				y -= height;
 			}
 		}
 	}
-	for (int i = linestart; i < chars.length; i++)
+	for (int i = linestart; i < chars.length(); i++)
 	{
-		if ((chars[i] == '\n') || (chars[i] == '\t')) return i;
-		int charwidth = fm.charWidth(isHidden() ? '*' : chars[i]);
+		if ((chars.charAt(i) == '\n') || (chars.charAt(i) == '\t')) return i;
+		int charwidth = fm.charWidth(isHidden() ? '*' : chars.charAt(i));
 		if (x <= (charwidth / 2)) { return i; }
 		x -= charwidth;
 	}
-	return chars.length;
+	return chars.length();
 }
 
 /**
@@ -298,7 +301,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 	}
 	else if (keycode == Keys.END)
 	{
-		iend = text.length();
+		iend = textchars.length();
 		if (!shiftdown) istart = iend;
 	}
 	else if (keycode == Keys.HOME)
@@ -313,7 +316,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 			for (int i = 0; i < 2; i++)
 			{
 				while ((iend > 0) && ((i != 0) ==
-					Character.isLetterOrDigit(text.charAt(iend - 1)))) { iend--; }	
+					Character.isLetterOrDigit(textchars.charAt(iend - 1)))) { iend--; }	
 			}
 		}
 		else
@@ -328,8 +331,11 @@ public boolean handleKeyPress(KeyboardEvent event)
 		{
 			for (int i = 0; i < 2; i++)
 			{
-				while ((iend < text.length()) && ((i == 0) ==
-					Character.isLetterOrDigit(text.charAt(iend)))) { iend++; }
+				while ((iend < textchars.length()) &&
+						((i == 0) == Character.isLetterOrDigit(textchars.charAt(iend))))
+				{
+					iend++;
+				}
 			}
 		}
 		else
@@ -346,18 +352,18 @@ public boolean handleKeyPress(KeyboardEvent event)
 	else if (controldown && ((keycode == Keys.A)/* || (keycode == 0xBF)*/))
 	{
 		istart = 0;
-		iend = text.length();
+		iend = textchars.length();
 	}
 	else if (controldown && (keycode == Keys.END /*0xDC*/))
 	{
-		istart = iend = text.length();
+		istart = iend = textchars.length();
 	}
 	else if ((editable && !isHidden() && controldown && (keycode == Keys.X)) ||
 			(!isHidden() && controldown && (keycode == Keys.C)))
 	{
 		if (start != end)
 		{
-			String clipboard = text.substring(Math.min(start, end), Math.max(start, end));
+			String clipboard = textchars.substring(Math.min(start, end), Math.max(start, end));
 			try
 			{ desktop.getSystemClipboard().copy(clipboard); }
 			catch (IOException e)
@@ -388,7 +394,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 				return false;
 		}
 	}
-	return changeField(text, insert, istart, iend);
+	return changeField(textchars.toString(), insert, istart, iend);
 }
 
 protected void processField(MouseInteraction mouseInteraction, MouseEvent event, int left)
@@ -424,13 +430,13 @@ protected void processField(MouseInteraction mouseInteraction, MouseEvent event,
 		if (clickcount > 1)
 		{
 //			String text = component.getText();
-			while ((caretstart > 0) && ((clickcount == 2) ?
-				Character.isLetterOrDigit(text.charAt(caretstart - 1)) :
-					(text.charAt(caretstart - 1) != '\n')))
+			while ((caretstart > 0) &&
+					((clickcount == 2) ? Character.isLetterOrDigit(textchars.charAt(caretstart - 1)) :
+					(textchars.charAt(caretstart - 1) != '\n')))
 			{ caretstart--; }
-			while ((caretend < text.length()) && ((clickcount == 2) ?
-				Character.isLetterOrDigit(text.charAt(caretend)) :
-					(text.charAt(caretend) != '\n')))
+			while ((caretend < textchars.length()) &&
+					((clickcount == 2) ? Character.isLetterOrDigit(textchars.charAt(caretend)) :
+					(textchars.charAt(caretend) != '\n')))
 			{ caretend++; }
 		}
 		setStart(caretstart);
@@ -471,7 +477,6 @@ protected void processField(MouseInteraction mouseInteraction, MouseEvent event,
 	}
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 { processField(mouseInteraction, event, 0); }
 
@@ -500,10 +505,10 @@ public void paintField(LwjglRenderer renderer,
 	{
 //		int start = component.getStart(); 
 //		int end = component.getEnd();
-		int caret = isHidden() ? (fm.charWidth('*') * end) : fm.stringWidth(text.substring(0, end));
+		int caret = isHidden() ? (fm.charWidth('*') * end) : fm.stringWidth(textchars.substring(0, end));
 		if (start != end)
 		{
-			int is = isHidden() ? (fm.charWidth('*') * start) : fm.stringWidth(text.substring(0, start));
+			int is = isHidden() ? (fm.charWidth('*') * start) : fm.stringWidth(textchars.substring(0, start));
 			renderer.setColor(renderer.c_select);
 			renderer.fillRect(2 + left - offset + Math.min(is, caret), 1,
 				Math.abs(caret - is), height - 2);
@@ -521,7 +526,7 @@ public void paintField(LwjglRenderer renderer,
 	if (isHidden())
 	{
 		int fh = fm.charWidth('*');
-		for (int i = text.length(); i > 0; i--)
+		for (int i = textchars.length(); i > 0; i--)
 		{
 			renderer.drawString("*", fx, fy);
 			fx += fh;
@@ -529,7 +534,7 @@ public void paintField(LwjglRenderer renderer,
 	}
 	else
 	{
-		renderer.drawString(text, fx, fy);
+		renderer.drawString(textchars, fx, fy);
 	}
 	
 	if (myfont != null) renderer.setCurrentFont(font);
@@ -546,7 +551,7 @@ public void paint(LwjglRenderer renderer)
 {
 	Rectangle bounds = getBounds();
 	doLayout();
-	paintField(renderer, bounds.width, bounds.height, isEnabled(), 0);
+	paintField(renderer, bounds.width, bounds.height, isEnabled() && renderer.isEnabled(), 0);
 }
 
 }

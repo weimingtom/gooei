@@ -21,8 +21,8 @@ public LwjglWindow(LwjglDesktop desktop)
 
 private void initDisplay()
 {
-	int displayWidth = 640;
-	int displayHeight = 480;
+	int displayWidth = desktop.getSize().width;
+	int displayHeight = desktop.getSize().height;
 	int displayBPP = 24;
 	try
 	{

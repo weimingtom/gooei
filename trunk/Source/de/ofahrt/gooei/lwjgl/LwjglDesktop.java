@@ -9,13 +9,16 @@ import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
 import gooei.input.MouseEvent;
 import gooei.utils.Icon;
+import gooei.utils.PreparedIcon;
 import gooei.utils.TLColor;
 import gooei.utils.TimerEventType;
+import gooei.xml.WidgetFactory;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -31,6 +34,9 @@ import de.yvert.camera.TargetCamera;
 import de.yvert.geometry.Plane;
 import de.yvert.geometry.Ray;
 import de.yvert.geometry.Vector3;
+import de.yvert.jingle.ImageReader;
+import de.yvert.jingle.ReaderWriterFactory;
+import de.yvert.jingle.ldr.LdrImage2D;
 
 public final class LwjglDesktop extends ThinletDesktop
 {
@@ -47,10 +53,10 @@ protected final TargetCamera camera;
 
 private final LwjglInputSource inputSource = new LwjglInputSource();
 
-public LwjglDesktop()
+public LwjglDesktop(WidgetFactory factory, int width, int height)
 {
-	super();
-	if (false)
+	super(factory);
+	if (true)
 		fontProvider = new BmpFontProvider();
 	else
 	{
@@ -62,7 +68,16 @@ public LwjglDesktop()
 	Font defaultFont = createFont("SansSerif", 0, 18);
 	renderer = new LwjglRenderer(this, defaultFont);
 	camera = new TargetCamera(new Vector3(260, 260, 0), 300);
+	
+	setPosition(0, 0);
+	setSize(width, height);
 }
+
+public LwjglDesktop(WidgetFactory factory)
+{ this(factory, 640, 480); }
+
+public LwjglDesktop()
+{ this(new LwjglWidgetFactory(), 640, 480); }
 
 @Override
 public void setTimer(TimerEventType type, long delay)
@@ -139,12 +154,34 @@ public void setCursor(Cursor cursor)
 }
 
 @Override
-public void repaintDesktop(int tx, int ty, int width, int height)
+public void repaintDesktop(int tx, int ty, int w, int h)
 {/*Do nothing!*/}
 
 @Override
-public Icon loadIcon(String path)
-{ return null; }
+public Icon loadIcon(String filename)
+{
+	try
+	{
+		InputStream in = getClass().getClassLoader().getResourceAsStream("de/ofahrt/gooei/tilt/"+filename);
+		int i = filename.lastIndexOf('.');
+		String extension = filename.substring(i+1);
+		ImageReader reader = ReaderWriterFactory.getReader(extension);
+		LdrImage2D image = (LdrImage2D) reader.load(in);
+		return new LwjglIcon(image);
+	}
+	catch (IOException e)
+	{
+		e.printStackTrace();
+	}
+	return null;
+}
+
+@Override
+public PreparedIcon prepareIcon(Icon icon)
+{
+	LwjglIcon i = (LwjglIcon) icon;
+	return new LwjglPreparedIcon(i.getImage());
+}
 
 
 
@@ -166,8 +203,6 @@ public void setSize(int width, int height)
 
 public void showContainer()
 {
-	setPosition(0, 0);
-	setSize(640, 480);
 	LwjglWindow window = new LwjglWindow(this);
 	new Thread(window).start();
 }

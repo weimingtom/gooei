@@ -69,7 +69,7 @@ public void paint(LwjglRenderer renderer)
 //	int value = progressbar.getValue();
 	// fixed by by Mike Hartshorn and Timothy Stack
 	final boolean horizontal = getOrientation() == Orientation.HORIZONTAL;
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	int length = (value - minimum) *
 		((horizontal ? bounds.width : bounds.height) - 1) / (maximum - minimum);
 	renderer.paintRect(0, 0, horizontal ? length : bounds.width,

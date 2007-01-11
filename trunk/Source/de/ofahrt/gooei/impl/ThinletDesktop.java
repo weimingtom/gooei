@@ -6,6 +6,7 @@ import gooei.FocusableWidget;
 import gooei.IconAndText;
 import gooei.MnemonicWidget;
 import gooei.MouseInteraction;
+import gooei.MouseableWidget;
 import gooei.PopupMenuElement;
 import gooei.PopupOwner;
 import gooei.PopupWidget;
@@ -24,9 +25,11 @@ import gooei.input.MouseEvent;
 import gooei.input.MouseMotionEvent;
 import gooei.input.MouseWheelEvent;
 import gooei.utils.Icon;
+import gooei.utils.PreparedIcon;
 import gooei.utils.TLColor;
 import gooei.utils.TimerEventType;
 import gooei.xml.SimpleXMLParser;
+import gooei.xml.WidgetFactory;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -42,6 +45,24 @@ public abstract class ThinletDesktop implements Desktop
 {
 
 private final DesktopPaneWidget pane = new DesktopPaneWidget(this);
+private final WidgetFactory factory;
+
+// UI management
+
+private final MouseInteraction currentMouseInteraction = new MouseInteraction();
+
+private long mousetime;
+private int mousemods, mousex, mousey;
+private FocusableWidget focusowner;
+private boolean focusinside;
+private PopupOwner popupowner;
+private ToolTipOwner tooltipowner;
+
+
+public ThinletDesktop(WidgetFactory factory)
+{
+	this.factory = factory;
+}
 
 public void insertItem(Widget child, int index)
 { pane.insertItem(child, index); }
@@ -118,6 +139,7 @@ public abstract Dimension getSize();
 public abstract void setCursor(Cursor cursor);
 public abstract void repaintDesktop(int tx, int ty, int width, int height);
 public abstract Icon loadIcon(String path);
+public abstract PreparedIcon prepareIcon(Icon icon);
 
 public void repaintDesktop(Rectangle rect)
 { repaintDesktop(rect.x, rect.y, rect.width, rect.height); }
@@ -154,6 +176,9 @@ public void repaint(Widget widget, final Rectangle area)
 	repaintDesktop(rect);
 }
 
+public void repaint(Widget widget)
+{ repaint(widget, widget.getBounds()); }
+
 public Dimension getSize(IconAndText widget, int dx, int dy)
 {
 	int tw = 0, th = 0;
@@ -178,7 +203,7 @@ public Dimension getSize(IconAndText widget, int dx, int dy)
 
 
 public Widget parse(UIController controller, InputStream in, ResourceBundle bundle) throws IOException
-{ return new SimpleXMLParser(this, controller, bundle).parse(in); }
+{ return new SimpleXMLParser(this, controller, factory, bundle).parse(in); }
 
 public Widget parse(UIController controller, String path, ResourceBundle bundle) throws IOException
 {
@@ -203,17 +228,6 @@ public void parseAndAdd(UIController controller, String path) throws IOException
 
 
 
-// UI management
-
-private final MouseInteraction currentMouseInteraction = new MouseInteraction();
-
-private long mousetime;
-private int mousemods, mousex, mousey;
-private FocusableWidget focusowner;
-private boolean focusinside;
-private PopupOwner popupowner;
-private ToolTipOwner tooltipowner;
-
 public MouseInteraction getMouseInteraction()
 { return currentMouseInteraction; }
 
@@ -224,6 +238,7 @@ public MouseInteraction getMouseInteraction()
  */
 public boolean setFocus(Widget component)
 {
+	if (!isFocusable(component)) return false;
 	if (!(component instanceof FocusableWidget)) throw new IllegalArgumentException();
 	if (!focusinside)
 	{ // request focus for the thinlet component
@@ -235,16 +250,14 @@ public boolean setFocus(Widget component)
 		if (focusowner != null)
 		{
 			focusowner = null; // clear focusowner
-			focused.repaint();
 			// invoke the focus listener of the previously focused component
-			focused.invokeFocusLost();
+			focused.handleFocusLost();
 		}
 		if (focusowner == null)
 		{ // it won't be null, if refocused
 			focusowner = (FocusableWidget) component;
 			// invoke the focus listener of the new focused component
-			focusowner.invokeFocusGained();
-			focusowner.repaint();
+			focusowner.handleFocusGained();
 		}
 		return true;
 	}
@@ -342,7 +355,7 @@ private boolean findMnemonic(Widget component, Object checked, Keys keycode, int
 private boolean findMnemonic(Widget component, Keys keycode, int modifiers)
 { return findMnemonic(component, null, keycode, modifiers); }
 
-private void handleMouseEvent(Widget component, Object part, MouseInteraction mouseInteraction, MouseEvent event)
+private void handleMouseEvent(MouseableWidget component, Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
 	if (id == InputEventType.MOUSE_ENTERED)
@@ -374,7 +387,7 @@ public void onFocusLost()
 {
 	focusinside = false;
 	if (focusowner != null)
-		focusowner.repaint();
+		focusowner.handleFocusLost();
 	closePopup();
 }
 
@@ -382,9 +395,7 @@ public void onFocusGained()
 {
 	focusinside = true;
 	if (focusowner != null)
-		focusowner.repaint();
-//	else
-//		setFocus(null);
+		focusowner.handleFocusGained();
 }
 
 public void onResize()
@@ -396,7 +407,7 @@ public void onResize()
 }
 
 /** Returns whether this widget can become focusowner. */
-public static boolean isFocusable(Widget widget)
+private boolean isFocusable(Widget widget)
 {
 	if (widget instanceof FocusableWidget)
 	{
@@ -540,7 +551,6 @@ public boolean onKey(KeyboardEvent event, boolean actionKey)
 				else
 					transferFocusBackward();
 			}
-			focusowner.repaint();
 			closePopup();
 			return consumed;
 		}
@@ -552,7 +562,6 @@ public boolean onKey(KeyboardEvent event, boolean actionKey)
 				if (splitpane instanceof SplitPaneWidget)
 				{
 					setFocus(splitpane);
-					splitpane.repaint();
 					return true;
 				}
 			}
@@ -610,7 +619,7 @@ public void onMouse(MouseEvent event)
 	}
 	else if (id == InputEventType.MOUSE_MOVED)
 	{
-		Widget previnside = currentMouseInteraction.mouseinside;
+		MouseableWidget previnside = currentMouseInteraction.mouseinside;
 		Object prevpart = currentMouseInteraction.insidepart;
 		pane.findComponent(currentMouseInteraction, x, y);
 		if ((previnside == currentMouseInteraction.mouseinside) && (prevpart == currentMouseInteraction.insidepart))
@@ -630,7 +639,7 @@ public void onMouse(MouseEvent event)
 	{
 		if (currentMouseInteraction.mousepressed == null)
 		{
-			Widget mouseexit = currentMouseInteraction.mouseinside;
+			MouseableWidget mouseexit = currentMouseInteraction.mouseinside;
 			Object exitpart = currentMouseInteraction.insidepart;
 			currentMouseInteraction.mouseinside = null;
 			currentMouseInteraction.insidepart = null;
@@ -642,7 +651,7 @@ public void onMouse(MouseEvent event)
 		if (popupowner != null)
 		{ // remove popup
 			if ((popupowner != currentMouseInteraction.mouseinside) &&
-					!(currentMouseInteraction.mouseinside instanceof PopupWidgetImpl) && !(currentMouseInteraction.mouseinside instanceof ComboListWidget))
+					!(currentMouseInteraction.mouseinside instanceof PopupWidget) && !(currentMouseInteraction.mouseinside instanceof ComboListWidget))
 			{
 				closePopup();
 			}
@@ -655,7 +664,7 @@ public void onMouse(MouseEvent event)
 	else if (id == InputEventType.MOUSE_DRAGGED)
 	{
 		hideTip(); // remove tooltip
-		Widget previnside = currentMouseInteraction.mouseinside;
+		MouseableWidget previnside = currentMouseInteraction.mouseinside;
 		Object prevpart = currentMouseInteraction.insidepart;
 		pane.findComponent(currentMouseInteraction, x, y);
 		boolean same = (previnside == currentMouseInteraction.mouseinside) && (prevpart == currentMouseInteraction.insidepart);
@@ -690,7 +699,7 @@ public void onMouse(MouseEvent event)
 	else if (id == InputEventType.MOUSE_RELEASED)
 	{
 		hideTip(); // remove tooltip
-		Widget mouserelease = currentMouseInteraction.mousepressed;
+		MouseableWidget mouserelease = currentMouseInteraction.mousepressed;
 		Object releasepart = currentMouseInteraction.pressedpart;
 		currentMouseInteraction.mousepressed = null;
 		currentMouseInteraction.pressedpart = null;

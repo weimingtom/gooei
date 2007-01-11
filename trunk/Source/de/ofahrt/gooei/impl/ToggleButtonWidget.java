@@ -31,7 +31,7 @@ public void paint(LwjglRenderer renderer)
 	boolean pressed = isMousePressed();
 	boolean inside = isMouseInside();
 	boolean toggled = isSelected();
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	// disabled toggled
 	char mode = enabled ? ((inside != pressed) ? 'h' : ((pressed || toggled) ? 'p' : 'g')) : 'd';
 	renderer.paintIconAndText(this, 0, 0, bounds.width, bounds.height,

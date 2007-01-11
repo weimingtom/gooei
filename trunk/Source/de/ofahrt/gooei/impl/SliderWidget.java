@@ -89,7 +89,6 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return false;
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -129,7 +128,7 @@ public void paint(LwjglRenderer renderer)
 	int maximum = getMaximum();
 	int value = getValue();
 	boolean horizontal = getOrientation() == Orientation.HORIZONTAL;
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	int length = (value - minimum) *
 		((horizontal ? bounds.width : bounds.height) - block) /
 		(maximum - minimum);

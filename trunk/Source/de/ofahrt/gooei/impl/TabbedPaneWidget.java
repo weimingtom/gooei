@@ -54,7 +54,7 @@ public boolean invokeAction(TabWidget part)
 public TabWidget getSelectedItem()
 {
 	int index = getSelected();
-	return (index != -1) ? getTab(index) : null;
+	return (index != -1) && (index < getChildCount()) ? getTab(index) : null;
 }
 
 @Override
@@ -293,26 +293,24 @@ public boolean handleKeyPress(KeyboardEvent event)
 }
 
 @Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
-//	int selected = getSelected();
-	int i = 0;
 	for (final TabWidget tab : this)
 	{
 		Rectangle r = tab.getBounds();
-		if (i == selected)
-		{
-			Widget tabcontent = tab.getContent();
-			if ((tabcontent != null) && tabcontent.findComponent(mouseInteraction, x - r.x, y - r.y))
-				break;
-		}
 		if (r.contains(x, y))
 		{
 			mouseInteraction.insidepart = tab;
-			break;
+			return;
 		}
-		i++;
 	}
+	
+	TabWidget activeTab = getSelectedItem();
+	Widget comp = activeTab.getContent();
+	Rectangle r = activeTab.getBounds();
+	x -= r.x;
+	y -= r.y;
+	findComponent(comp, mouseInteraction, x, y);
 }
 
 private int getIndex(TabWidget value)
@@ -326,7 +324,6 @@ private int getIndex(TabWidget value)
 	return -1;
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -366,7 +363,7 @@ public void paint(LwjglRenderer renderer)
 	if (needsLayout()) doLayout();
 	Rectangle bounds = getBounds();
 	boolean inside = isMouseInside();
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	
 	TabWidget selectedtab = null;
 //	int selected = getSelected();
@@ -415,7 +412,7 @@ public void paint(LwjglRenderer renderer)
 			{
 				renderer.pushState();
 				renderer.translate(r.x, r.y); // relative to tab
-				paintChild(comp, renderer, enabled);
+				paintChild(comp, renderer);
 				renderer.popState();
 			}
 		}

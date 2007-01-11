@@ -1,13 +1,19 @@
 package de.ofahrt.gooei.impl;
 
-import gooei.*;
+import gooei.Desktop;
+import gooei.MenuContainerElement;
+import gooei.MenuElement;
+import gooei.ModalWidget;
+import gooei.MouseInteraction;
+import gooei.PopupWidget;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class PopupWidgetImpl extends MenuContainerWidget implements PopupWidget, ModalWidget
+public final class PopupWidgetImpl extends MenuContainerWidget
+	implements PopupWidget, ModalWidget
 {
 
 private boolean modal = false;
@@ -62,8 +68,7 @@ public MenuElement getMenu(MenuElement part, boolean forward)
 	return previous;
 }
 
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
 	for (final MenuElement menu : getMenuWidget())
 	{

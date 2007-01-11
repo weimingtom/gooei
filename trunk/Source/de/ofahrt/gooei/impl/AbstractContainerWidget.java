@@ -3,9 +3,14 @@ package de.ofahrt.gooei.impl;
 import gooei.ContainerWidget;
 import gooei.Desktop;
 import gooei.MnemonicWidget;
+import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
+import gooei.MouseableWidget;
+import gooei.ScrollableWidget;
 import gooei.Widget;
 import gooei.input.Keys;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -116,7 +121,7 @@ public void validate()
 	needsLayout = true;
 }
 
-protected void paintChild(Widget child, LwjglRenderer renderer, boolean enabled)
+protected void paintChild(Widget child, LwjglRenderer renderer)
 {
 	if (!child.isVisible()) return;
 	renderer.pushState();
@@ -125,15 +130,54 @@ protected void paintChild(Widget child, LwjglRenderer renderer, boolean enabled)
 	renderer.popState();
 }
 
-public void paintAll(LwjglRenderer renderer, boolean enabled)
+public void paintAll(LwjglRenderer renderer)
 {
+	renderer.updateEnabled(isEnabled());
 	for (Widget comp : data)
-		paintChild(comp, renderer, enabled);
+		paintChild(comp, renderer);
 }
 
 @Override
 public abstract void paint(LwjglRenderer renderer);
 
+
+protected boolean findComponent(Widget comp, MouseInteraction mouseInteraction, int x, int y)
+{
+	if (!comp.isVisible()) return false;
+	Rectangle b = comp.getBounds();
+	if (b.contains(x, y))
+	{
+		if (comp instanceof MouseableWidget)
+			mouseInteraction.mouseinside = (MouseableWidget) comp;
+		if (comp instanceof MouseRouterWidget)
+			((MouseRouterWidget) comp).findComponent(mouseInteraction, x-b.x, y-b.y);
+		return true;
+	}
+	return false;
+}
+
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
+{
+	if (this instanceof ScrollableWidget)
+	{
+		ScrollableWidget sw = (ScrollableWidget) this;
+		if (findScroll(mouseInteraction, x, y)) return;
+		
+		Rectangle port = sw.getPort();
+		if (port != null)
+		{ // content scrolled
+			Rectangle view = sw.getView();
+			x += view.x - port.x;
+			y += view.y - port.y;
+		}
+	}
+	
+	for (final Widget comp : this)
+	{
+		if (findComponent(comp, mouseInteraction, x, y))
+			return;
+	}
+}
 
 protected boolean checkMnemonic(Widget child, Object checked, Keys keycode, int modifiers)
 {

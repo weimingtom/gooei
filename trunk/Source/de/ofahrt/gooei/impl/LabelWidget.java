@@ -97,9 +97,10 @@ public boolean checkMnemonic(Keys keycode, int modifiers)
 public void paint(LwjglRenderer renderer)
 {
 	Rectangle bounds = getBounds();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	renderer.paintIconAndText(this, 0, 0, bounds.width, bounds.height,
 		false, false, false, false,
-		0, 0, 0, 0, false, isEnabled() ? 'e' : 'd', false);
+		0, 0, 0, 0, false, enabled ? 'e' : 'd', false);
 }
 
 }

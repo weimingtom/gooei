@@ -115,7 +115,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 { return processList(event); }
 
 @Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 { findScroll(mouseInteraction, x, y); }
 
 @Override
@@ -163,7 +163,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 }
 
 @Override
-public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
+public void paintScrollableContent(LwjglRenderer renderer)
 {
 	int viewwidth = getView().width;
 	
@@ -172,6 +172,7 @@ public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
 	final int clipheight = renderer.getClipHeight();
 	
 	final boolean focus = hasFocus();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	
 	ListItem lead = (ListItem) getLeadWidget();
 	int iline = hasLine() ? 1 : 0;

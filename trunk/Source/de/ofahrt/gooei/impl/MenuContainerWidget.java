@@ -11,6 +11,7 @@ import java.awt.Rectangle;
  * contains common base code.
  */
 public abstract class MenuContainerWidget extends AbstractWidget
+	implements MouseRouterWidget, MouseableWidget
 {
 
 private PopupWidgetImpl popupWidget;
@@ -104,7 +105,6 @@ protected void repaintComponent(MenuElement part)
 public boolean handleKeyPress(KeyboardEvent event)
 { return false; }*/
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();

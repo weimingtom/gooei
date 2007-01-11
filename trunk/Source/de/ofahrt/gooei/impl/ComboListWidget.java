@@ -3,6 +3,8 @@ package de.ofahrt.gooei.impl;
 import gooei.Desktop;
 import gooei.ModalWidget;
 import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
+import gooei.MouseableWidget;
 import gooei.ScrollableWidget;
 import gooei.input.InputEventType;
 import gooei.input.MouseEvent;
@@ -11,7 +13,8 @@ import java.awt.Rectangle;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public class ComboListWidget extends AbstractWidget implements ModalWidget, ScrollableWidget
+public class ComboListWidget extends AbstractWidget
+	implements ModalWidget, MouseRouterWidget, MouseableWidget, ScrollableWidget
 {
 
 private boolean modal = false;
@@ -60,8 +63,7 @@ void setInside(ComboBoxItem part, boolean scroll)
 	}
 }
 
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
 	if (!findScroll(mouseInteraction, x, y))
 	{
@@ -78,7 +80,6 @@ public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
 	}
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -98,10 +99,10 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 
 @Override
 public void paint(LwjglRenderer renderer)
-{ paintScroll(renderer, false, isEnabled()); }
+{ paintScroll(renderer, false); }
 
 @Override
-public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
+public void paintScrollableContent(LwjglRenderer renderer)
 {
 	// clip is used for rendering acceleration
 	final int clipy = renderer.getClipY();

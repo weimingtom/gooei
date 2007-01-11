@@ -109,7 +109,6 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return false;
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -128,10 +127,10 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 public void paint(LwjglRenderer renderer)
 {
 	Rectangle bounds = getBounds();
-	boolean pressed = isMousePressed();
-	boolean inside = isMouseInside();
-	int block = desktop.getBlockSize();
-	boolean enabled = isEnabled();
+	final boolean pressed = isMousePressed();
+	final boolean inside = isMouseInside();
+	final int block = desktop.getBlockSize();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	
 	renderer.paintIconAndText(this, 0, 0, bounds.width, bounds.height,
 			false, false, false, false,

@@ -140,22 +140,6 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return false;
 }
 
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
-{
-	final Widget comp1 = getChild(0);
-	final Widget comp2 = getChild(1);
-	if (comp1 != null)
-	{
-		if (!comp1.findComponent(mouseInteraction, x, y))
-		{
-			if (comp2 != null)
-				comp2.findComponent(mouseInteraction, x, y);
-		}
-	}
-}
-
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -184,7 +168,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 			Cursor.E_RESIZE_CURSOR : Cursor.S_RESIZE_CURSOR));
 	}
 	else if (((id == InputEventType.MOUSE_EXITED) && (mouseInteraction.mousepressed == null)) ||
-			((id == InputEventType.MOUSE_RELEASED) && (mouseInteraction.mouseinside != this)))
+			((id == InputEventType.MOUSE_RELEASED)/* && (mouseInteraction.mouseinside != this)*/))
 	{
 		desktop.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -205,7 +189,7 @@ public void paint(LwjglRenderer renderer)
 		if (horizontal) renderer.drawFocus(divider, 0, 4, bounds.height - 1);
 		else renderer.drawFocus(0, divider, bounds.width - 1, 4);
 	}
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	renderer.setColor(enabled ? renderer.c_border : renderer.c_disable);
 	int xy = horizontal ? bounds.height : bounds.width;
 	int xy1 = Math.max(0, xy / 2 - 12);
@@ -216,7 +200,7 @@ public void paint(LwjglRenderer renderer)
 		else renderer.drawLine(xy1, i, xy2, i);
 	}
 	
-	paintAll(renderer, enabled);
+	paintAll(renderer);
 }
 
 }

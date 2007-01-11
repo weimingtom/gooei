@@ -26,7 +26,7 @@ public Dimension getPreferredSize()
 public void paint(LwjglRenderer renderer)
 {
 	Rectangle bounds = getBounds();
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	renderer.setColor(enabled ? renderer.c_border : renderer.c_disable);
 	renderer.fillRect(0, 0, bounds.width, bounds.height);
 }

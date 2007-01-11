@@ -34,10 +34,10 @@ public int charWidth(char c)
 	return glyph.xadvance;
 }
 
-public int stringWidth(String csq)
+public int stringWidth(CharSequence csq, int off, int len)
 {
 	int width = 0;
-	for (int i = 0; i < csq.length(); i++)
+	for (int i = off; i < off+len; i++)
 	{
 		CharInfo glyph = data.charInfos[csq.charAt(i)];
 		width += glyph.xadvance;
@@ -45,30 +45,22 @@ public int stringWidth(String csq)
 	return width;
 }
 
-public int charsWidth(char[] chars, int off, int len)
-{
-	int width = 0;
-	for (int i = off; i < off+len; i++)
-	{
-		CharInfo glyph = data.charInfos[chars[i]];
-		width += glyph.xadvance;
-	}
-	return width;
-}
+public int stringWidth(CharSequence csq)
+{ return stringWidth(csq, 0, csq.length()); }
 
-public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq)
-{
-	for (int i = 0; i < csq.length(); i++)
-		x += font.drawGlyph(graphics, csq.charAt(i), x, y);
-}
-
-public void drawString(FontDrawInterface graphics, int x, int y, char[] chars, int off, int len)
+public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq, int off, int len)
 {
 	for (int i = 0; i < len; i++)
-		x += font.drawGlyph(graphics, chars[off+i], x, y);
+		x += font.drawGlyph(graphics, csq.charAt(off+i), x, y);
 }
 
-public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq)
+public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq, int off, int len)
 { throw new UnsupportedOperationException(); }
+
+public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq)
+{ drawString(graphics, x, y, csq, 0, csq.length()); }
+
+public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq)
+{ drawString(graphics, x, y, csq, 0, csq.length()); }
 
 }

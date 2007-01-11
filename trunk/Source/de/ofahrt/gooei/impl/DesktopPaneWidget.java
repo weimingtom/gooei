@@ -5,6 +5,8 @@ import gooei.Desktop;
 import gooei.MnemonicWidget;
 import gooei.ModalWidget;
 import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
+import gooei.MouseableWidget;
 import gooei.Widget;
 import gooei.input.InputEventType;
 import gooei.input.Keys;
@@ -80,7 +82,7 @@ public void moveToFront(Widget child)
 		removeChild(child);
 		insertItem(child, 0);
 		child.setParent(this);
-		child.repaint(); // to front always...
+		desktop.repaint(child); // to front always...
 		desktop.setNextFocusable(child);
 	}
 }
@@ -166,33 +168,46 @@ public boolean checkMnemonic(Object checked, Keys keycode, int modifiers)
 	return false;
 }
 
-@Override
-public boolean findComponent(MouseInteraction mouseInteraction, int x, int y)
+protected boolean findComponent(Widget comp, MouseInteraction mouseInteraction, int x, int y)
+{
+	if (!comp.isVisible()) return false;
+	Rectangle b = comp.getBounds();
+	if (b.contains(x, y))
+	{
+		if (comp instanceof MouseableWidget)
+			mouseInteraction.mouseinside = (MouseableWidget) comp;
+		if (comp instanceof MouseRouterWidget)
+			((MouseRouterWidget) comp).findComponent(mouseInteraction, x-b.x, y-b.y);
+		return true;
+	}
+	return false;
+}
+
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
 	mouseInteraction.mouseinside = null;
 	mouseInteraction.insidepart = null;
 	
-	if (!isVisible()) return false;
+	if (!isVisible()) return;
 	Rectangle bounds = getBounds();
-	if ((bounds == null) || !(bounds.contains(x, y))) return false;
-	mouseInteraction.mouseinside = this;
+	if ((bounds == null) || !(bounds.contains(x, y))) return;
 	x -= bounds.x;
 	y -= bounds.y;
 	
 	for (final Widget comp : this)
 	{
-		if (comp.findComponent(mouseInteraction, x, y)) break;
+		if (findComponent(comp, mouseInteraction, x, y))
+			return;
+		
 		if (((comp instanceof ModalWidget) && ((ModalWidget) comp).isModal()) ||
 					((comp instanceof DialogWidget) && ((DialogWidget) comp).isModal()))
 		{
 			mouseInteraction.insidepart = "modal";
-			break;
+			return;
 		}
 	}
-	return true;
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();

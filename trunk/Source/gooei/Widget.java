@@ -1,7 +1,5 @@
 package gooei;
 
-import gooei.input.MouseEvent;
-
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -9,6 +7,8 @@ import java.awt.Rectangle;
  * By convention, all Widgets have a one argument constructor taking a single
  * {@link Desktop} object as parameter. After their creation, Widgets cannot
  * be moved to a different {@link Desktop}.
+ * <p>
+ * FIXME: Describe sub-interfaces!
  * 
  * @author Ulf Ochsenfahrt
  */
@@ -81,40 +81,5 @@ Dimension getPreferredSize();
  * {@link ContainerWidget#paint(Renderer)}.
  */
 void paint(Renderer renderer);
-
-/**
- * Registers the entire area of this component for repainting.
- * MUST call {@link Desktop#repaint(Widget, Rectangle)}:
- * <pre><code>
- * desktop.repaint(this, getBounds());
- * </code></pre>
- */
-void repaint();
-
-
-/**
- * Finds the component that contains the mouse pointer.
- * The x,y coordinates are the mouse coordinates relative to this components
- * origin. The results of this method are stored in the given
- * {@link MouseInteraction}. An implementation of this method should check if
- * the current component is visible.
- * <p>
- * After the component that contains the mouse is determined, mouse events
- * are directly delivered to that component.
- * 
- * @return true if a component was found at the given coordinates,
- *         false if the component is not visible
- */
-boolean findComponent(MouseInteraction mouseInteraction, int x, int y);
-
-/**
- * Handle mouse event.
- * The parameter part contains the part of this component, which is supposed
- * to handle this mouse event. Parts can only be objects that were returned
- * as {@link MouseInteraction#insidepart} by a previous
- * {@link #findComponent(MouseInteraction, int, int)} invocation.
- * The part parameter may differ from {@link MouseInteraction#insidepart}.
- */
-void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event);
 
 }

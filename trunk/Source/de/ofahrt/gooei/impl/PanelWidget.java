@@ -2,7 +2,6 @@ package de.ofahrt.gooei.impl;
 
 import gooei.Desktop;
 import gooei.IconAndText;
-import gooei.MouseInteraction;
 import gooei.ScrollableWidget;
 import gooei.Widget;
 import gooei.utils.Alignment;
@@ -524,31 +523,11 @@ public void doLayout()
 }
 
 @Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
-{
-	if ((mouseInteraction.insidepart == null) && !findScroll(mouseInteraction, x, y))
-	{
-		Rectangle port = getPort();
-		if (port != null)
-		{ // content scrolled
-			Rectangle view = getView();
-			x += view.x - port.x;
-			y += view.y - port.y;
-		}
-		for (final Widget comp : this)
-		{
-			if (comp.findComponent(mouseInteraction, x, y))
-				break;
-		}
-	}
-}
-
-@Override
 public void paint(LwjglRenderer renderer)
 {
 	if (needsLayout()) doLayout();
 	Rectangle bounds = getBounds();
-	boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 //	int titleheight = getTitleHeight();
 //	boolean border = hasBorder();
 	renderer.paintBorderAndBackground(this, 0, titleheight / 2, bounds.width, bounds.height - (titleheight / 2),
@@ -557,13 +536,13 @@ public void paint(LwjglRenderer renderer)
 		false, false, false, false, 0, 3, 0, 3, false, enabled ? 'x' : 'd', false);
 	
 	if (getPort() != null)
-		paintScroll(renderer, false, enabled);
+		paintScroll(renderer, false);
 	else
-		paintAll(renderer, enabled);
+		paintAll(renderer);
 }
 
 @Override
-public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
-{ paintAll(renderer, enabled); }
+public void paintScrollableContent(LwjglRenderer renderer)
+{ paintAll(renderer); }
 
 }

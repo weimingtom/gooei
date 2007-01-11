@@ -97,28 +97,22 @@ public Dimension getPreferredSize()
 	throw new IllegalArgumentException(this.toString());
 }
 
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
-{/*OK*/}
-
-public boolean findComponent(MouseInteraction mouseInteraction, int x, int y)
-{
-	if (!isVisible() || !isEnabled()) return false;
-//	Rectangle bounds = getBounds();
-	if ((bounds == null) || !(bounds.contains(x, y))) return false;
-	mouseInteraction.mouseinside = this;
-	findSubComponent(mouseInteraction, x-bounds.x, y-bounds.y);
-	return true;
-}
-
-public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
-{/*OK*/}
-
+// FIXME: Make this relative to the component
 public void repaint(Rectangle area)
 { desktop.repaint(this, area); }
 
+// FIXME: Make this relative to the component
 public void repaint(int x, int y, int w, int h)
 { repaint(new Rectangle(x, y, w, h)); }
 
+/**
+ * Convenience method to repaint this component.
+ * Registers the entire area of this component for repainting
+ * by calling {@link Desktop#repaint(Widget, Rectangle)}:
+ * <pre><code>
+ * desktop.repaint(this, getBounds());
+ * </code></pre>
+ */
 public void repaint()
 { desktop.repaint(this, getBounds()); }
 
@@ -171,12 +165,6 @@ public boolean isVisible()
 public void setVisible(boolean visible)
 { this.visible = visible; }
 
-public String getToolTip()
-{ return tooltip; }
-
-public void setToolTip(String tooltip)
-{ this.tooltip = tooltip; }
-
 public Font getFont(Font def)
 { return font != null ? font : def; }
 
@@ -208,6 +196,104 @@ public Rectangle getBounds()
 public void setBounds(int x, int y, int width, int height)
 { bounds.setBounds(x, y, width, height); }
 
+public String getToolTip()
+{ return tooltip; }
+
+public void setToolTip(String tooltip)
+{ this.tooltip = tooltip; }
+
+public Rectangle getToolTipBounds()
+{ return tooltipbounds; }
+
+public void setToolTipBounds(int x, int y, int width, int height)
+{ tooltipbounds = updateRect(tooltipbounds, x, y, width, height); }
+
+public void removeToolTipBounds()
+{ tooltipbounds = null; }
+
+protected boolean invokeIt(MethodInvoker method, Object part)
+{
+	if (method != null)
+	{
+		method.invoke(part);
+		return true;
+	}
+	return false;
+}
+
+public void setInit(MethodInvoker method)
+{ initMethod = method; }
+
+public boolean invokeInit(Element part)
+{ return invokeIt(initMethod, part); }
+
+
+public void remove()
+{ parent().removeChild(this); }
+
+
+public final boolean isMousePressed()
+{ return desktop.getMouseInteraction().mousepressed == this; }
+
+public final boolean isMouseInside()
+{
+	return (desktop.getMouseInteraction().mouseinside == this) &&
+		((desktop.getMouseInteraction().mousepressed == null) ||
+			(desktop.getMouseInteraction().mousepressed == this));
+}
+
+
+// MnemonicWidget support
+public static boolean isAccelerator(Keys keycode, int modifiers, String text, int index)
+{
+	if (modifiers == Modifiers.ALT)
+	{
+		if (index != -1)
+		{
+			return (text != null) && (text.length() > index) &&
+				(Character.toUpperCase(text.charAt(index)) == keycode.charRepresentation());
+		}
+	}
+	return false;
+}
+
+
+// FocusableWidget support
+public void setFocusGained(MethodInvoker method)
+{ focusgainedMethod = method; }
+
+public void handleFocusGained()
+{
+	invokeIt(focusgainedMethod, null);
+	repaint();
+}
+
+public void setFocusLost(MethodInvoker method)
+{ focuslostMethod = method; }
+
+public void handleFocusLost()
+{
+	invokeIt(focuslostMethod, null);
+	repaint();
+}
+
+/** Convenience method to check if this component has the focus. */
+public final boolean hasFocus()
+{ return desktop.hasFocus(this); }
+
+/** Convenience method to set the focus to this Widget. */
+protected final boolean setFocus()
+{
+	if (!(this instanceof FocusableWidget)) throw new UnsupportedOperationException();
+	return desktop.setFocus(this);
+}
+
+/** Requests that both the container and this widget gain the focus, if this widget is focusable. */
+public final boolean requestFocus()
+{ return desktop.setFocus(this); }
+
+
+// ScrollableWidget support
 public Rectangle getPort()
 { return port; }
 
@@ -225,15 +311,6 @@ public void setView(Rectangle view)
 
 public void setView(int x, int y, int width, int height)
 { view = updateRect(view, x, y, width, height); }
-
-public Rectangle getToolTipBounds()
-{ return tooltipbounds; }
-
-public void setToolTipBounds(int x, int y, int width, int height)
-{ tooltipbounds = updateRect(tooltipbounds, x, y, width, height); }
-
-public void removeToolTipBounds()
-{ tooltipbounds = null; }
 
 /** Horizontal scrollbar, or null if none exists. */
 public Rectangle getHorizontal()
@@ -254,90 +331,6 @@ public void setVertical(Rectangle vertical)
 
 public void setVertical(int x, int y, int width, int height)
 { vertical = updateRect(vertical, x, y, width, height); }
-
-protected boolean invokeIt(MethodInvoker method, Object part)
-{
-	if (method != null)
-	{
-		method.invoke(part);
-		return true;
-	}
-	return false;
-}
-
-public void setInit(MethodInvoker method)
-{ initMethod = method; }
-
-public boolean invokeInit(Element part)
-{ return invokeIt(initMethod, part); }
-
-public void setFocusGained(MethodInvoker method)
-{ focusgainedMethod = method; }
-
-public boolean invokeFocusGained()
-{ return invokeIt(focusgainedMethod, null); }
-
-public void setFocusLost(MethodInvoker method)
-{ focuslostMethod = method; }
-
-public boolean invokeFocusLost()
-{ return invokeIt(focuslostMethod, null); }
-
-
-public void remove()
-{ parent().removeChild(this); }
-
-
-// Support method for mnemonics
-public static boolean isAccelerator(Keys keycode, int modifiers, String text, int index)
-{
-	if (modifiers == Modifiers.ALT)
-	{
-		if (index != -1)
-		{
-			return (text != null) && (text.length() > index) &&
-				(Character.toUpperCase(text.charAt(index)) == keycode.charRepresentation());
-		}
-	}
-	return false;
-}
-
-public final boolean isMousePressed()
-{ return desktop.getMouseInteraction().mousepressed == this; }
-
-public final boolean isMouseInside()
-{
-	return (desktop.getMouseInteraction().mouseinside == this) &&
-		((desktop.getMouseInteraction().mousepressed == null) ||
-			(desktop.getMouseInteraction().mousepressed == this));
-}
-
-
-// Support functions for FocusableWidget:
-
-public final boolean hasFocus()
-{ return desktop.hasFocus(this); }
-
-/** Convenience method to set the focus to this Widget. */
-protected final boolean setFocus()
-{
-	if (!(this instanceof FocusableWidget)) throw new UnsupportedOperationException();
-	return desktop.setFocus(this);
-}
-
-/** Requests that both the container and this widget gain the focus, if this widget is focusable. */
-public final boolean requestFocus()
-{
-	if (ThinletDesktop.isFocusable(this))
-	{
-		desktop.setFocus(this);
-		return true;
-	}
-	return false;
-}
-
-
-// Support functions for ScrollableWidget:
 
 protected final void repaintScrollablePart(Element part)
 {
@@ -664,7 +657,7 @@ public final boolean processScroll(Object part)
 			(view.y < view.height - iport.height));
 }
 
-protected void paintScrollableContent(LwjglRenderer renderer, boolean isenabled)
+protected void paintScrollableContent(LwjglRenderer renderer)
 {
 	if (this instanceof ScrollableWidget)
 		throw new UnsupportedOperationException();
@@ -672,12 +665,13 @@ protected void paintScrollableContent(LwjglRenderer renderer, boolean isenabled)
 }
 
 /** Paint background, content and scrollbar of a scrollable widget. */
-public final void paintScroll(LwjglRenderer renderer, boolean drawfocus, boolean isenabled)
+public final void paintScroll(LwjglRenderer renderer, boolean drawfocus)
 {
 	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
 	
 	final boolean pressed = isMousePressed();
 	final boolean inside = isMouseInside();
+	final boolean isenabled = isEnabled() && renderer.isEnabled();
 	final int block = desktop.getBlockSize();
 	
 	final int clipx = renderer.getClipX(), clipy = renderer.getClipY();
@@ -827,7 +821,7 @@ public final void paintScroll(LwjglRenderer renderer, boolean drawfocus, boolean
 		if (ny != renderer.getClipY()) throw new IllegalStateException(this+" "+ny+" "+renderer.getClipY());
 		if (nw != renderer.getClipWidth()) throw new IllegalStateException(this+" "+nw+" "+renderer.getClipWidth());
 		if (nh != renderer.getClipHeight()) throw new IllegalStateException(this+" "+nh+" "+renderer.getClipHeight());
-		paintScrollableContent(renderer, isenabled);
+		paintScrollableContent(renderer);
 		renderer.popState();
 	}
 	
