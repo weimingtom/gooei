@@ -2,14 +2,17 @@ package gooei;
 
 import java.awt.Rectangle;
 
-
+/**
+ * This class contains mouse event routing information as well as some state
+ * to support drag operations within a single widget.
+ */
 public final class MouseInteraction
 {
 
 public int referencex, referencey;
-public Widget mouseinside;
+public MouseableWidget mouseinside;
 public Object insidepart;
-public Widget mousepressed;
+public MouseableWidget mousepressed;
 public Object pressedpart;
 
 public MouseInteraction()

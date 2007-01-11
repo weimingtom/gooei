@@ -2,6 +2,7 @@ package de.ofahrt.gooei.impl;
 
 import gooei.Desktop;
 import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
 import gooei.ScrollableWidget;
 import gooei.font.Font;
 import gooei.font.FontMetrics;
@@ -16,7 +17,8 @@ import java.awt.Rectangle;
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class TextAreaWidget extends TextFieldWidget implements ScrollableWidget
+public final class TextAreaWidget extends TextFieldWidget
+	implements ScrollableWidget, MouseRouterWidget
 {
 
 private int rows = 1;
@@ -66,40 +68,35 @@ public Dimension getPreferredSize()
 	return result;
 }
 
-private char[] getChars(String text, int w, int h)
+private StringBuffer getChars(int w, int h)
 {
-	char[] chars = getTextChars();
-	if ((chars == null) || (chars.length != text.length()))
-	{
-		chars = text.toCharArray();
-		setTextChars(chars);
-	}
-	else
-		text.getChars(0, chars.length, chars, 0);
-	
+	StringBuffer chars = new StringBuffer(getTextChars());
 	if (wrap)
 	{
 		Font currentfont = getFont(desktop.getDefaultFont());
 		FontMetrics fm = desktop.getFontMetrics(currentfont);
 		int lines = (h - 4 + fm.getLeading()) / fm.getHeight();
-		boolean prevletter = false; int n = chars.length; int linecount = 0;
+		boolean prevletter = false;
+		int n = chars.length();
+		int linecount = 0;
 		for (int i = 0, j = -1, k = 0; k <= n; k++)
 		{ // j is the last space index (before k)
-			if (((k == n) || (chars[k] == '\n') || (chars[k] == ' ')) &&
-					(j > i) && (fm.charsWidth(chars, i, k - i) > w))
+			if (((k == n) || (chars.charAt(k) == '\n') || (chars.charAt(k) == ' ')) &&
+					(j > i) && (fm.stringWidth(chars, i, k - i) > w))
 			{
-				chars[j] = '\n';
+				chars.setCharAt(j, '\n');
 				k--; // draw line to the begin of the current word (+ spaces) if it is out of width
 			}
-			else if ((k == n) || (chars[k] == '\n'))
+			else if ((k == n) || (chars.charAt(k) == '\n'))
 			{ // draw line to the text/line end
-				j = k; prevletter = false;
+				j = k;
+				prevletter = false;
 			}
 			else
 			{
 				// keep spaces starting the line
-				if ((chars[k] == ' ') && (prevletter || (j > i))) { j = k; }
-				prevletter = (chars[k] != ' ');
+				if ((chars.charAt(k) == ' ') && (prevletter || (j > i))) { j = k; }
+				prevletter = (chars.charAt(k) != ' ');
 				continue;
 			}
 			linecount++;
@@ -121,29 +118,29 @@ public void doLayout()
 	if (end > text.length()) setEnd(end = text.length());
 	
 //	boolean wrap = ((TextAreaWidget) this).isWrap();
-	char[] chars = null;
+	StringBuffer chars = null;
 	if (wrap)
 	{
 		Rectangle bounds = getBounds();
-		chars = getChars(text, bounds.width - 4, bounds.height);
+		chars = getChars(bounds.width - 4, bounds.height);
 		if (chars == null) // need scrollbars
-			chars = getChars(text, bounds.width - block - 4, 0);
+			chars = getChars(bounds.width - block - 4, 0);
 	}
 	else
-		chars = getChars(text, 0, 0);
+		chars = getChars(0, 0);
 	
 	Font currentfont = getFont(desktop.getDefaultFont());
 	FontMetrics fm = desktop.getFontMetrics(currentfont);
 	int w = 0, h = 0;
 	int caretx = 0; int carety = 0;
-	for (int i = 0, j = 0; j <= chars.length; j++)
+	for (int i = 0, j = 0; j <= chars.length(); j++)
 	{
-		if ((j == chars.length) || (chars[j] == '\n'))
+		if ((j == chars.length()) || (chars.charAt(j) == '\n'))
 		{
-			w = Math.max(w, fm.charsWidth(chars, i, j - i));
+			w = Math.max(w, fm.stringWidth(chars, i, j - i));
 			if ((end >= i) && (end <= j))
 			{
-				caretx = fm.charsWidth(chars, i, end - i);
+				caretx = fm.stringWidth(chars, i, end - i);
 				carety = h;
 			}
 			h += fm.getHeight();
@@ -161,7 +158,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 	boolean shiftdown = event.isModifierDown(Modifiers.SHIFT);
 	boolean controldown = event.isModifierDown(Modifiers.CTRL);
 	
-	char[] chars = getTextChars();
+	StringBuffer chars = getTextChars();
 	int start = getStart();
 	int end = getEnd();
 	
@@ -171,12 +168,12 @@ public boolean handleKeyPress(KeyboardEvent event)
 	int iend = end;
 	if ((keycode == Keys.HOME) && !controldown)
 	{
-		while ((iend > 0) && (chars[iend - 1] != '\n')) iend--;
+		while ((iend > 0) && (chars.charAt(iend - 1) != '\n')) iend--;
 		if (!shiftdown) istart = iend;
 	}
 	else if ((keycode == Keys.END) && !controldown)
 	{
-		while ((iend < chars.length) && (chars[iend] != '\n')) iend++;
+		while ((iend < chars.length()) && (chars.charAt(iend) != '\n')) iend++;
 		if (!shiftdown) istart = iend;
 	}
 	else if ((keycode == Keys.UP) || (keycode == Keys.PRIOR) ||
@@ -188,7 +185,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 		int y = 0; int linestart = 0;
 		for (int i = 0; i < iend; i++)
 		{
-			if ((chars[i] == '\n') || (chars[i] == '\t'))
+			if ((chars.charAt(i) == '\n') || (chars.charAt(i) == '\t'))
 			{
 				linestart = i + 1;
 				y += fh;
@@ -201,7 +198,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 			int dy = getPort().height;
 			y += (keycode == Keys.PRIOR) ? -dy : dy; // VK_PAGE_DOWN
 		}
-		int x = fm.charsWidth(chars, linestart, iend - linestart);
+		int x = fm.stringWidth(chars, linestart, iend - linestart);
 		iend = getCaretLocation(x, y);
 		if (!shiftdown) istart = iend;
 	}
@@ -210,8 +207,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return changeField(getText(), null, istart, iend);
 }
 
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 { findScroll(mouseInteraction, x, y); }
 
 @Override
@@ -225,11 +221,11 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 public void paint(LwjglRenderer renderer)
 {
 	doLayout();
-	paintScroll(renderer, true, isEnabled());
+	paintScroll(renderer, true);
 }
 
 @Override
-public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
+public void paintScrollableContent(LwjglRenderer renderer)
 {
 	int viewwidth = getView().width;
 	
@@ -238,8 +234,9 @@ public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
 	final int clipheight = renderer.getClipHeight();
 	
 	final boolean focus = hasFocus();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	
-	char[] chars = getTextChars();
+	StringBuffer chars = getTextChars();
 	int start = focus ? getStart() : 0;
 	int end = focus ? getEnd() : 0;
 	int is = Math.min(start, end);
@@ -253,9 +250,9 @@ public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
 	int ascent = 1;
 	
 	GLColor textcolor = enabled ? (GLColor) getForeground(renderer.c_text) : renderer.c_disable;
-	for (int i = 0, j = 0; j <= chars.length; j++)
+	for (int i = 0, j = 0; j <= chars.length(); j++)
 	{
-		if ((j == chars.length) || (chars[j] == '\n'))
+		if ((j == chars.length()) || (chars.charAt(j) == '\n'))
 		{
 			// the next lines are bellow paint rectangle
 			if (clipy + clipheight <= ascent) break;
@@ -263,17 +260,17 @@ public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
 				if (focus && (is != ie) && (ie >= i) && (is <= j))
 				{
 					int xs = (is < i) ? -1 : ((is > j) ? (viewwidth - 1) :
-						fm.charsWidth(chars, i, is - i));
+						fm.stringWidth(chars, i, is - i));
 					int xe = ((j != -1) && (ie > j)) ? (viewwidth - 1) :
-						fm.charsWidth(chars, i, ie - i);
+						fm.stringWidth(chars, i, ie - i);
 					renderer.setColor(renderer.c_select);
 					renderer.fillRect(1 + xs, ascent, xe - xs, fontheight);
 				}
 				renderer.setColor(textcolor);
-				renderer.drawChars(chars, i, j - i, 1, ascent + fontascent);
+				renderer.drawString(chars, i, j - i, 1, ascent + fontascent);
 				if (focus && (end >= i) && (end <= j))
 				{
-					int caret = fm.charsWidth(chars, i, end - i);
+					int caret = fm.stringWidth(chars, i, end - i);
 					renderer.setColor(renderer.c_focus);
 					renderer.fillRect(caret, ascent, 1, fontheight);
 				}

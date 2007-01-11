@@ -14,7 +14,8 @@ import java.util.List;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class MenuBarWidget extends MenuContainerWidget implements ElementContainer<MenuContainerElement<?>>, MnemonicWidget, PopupOwner
+public final class MenuBarWidget extends MenuContainerWidget
+	implements ElementContainer<MenuContainerElement<?>>, MnemonicWidget, PopupOwner
 {
 
 private List<MenuContainerElement<?>> data = new ArrayList<MenuContainerElement<?>>();
@@ -120,20 +121,6 @@ public void validate()
 {
 	repaint();
 	needsLayout = true;
-}
-
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
-{
-	for (final MenuElement menu : this)
-	{
-		Rectangle r = menu.getBounds();
-		if ((x >= r.x) && (x < r.x + r.width))
-		{
-			mouseInteraction.insidepart = menu;
-			break;
-		}
-	}
 }
 
 public boolean checkMnemonic(Keys keycode, int modifiers)
@@ -252,6 +239,19 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return true;
 }
 
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
+{
+	for (final MenuElement menu : this)
+	{
+		Rectangle r = menu.getBounds();
+		if ((x >= r.x) && (x < r.x + r.width))
+		{
+			mouseInteraction.insidepart = menu;
+			break;
+		}
+	}
+}
+
 @Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
@@ -301,7 +301,7 @@ public void paint(LwjglRenderer renderer)
 	MenuElement selected = getSelectedWidget();
 	final int minx = renderer.getClipX();
 	final int maxx = renderer.getClipX()+renderer.getClipWidth();
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	
 	int lastx = 0;
 	for (final MenuContainerElement<?> menu : this)

@@ -5,6 +5,7 @@ import gooei.Element;
 import gooei.ElementContainer;
 import gooei.IconAndText;
 import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
 import gooei.PopupOwner;
 import gooei.ScrollableWidget;
 import gooei.Widget;
@@ -25,7 +26,8 @@ import java.util.List;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
 // FIXME: move ElementContainer functionality to ComboListWidget
-public final class ComboBoxWidget extends TextFieldWidget implements ElementContainer<ComboBoxItem>, IconAndText, PopupOwner
+public final class ComboBoxWidget extends TextFieldWidget
+	implements MouseRouterWidget, ElementContainer<ComboBoxItem>, IconAndText, PopupOwner
 {
 
 private int selected = -1;
@@ -412,8 +414,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return true;
 }
 
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
 	Rectangle bounds = getBounds();
 	int block = desktop.getBlockSize();
@@ -483,7 +484,7 @@ public void paint(LwjglRenderer renderer)
 	Rectangle bounds = getBounds();
 	final boolean pressed = isMousePressed();
 	final boolean inside = isMouseInside();
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	int block = desktop.getBlockSize();
 	
 	if (isEditable())

@@ -1,6 +1,14 @@
 package de.ofahrt.gooei.impl;
 
-import gooei.*;
+import gooei.Desktop;
+import gooei.Element;
+import gooei.ElementContainer;
+import gooei.FocusableWidget;
+import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
+import gooei.MouseableWidget;
+import gooei.ScrollableWidget;
+import gooei.SelectableElement;
 import gooei.input.KeyboardEvent;
 import gooei.input.Keys;
 import gooei.input.Modifiers;
@@ -15,7 +23,8 @@ import java.util.Iterator;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public abstract class AbstractElementContainerWidget<T extends Element> extends AbstractWidget implements ElementContainer<T>, ScrollableWidget, FocusableWidget
+public abstract class AbstractElementContainerWidget<T extends Element> extends AbstractWidget
+	implements ElementContainer<T>, ScrollableWidget, MouseRouterWidget, MouseableWidget, FocusableWidget
 {
 
 private boolean line = true;
@@ -413,10 +422,9 @@ protected boolean processList(KeyboardEvent event)
 
 @Override
 public abstract Dimension getPreferredSize();
+
 public abstract boolean handleKeyPress(KeyboardEvent event);
-@Override
-public abstract void findSubComponent(MouseInteraction mouseInteraction, int x, int y);
-@Override
+public abstract void findComponent(MouseInteraction mouseInteraction, int x, int y);
 public abstract void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event);
 
 
@@ -436,10 +444,10 @@ public void validate()
 public final void paint(LwjglRenderer renderer)
 {
 	if (needsLayout()) doLayout();
-	paintScroll(renderer, hasFocus() && isEmpty(), isEnabled());
+	paintScroll(renderer, hasFocus() && isEmpty());
 }
 
 @Override
-public abstract void paintScrollableContent(LwjglRenderer renderer, boolean enabled);
+public abstract void paintScrollableContent(LwjglRenderer renderer);
 
 }

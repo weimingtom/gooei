@@ -1,6 +1,6 @@
 package gooei.utils;
 
-public interface Icon
+public interface PreparedIcon
 {
 
 int getWidth();

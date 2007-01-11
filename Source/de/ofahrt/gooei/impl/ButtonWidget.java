@@ -3,6 +3,7 @@ package de.ofahrt.gooei.impl;
 import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
+import gooei.MouseableWidget;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
 import gooei.input.Keys;
@@ -15,7 +16,8 @@ import java.awt.Rectangle;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class ButtonWidget extends LabelWidget implements FocusableWidget
+public final class ButtonWidget extends LabelWidget
+	implements MouseableWidget, FocusableWidget
 {
 
 	public static enum Type
@@ -86,7 +88,6 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return false;
 }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -122,7 +123,7 @@ public void paint(LwjglRenderer renderer)
 	boolean pressed = isMousePressed();
 	boolean inside = isMouseInside();
 	boolean link = getType() == ButtonWidget.Type.LINK;
-	boolean enabled = isEnabled();
+	boolean enabled = isEnabled() && renderer.isEnabled();
 	if (link)
 	{
 		char mode = enabled ? (pressed ? 'e' : 'l') : 'd';

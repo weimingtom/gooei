@@ -33,7 +33,6 @@ import de.ofahrt.gooei.impl.TableWidget;
 import de.ofahrt.gooei.impl.ThinletDesktop;
 import de.ofahrt.gooei.impl.TreeNode;
 import de.ofahrt.gooei.impl.TreeWidget;
-import de.ofahrt.gooei.lwjgl.LwjglWidgetFactory;
 
 public class SimpleXMLParser
 {
@@ -61,11 +60,12 @@ private final WidgetFactory factory;
 private final ResourceBundle bundle;
 private final ArrayList<MethodFixup> methodFixups = new ArrayList<MethodFixup>();
 
-public SimpleXMLParser(ThinletDesktop desktop, UIController container, ResourceBundle bundle)
+public SimpleXMLParser(ThinletDesktop desktop, UIController container,
+		WidgetFactory factory, ResourceBundle bundle)
 {
 	this.desktop = desktop;
 	this.controller = container;
-	this.factory = new LwjglWidgetFactory();
+	this.factory = factory;
 	this.bundle = bundle;
 }
 

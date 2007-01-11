@@ -8,6 +8,7 @@ public final class GLColor implements TLColor
 public static final GLColor BLUE = new GLColor(0, 0, 1);
 public static final GLColor BLACK = new GLColor(0, 0, 0);
 public static final GLColor RED = new GLColor(1, 0, 0);
+public static final GLColor WHITE = new GLColor(1, 1, 1);
 
 private final float r, g, b, a;
 

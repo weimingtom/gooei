@@ -1,5 +1,6 @@
 package de.ofahrt.gooei.lwjgl;
 
+// FIXME: allow complete state saving
 public class ClipStack
 {
 

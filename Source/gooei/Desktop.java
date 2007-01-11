@@ -2,6 +2,8 @@ package gooei;
 
 import gooei.font.Font;
 import gooei.font.FontMetrics;
+import gooei.utils.Icon;
+import gooei.utils.PreparedIcon;
 import gooei.utils.TimerEventType;
 
 import java.awt.Cursor;
@@ -15,6 +17,7 @@ Rectangle getBounds();
 
 SimpleClipboard getSystemClipboard();
 void repaint(Widget widget, Rectangle area);
+void repaint(Widget child);
 
 void addChild(Widget widget, int index);
 void removeChild(Widget widget);
@@ -49,5 +52,8 @@ Dimension getSize(IconAndText item, int dx, int dy);
 
 // Cursor
 void setCursor(Cursor cursor);
+
+// Prepared Items
+PreparedIcon prepareIcon(Icon icon);
 
 }

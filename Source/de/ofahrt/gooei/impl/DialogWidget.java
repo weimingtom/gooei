@@ -3,7 +3,7 @@ package de.ofahrt.gooei.impl;
 import gooei.Desktop;
 import gooei.ModalWidget;
 import gooei.MouseInteraction;
-import gooei.Widget;
+import gooei.MouseableWidget;
 import gooei.input.InputEventType;
 import gooei.input.MouseEvent;
 
@@ -13,7 +13,8 @@ import java.awt.Rectangle;
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class DialogWidget extends PanelWidget implements ModalWidget
+public final class DialogWidget extends PanelWidget
+	implements MouseableWidget, ModalWidget
 {
 
 private boolean modal = false;
@@ -62,7 +63,6 @@ public boolean isIconifiable()
 public void setIconifiable(boolean iconifiable)
 { this.iconifiable = iconifiable; }
 
-@Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
 	InputEventType id = event.getType();
@@ -143,7 +143,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 }
 
 @Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
 	Rectangle bounds = getBounds();
 	int block = desktop.getBlockSize();
@@ -175,21 +175,8 @@ public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
 			mouseInteraction.insidepart = "header";
 	}
 	
-	if ((mouseInteraction.insidepart == null) && !findScroll(mouseInteraction, x, y))
-	{
-		Rectangle port = getPort();
-		if (port != null)
-		{ // content scrolled
-			Rectangle view = getView();
-			x += view.x - port.x; y += view.y - port.y;
-		}
-		
-		for (Widget comp : this)
-		{
-			if (comp.findComponent(mouseInteraction, x, y))
-				break;
-		}
-	}
+	if (mouseInteraction.insidepart == null)
+		super.findComponent(mouseInteraction, x, y);
 }
 
 /** Paint dialog button. */
@@ -249,15 +236,14 @@ public void paint(LwjglRenderer renderer)
 		3, 3 + titleheight, bounds.width - 6, bounds.height - 6 - titleheight,
 		true, true, true, true, 'b');
 	
-	final boolean enabled = isEnabled();
 	if (getPort() != null)
-		paintScroll(renderer, false, enabled);
+		paintScroll(renderer, false);
 	else
-		paintAll(renderer, enabled);
+		paintAll(renderer);
 }
 
 @Override
-public void paintScrollableContent(LwjglRenderer renderer, boolean enabled)
-{ paintAll(renderer, enabled); }
+public void paintScrollableContent(LwjglRenderer renderer)
+{ paintAll(renderer); }
 
 }

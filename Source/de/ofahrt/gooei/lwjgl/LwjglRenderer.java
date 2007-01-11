@@ -10,6 +10,7 @@ import gooei.font.FontMetrics;
 import gooei.font.FontTriangleInterface;
 import gooei.utils.Alignment;
 import gooei.utils.Icon;
+import gooei.utils.PreparedIcon;
 import gooei.utils.TLColor;
 
 import java.awt.Dimension;
@@ -50,7 +51,7 @@ private GLColor currentColor;
 private int block;
 //private int tx, ty;
 
-private ClipStack clipStack = new ClipStack();
+private ClipStack stateStack = new ClipStack();
 
 public LwjglRenderer(LwjglDesktop desktop, Font defaultFont)
 {
@@ -116,7 +117,7 @@ public void render()
 	GL11.glEnable(GL11.GL_CLIP_PLANE3);
 	
 	Dimension dim = desktop.getSize();
-	clipStack.init(0, 0, dim.width, dim.height);
+	stateStack.init(0, 0, dim.width, dim.height);
 	updateClip();
 	desktop.paint(this);
 	
@@ -135,10 +136,10 @@ public void setColor(GLColor color)
 
 private void updateClip()
 {
-	int cx0 = clipStack.getX0();
-	int cx1 = clipStack.getX1();
-	int cy0 = clipStack.getY0();
-	int cy1 = clipStack.getY1();
+	int cx0 = stateStack.getX0();
+	int cx1 = stateStack.getX1();
+	int cy0 = stateStack.getY0();
+	int cy1 = stateStack.getY1();
 	doubleBuffer.clear();
 	doubleBuffer.put(1).put(0).put(0).put(-cx0).flip();
 	GL11.glClipPlane(GL11.GL_CLIP_PLANE0, doubleBuffer);
@@ -153,10 +154,17 @@ private void updateClip()
 	GL11.glClipPlane(GL11.GL_CLIP_PLANE3, doubleBuffer);
 }
 
+// FIXME: Implement
+public void updateEnabled(boolean enabled)
+{}
+
+public boolean isEnabled()
+{ return true; }
+
 /** Set clip to intersection of current clip and given clip. */
 public void clip(int x, int y, int width, int height)
 {
-	clipStack.clip(x, y, x+width, y+height);
+	stateStack.clip(x, y, x+width, y+height);
 	updateClip();
 }
 
@@ -164,37 +172,37 @@ public void clip(int x, int y, int width, int height)
 public void translate(int dx, int dy)
 {
 	GL11.glTranslatef(dx, dy, 0);
-	clipStack.translate(dx, dy);
+	stateStack.translate(dx, dy);
 	updateClip();
 }
 
 public void pushState()
 {
-	clipStack.push();
+	stateStack.push();
 	updateClip();
 }
 
 public void popState()
 {
-	int ox = clipStack.getTX(), oy = clipStack.getTY();
-	clipStack.pop();
-	int dx = clipStack.getTX()-ox, dy = clipStack.getTY()-oy;
+	int ox = stateStack.getTX(), oy = stateStack.getTY();
+	stateStack.pop();
+	int dx = stateStack.getTX()-ox, dy = stateStack.getTY()-oy;
 	if ((dx != 0) || (dy != 0))
 		GL11.glTranslatef(dx, dy, 0);
 	updateClip();
 }
 
 public int getClipX()
-{ return clipStack.getX0(); }
+{ return stateStack.getX0(); }
 
 public int getClipY()
-{ return clipStack.getY0(); }
+{ return stateStack.getY0(); }
 
 public int getClipWidth()
-{ return clipStack.getX1()-clipStack.getX0(); }
+{ return stateStack.getX1()-stateStack.getX0(); }
 
 public int getClipHeight()
-{ return clipStack.getY1()-clipStack.getY0(); }
+{ return stateStack.getY1()-stateStack.getY0(); }
 
 /**
  * Move the coordinate system origin to (bounds.x, bounds.y)
@@ -227,7 +235,7 @@ public boolean moveCoordSystem(Rectangle bounds)
 	return true;
 }
 
-public void drawString(String s, int atx, final int aty)
+public void drawString(CharSequence csq, int off, int len, int atx, final int aty)
 {
 	FontMetrics metrics = getFontMetrics();
 	final int baseline = metrics.getDescent();
@@ -248,7 +256,7 @@ public void drawString(String s, int atx, final int aty)
 					GL11.glEnd();
 					setColor(currentColor);
 				}
-			}, atx, 0, s);
+			}, atx, 0, csq, off, len);
 	}
 	else
 	{
@@ -268,56 +276,13 @@ public void drawString(String s, int atx, final int aty)
 						}
 					}
 				}
-			}, atx, 0, s);
+			}, atx, 0, csq, off, len);
 		GL11.glEnd();
 	}
 }
 
-public void drawChars(char[] chars, int off, int len, int atx, final int aty)
-{
-	FontMetrics metrics = getFontMetrics();
-	final int baseline = metrics.getDescent();
-	if (!(metrics instanceof TriMetrics))
-	{
-		metrics.drawString(new FontDrawInterface()
-			{
-				public void drawPixel(int i, int j, float frac)
-				{
-					int x = i+1;
-					int y = aty-j+baseline-1;
-					GL11.glColor4f(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), frac);
-					GL11.glBegin(GL11.GL_QUADS);
-						GL11.glVertex2f(x, y);
-						GL11.glVertex2f(x+1, y);
-						GL11.glVertex2f(x+1, y+1);
-						GL11.glVertex2f(x, y+1);
-					GL11.glEnd();
-					setColor(currentColor);
-				}
-			}, atx, 0, chars, off, len);
-	}
-	else
-	{
-		GL11.glBegin(GL11.GL_TRIANGLES);
-		((TriMetrics) metrics).drawString(new FontTriangleInterface()
-			{
-				public void drawTriangles(float x, float y, float scale, TriGlyph glyph)
-				{
-					for (int i = 0; i < glyph.triangles.length; i++)
-					{
-						for (int j = 0; j < 3; j++)
-						{
-							Vector2 v = glyph.vertices[glyph.triangles[i][j]];
-							double vx = x+v.getX()*scale;
-							double vy = aty+y-v.getY()*scale;
-							GL11.glVertex2f((float) vx, (float) vy);
-						}
-					}
-				}
-			}, atx, 0, chars, off, len);
-		GL11.glEnd();
-	}
-}
+public void drawString(CharSequence csq, int atx, final int aty)
+{ drawString(csq, 0, csq.length(), atx, aty); }
 
 public void drawLine(int x0, int y0, int x1, int y1)
 {
@@ -425,7 +390,19 @@ public void drawFocus(int x, int y, int width, int height)
 
 public void drawImage(Icon icon, int x, int y)
 {
-	// FIXME: implement me!
+	LwjglIcon i = (LwjglIcon) icon;
+	OpenGLHelper.display(i.getImage(), x, y);
+}
+
+public void drawImage(PreparedIcon icon, int x, int y)
+{
+	LwjglPreparedIcon i = (LwjglPreparedIcon) icon;
+	if (i.isDirty())
+	{
+		i.clearDirty();
+		OpenGLHelper.upload(i.getId(), i.getImage());
+	}
+	OpenGLHelper.display(i.getId(), x, y, i.getWidth(), i.getHeight());
 }
 
 public void fillOval(int x, int y, int width, int height)

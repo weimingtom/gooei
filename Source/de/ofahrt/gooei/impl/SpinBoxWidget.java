@@ -2,6 +2,7 @@ package de.ofahrt.gooei.impl;
 
 import gooei.Desktop;
 import gooei.MouseInteraction;
+import gooei.MouseRouterWidget;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
 import gooei.input.Keys;
@@ -13,7 +14,7 @@ import java.awt.Rectangle;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class SpinBoxWidget extends TextFieldWidget
+public final class SpinBoxWidget extends TextFieldWidget implements MouseRouterWidget
 {
 
 private int minimum = Integer.MIN_VALUE;
@@ -117,8 +118,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 	return super.handleKeyPress(event);
 }
 
-@Override
-public void findSubComponent(MouseInteraction mouseInteraction, int x, int y)
+public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
 	Rectangle bounds = getBounds();
 	int block = desktop.getBlockSize();
@@ -164,7 +164,7 @@ public void paint(LwjglRenderer renderer)
 	Rectangle bounds = getBounds();
 	boolean pressed = isMousePressed();
 	boolean inside = isMouseInside();
-	final boolean enabled = isEnabled();
+	final boolean enabled = isEnabled() && renderer.isEnabled();
 	paintField(renderer, bounds.width - block, bounds.height, enabled, 0);
 	renderer.paintArrow(bounds.width - block, 0, block, bounds.height / 2,
 		'N', enabled, inside, pressed, "up", true, false, false, true, true);

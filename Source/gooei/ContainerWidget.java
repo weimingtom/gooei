@@ -9,7 +9,7 @@ import java.util.Iterator;
  * 
  * @author Ulf Ochsenfahrt
  */
-public interface ContainerWidget<T extends Widget> extends Widget, Iterable<T>
+public interface ContainerWidget<T extends Widget> extends MouseRouterWidget, Iterable<T>
 {
 
 /**
@@ -30,6 +30,7 @@ void addChild(Widget child, int index);
  */
 void removeChild(Widget widget);
 
+// FIXME: Make specification simpler!
 /**
  * Returns whether the given immediate child is focusable. The most basic code
  * must do the following:
