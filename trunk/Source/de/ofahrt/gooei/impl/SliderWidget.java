@@ -3,6 +3,7 @@ package de.ofahrt.gooei.impl;
 import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
+import gooei.MouseableWidget;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
 import gooei.input.Keys;
@@ -15,7 +16,8 @@ import java.awt.Rectangle;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class SliderWidget extends ProgressBarWidget implements FocusableWidget
+public final class SliderWidget extends ProgressBarWidget
+	implements MouseableWidget, FocusableWidget
 {
 
 private int unit = 5;

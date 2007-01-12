@@ -3,6 +3,7 @@ package de.ofahrt.gooei.impl;
 import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
+import gooei.MouseableWidget;
 import gooei.Widget;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
@@ -15,7 +16,8 @@ import java.awt.Rectangle;
 
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public final class TabbedPaneWidget extends AbstractContainerWidget<TabWidget> implements FocusableWidget
+public final class TabbedPaneWidget extends AbstractContainerWidget<TabWidget>
+	implements MouseableWidget, FocusableWidget
 {
 
 	public static enum Placement

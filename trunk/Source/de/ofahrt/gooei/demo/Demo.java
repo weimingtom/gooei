@@ -26,15 +26,19 @@ public static void main(String[] args) throws Exception
 }
 
 private final ThinletDesktop desktop;
+private TextAreaWidget textarea;
 
 public Demo(ThinletDesktop desktop)
 { this.desktop = desktop; }
+
+public void init(TextAreaWidget t)
+{ textarea = t; }
 
 /**
  * Called if the demo.xml was loaded,
  * it fills the textarea from a resource file
  */
-public void loadText(TextAreaWidget textarea) throws Exception
+public void loadText() throws Exception
 {
 	BufferedReader reader = new BufferedReader(new InputStreamReader(
 		getClass().getResourceAsStream("demodialog.xml")));
@@ -58,11 +62,8 @@ public void loadText(TextAreaWidget textarea) throws Exception
 /**
  * Updates textarea's editable property depending on a checkbox state
  */
-public void changeEditable(boolean editable, Widget w)
-{
-	TextAreaWidget textarea = (TextAreaWidget) w;
-	textarea.setEditable(editable);
-}
+public void changeEditable(boolean editable, TextAreaWidget textarea)
+{ textarea.setEditable(editable); }
 
 /**
  * Updates textarea's enabled property
@@ -78,7 +79,7 @@ DialogWidget dialog;
 public void showDialog() throws Exception
 {
 	if (dialog == null)
-		dialog = (DialogWidget) desktop.parse(this, "thinlet/demo/demodialog.xml");
+		dialog = (DialogWidget) desktop.parse(this, "de/ofahrt/gooei/demo/demodialog.xml");
 	desktop.addChild(dialog, 0);
 }
 
@@ -86,9 +87,8 @@ public void showDialog() throws Exception
  * Updates the textarea's selection range,
  * and add the search string to the history 
  */
-public void findText(Widget w, String what, boolean match, boolean down)
+public void findText(ComboBoxWidget combobox, String what, boolean match, boolean down)
 {
-	ComboBoxWidget combobox = (ComboBoxWidget) w;
 	closeDialog();
 	if (what.length() == 0) { return; }
 	
@@ -104,8 +104,7 @@ public void findText(Widget w, String what, boolean match, boolean down)
 		choice.setText(what);
 		combobox.addChild(choice, 0);
 	}
-
-	TextAreaWidget textarea = (TextAreaWidget) desktop.findWidget("textarea");
+	
 	int end = textarea.getEnd();
 	String text = textarea.getText();
 	
@@ -143,7 +142,7 @@ public void insertList(Widget w)
 	ListWidget list = (ListWidget) w;
 	ListItem item = new ListItem();
 	item.setText("New item");
-	item.setIcon(desktop.loadIcon("/icon/library.gif"));
+	item.setIcon(desktop.loadIcon("icon/library.gif"));
 	list.addChild(item, 0);
 //	System.out.println("> click " + System.currentTimeMillis());
 //	try { Thread.sleep(5000); } catch (InterruptedException ie) {}

@@ -1,6 +1,5 @@
 package gooei;
 
-
 public interface PopupMenuElement extends MenuContainerElement<MenuElement>
 {
 
