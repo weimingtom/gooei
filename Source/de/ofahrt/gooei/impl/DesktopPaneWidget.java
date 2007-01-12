@@ -120,7 +120,7 @@ public void doLayout()
 		if (comp instanceof DialogWidget)
 		{
 			Dimension d = comp.getPreferredSize();
-			if (comp.getBounds() == null)
+			if (comp.getBounds().width == 0)
 				comp.setBounds(Math.max(0, (bounds.width - d.width) / 2),
 					Math.max(0, (bounds.height - d.height) / 2),
 					Math.min(d.width, bounds.width),

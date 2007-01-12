@@ -3,6 +3,7 @@ package de.ofahrt.gooei.impl;
 import gooei.Desktop;
 import gooei.FocusableWidget;
 import gooei.MouseInteraction;
+import gooei.MouseableWidget;
 import gooei.Widget;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
@@ -16,7 +17,8 @@ import java.awt.Rectangle;
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
-public class CheckBoxWidget extends LabelWidget implements FocusableWidget
+public class CheckBoxWidget extends LabelWidget
+	implements MouseableWidget, FocusableWidget
 {
 
 private boolean selected = false;

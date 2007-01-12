@@ -162,7 +162,8 @@ public Icon loadIcon(String filename)
 {
 	try
 	{
-		InputStream in = getClass().getClassLoader().getResourceAsStream("de/ofahrt/gooei/tilt/"+filename);
+		InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
+		if (in == null) throw new NullPointerException(filename);
 		int i = filename.lastIndexOf('.');
 		String extension = filename.substring(i+1);
 		ImageReader reader = ReaderWriterFactory.getReader(extension);
@@ -170,9 +171,9 @@ public Icon loadIcon(String filename)
 		return new LwjglIcon(image);
 	}
 	catch (IOException e)
-	{
-		e.printStackTrace();
-	}
+	{ e.printStackTrace(); }
+	catch (RuntimeException e)
+	{ e.printStackTrace(); }
 	return null;
 }
 

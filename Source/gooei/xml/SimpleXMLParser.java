@@ -69,15 +69,6 @@ public SimpleXMLParser(ThinletDesktop desktop, UIController container,
 	this.bundle = bundle;
 }
 
-/**
- * Finds the first component from the root desktop by a specified name value
- *
- * @param name parameter value identifies the widget
- * @return the first suitable component, or null
- */
-public Widget find(String name)
-{ return desktop.findWidget(name); }
-
 private Method findMethod(Class<?> c, String mname)
 {
 	if (c == null) return null;
@@ -212,9 +203,9 @@ private MethodInvoker parseMethod(Object thisWidget, String value, Widget root)
 }
 
 /**
- * @param methods methods and label's 'for' widgets are stored in this
- * vector because these may reference to widgets which are not parsed
- * at that time
+ * Fix forward references.
+ * Calls init methods and fixes widget references (which may refer to widgets
+ * unknown at parse time).
  */
 private void finishParse(Widget root)
 {

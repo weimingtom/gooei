@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <stack name="menu">
 	<panel>
-		<label onclick="setActive(1)" x="280" y="580" width="240" highlight="true" icon="clickme.tga" />
+		<label onclick="setActive(1)" x="280" y="580" width="240" highlight="true" icon="de/ofahrt/gooei/tilt/clickme.tga" />
 	</panel>
 	<panel>
-		<label x="144" y="50" icon="gooei.tga" />
-		<label onclick="setActive(0)" x="280" y="580" width="240" highlight="true" icon="clickme.tga" />
-		<label x="144" y="305" width="512" icon="the.tga" />
-		<label x="144" y="380" width="512" icon="widget.tga" />
-		<label x="144" y="455" width="512" icon="toolkit.tga" />
+		<label x="144" y="50" icon="de/ofahrt/gooei/tilt/gooei.tga" />
+		<label onclick="setActive(0)" x="280" y="580" width="240" highlight="true" icon="de/ofahrt/gooei/tilt/clickme.tga" />
+		<label x="144" y="305" width="512" icon="de/ofahrt/gooei/tilt/the.tga" />
+		<label x="144" y="380" width="512" icon="de/ofahrt/gooei/tilt/widget.tga" />
+		<label x="144" y="455" width="512" icon="de/ofahrt/gooei/tilt/toolkit.tga" />
 		<label x="100" y="700" width="600" highlight="true"
 			text="images (c) by Ulf Ochsenfahrt" />
 	</panel>
