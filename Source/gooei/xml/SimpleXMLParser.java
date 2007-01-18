@@ -1,6 +1,7 @@
 package gooei.xml;
 
 import gooei.ContainerWidget;
+import gooei.Desktop;
 import gooei.Element;
 import gooei.ElementContainer;
 import gooei.UIController;
@@ -9,6 +10,7 @@ import gooei.font.Font;
 import gooei.utils.Icon;
 import gooei.utils.MethodInvoker;
 import gooei.utils.TLColor;
+import gooei.utils.WidgetHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +32,6 @@ import de.ofahrt.gooei.impl.TabWidget;
 import de.ofahrt.gooei.impl.TabbedPaneWidget;
 import de.ofahrt.gooei.impl.TableHeader;
 import de.ofahrt.gooei.impl.TableWidget;
-import de.ofahrt.gooei.impl.ThinletDesktop;
 import de.ofahrt.gooei.impl.TreeNode;
 import de.ofahrt.gooei.impl.TreeWidget;
 
@@ -54,13 +55,13 @@ public class SimpleXMLParser
 		}
 	}
 
-private final ThinletDesktop desktop;
+private final Desktop desktop;
 private final UIController controller;
 private final WidgetFactory factory;
 private final ResourceBundle bundle;
 private final ArrayList<MethodFixup> methodFixups = new ArrayList<MethodFixup>();
 
-public SimpleXMLParser(ThinletDesktop desktop, UIController container,
+public SimpleXMLParser(Desktop desktop, UIController container,
 		WidgetFactory factory, ResourceBundle bundle)
 {
 	this.desktop = desktop;
@@ -136,7 +137,7 @@ private MethodInvoker parseMethod(Object thisWidget, String value, Widget root)
 				comp = thisWidget;
 				paramClass = thisWidget.getClass();
 			}
-			else if ((comp = ThinletDesktop.findWidget(root, compname)) != null)
+			else if ((comp = WidgetHelper.findWidget(root, compname)) != null)
 			{ // a widget's name
 				paramClass = comp.getClass();
 			}
@@ -231,7 +232,7 @@ private void finishParse(Widget root)
 		}
 		else
 		{ // ("component" == definition[0])
-			Widget reference = ThinletDesktop.findWidget(root, value); //+start find from the component
+			Widget reference = WidgetHelper.findWidget(root, value); //+start find from the component
 			if (reference == null) throw new IllegalArgumentException(value + " not found"); 
 			try
 			{ fixup.m.invoke(component, reference); }

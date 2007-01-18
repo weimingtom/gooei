@@ -43,7 +43,7 @@ public void setBounds(int x, int y, int width, int height)
 }
 
 /** Inserts item in child chain at specified index. Appends if index is negative. */
-protected final void insertItem(Widget child, int index)
+public final void insertItem(Widget child, int index)
 {
 	if (child.parent() != null)
 		throw new IllegalArgumentException();

@@ -50,8 +50,8 @@ public int stringWidth(CharSequence csq)
 
 public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq, int off, int len)
 {
-	for (int i = 0; i < len; i++)
-		x += font.drawGlyph(graphics, csq.charAt(off+i), x, y);
+	for (int i = off; i < off+len; i++)
+		x += font.drawGlyph(graphics, csq.charAt(i), x, y);
 }
 
 public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq, int off, int len)

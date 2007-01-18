@@ -6,7 +6,6 @@ import gooei.Widget;
 import java.awt.Toolkit;
 
 import de.ofahrt.gooei.impl.TextFieldWidget;
-import de.ofahrt.gooei.impl.ThinletDesktop;
 import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 
 public class Calculator implements UIController
@@ -14,7 +13,7 @@ public class Calculator implements UIController
 
 public static void main(String[] args) throws Exception
 {
-	ThinletDesktop desktop = new LwjglDesktop();
+	LwjglDesktop desktop = new LwjglDesktop();
 	desktop.parseAndAdd(new Calculator(), "de/ofahrt/gooei/demo/calculator.xml");
 	desktop.show();
 }

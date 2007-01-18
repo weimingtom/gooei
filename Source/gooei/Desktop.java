@@ -4,6 +4,7 @@ import gooei.font.Font;
 import gooei.font.FontMetrics;
 import gooei.utils.Icon;
 import gooei.utils.PreparedIcon;
+import gooei.utils.TLColor;
 import gooei.utils.TimerEventType;
 
 import java.awt.Cursor;
@@ -55,5 +56,11 @@ void setCursor(Cursor cursor);
 
 // Prepared Items
 PreparedIcon prepareIcon(Icon icon);
+
+
+// parsing support
+Icon loadIcon(String value);
+TLColor createColor(int red, int green, int blue);
+Font createFont(String name, int style, int size);
 
 }

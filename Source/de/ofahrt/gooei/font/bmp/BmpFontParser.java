@@ -82,6 +82,9 @@ public BmpData parse(InputStream inStream) throws IOException
 			cinfo.page = getInt(map, "page");
 			cinfo.chnl = getInt(map, "chnl");
 			data.charInfos[cid] = cinfo;
+			if (cinfo.width+cinfo.xoffset > cinfo.xadvance)
+				cinfo.xadvance = cinfo.width+cinfo.xoffset;
+//				throw new RuntimeException(cid+" "+(cinfo.width+cinfo.xoffset)+" "+cinfo.xadvance);
 		} else if ("kerning".equals(id))
 		{
 			// Ok for now.
