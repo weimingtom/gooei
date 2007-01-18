@@ -2,10 +2,13 @@ package de.ofahrt.gooei.tilt;
 
 import gooei.Desktop;
 import gooei.Widget;
+import gooei.utils.Icon;
+import gooei.utils.PreparedIcon;
 
 import java.awt.Dimension;
 
 import de.ofahrt.gooei.impl.AbstractContainerWidget;
+import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
 public class TiltPanel extends AbstractContainerWidget<Widget>
@@ -27,6 +30,8 @@ public class TiltPanel extends AbstractContainerWidget<Widget>
 		{ this.y = y; }
 	}
 
+private PreparedIcon backgroundImage;
+
 public TiltPanel(Desktop desktop)
 { super(desktop); }
 
@@ -39,6 +44,9 @@ public void setX(Widget child, int x)
 
 public void setY(Widget child, int y)
 { getConstraintFor(child).setY(y); }
+
+public void setBackground(Icon icon)
+{ this.backgroundImage = desktop.prepareIcon(icon); }
 
 @Override
 protected Object createConstraints(Widget child)
@@ -67,6 +75,11 @@ public void doLayout()
 public void paint(LwjglRenderer renderer)
 {
 	if (needsLayout()) doLayout();
+	if (backgroundImage != null)
+	{
+		renderer.setColor(GLColor.WHITE);
+		renderer.drawImage(backgroundImage, 0, 0);
+	}
 	paintAll(renderer);
 }
 

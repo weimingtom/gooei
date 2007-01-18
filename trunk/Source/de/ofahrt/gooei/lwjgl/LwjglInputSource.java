@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-
 public class LwjglInputSource implements InputSource
 {
 

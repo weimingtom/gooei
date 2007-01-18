@@ -1,17 +1,16 @@
 package gooei.xml;
 
+import gooei.Desktop;
 import gooei.utils.TLColor;
 
 import java.util.StringTokenizer;
 
-import de.ofahrt.gooei.impl.ThinletDesktop;
-
 public class ColorParser
 {
 
-private final ThinletDesktop desktop;
+private final Desktop desktop;
 
-public ColorParser(ThinletDesktop desktop)
+public ColorParser(Desktop desktop)
 {
 	this.desktop = desktop;
 }

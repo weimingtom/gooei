@@ -1,4 +1,4 @@
-package de.ofahrt.gooei.impl;
+package de.ofahrt.gooei.lwjgl;
 
 import gooei.ContainerWidget;
 import gooei.Desktop;
@@ -28,6 +28,7 @@ import gooei.utils.Icon;
 import gooei.utils.PreparedIcon;
 import gooei.utils.TLColor;
 import gooei.utils.TimerEventType;
+import gooei.utils.WidgetHelper;
 import gooei.xml.SimpleXMLParser;
 import gooei.xml.WidgetFactory;
 
@@ -39,9 +40,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import de.ofahrt.gooei.lwjgl.LwjglRenderer;
+import de.ofahrt.gooei.impl.ComboListWidget;
+import de.ofahrt.gooei.impl.DesktopPaneWidget;
+import de.ofahrt.gooei.impl.DialogWidget;
+import de.ofahrt.gooei.impl.SpinBoxWidget;
+import de.ofahrt.gooei.impl.SplitPaneWidget;
+import de.ofahrt.gooei.impl.TabWidget;
+import de.ofahrt.gooei.impl.TabbedPaneWidget;
 
-public abstract class ThinletDesktop implements Desktop
+abstract class AbstractDesktop implements Desktop
 {
 
 private final DesktopPaneWidget pane = new DesktopPaneWidget(this);
@@ -59,7 +66,7 @@ private PopupOwner popupowner;
 private ToolTipOwner tooltipowner;
 
 
-public ThinletDesktop(WidgetFactory factory)
+public AbstractDesktop(WidgetFactory factory)
 {
 	this.factory = factory;
 }
@@ -74,7 +81,7 @@ public void removeChild(Widget child)
 { pane.removeChild(child); }
 
 public Widget findWidget(String name)
-{ return findWidget(pane, name); }
+{ return WidgetHelper.findWidget(pane, name); }
 
 public Rectangle getBounds()
 { return pane.getBounds(); }
@@ -732,35 +739,5 @@ public void onTimer(TimerEventType timerType)
 
 public void moveToFront(Widget child)
 { pane.moveToFront(child); }
-
-
-public static Widget findWidget(Widget current, String name)
-{
-	if (name.equals(current.getName())) return current;
-	Widget found;
-	
-	// otherwise search in its subcomponents
-	if (current instanceof ContainerWidget<?>)
-	{
-		for (Widget comp : (ContainerWidget<?>) current)
-		{
-			found = findWidget(comp, name);
-			if (found != null)
-				return found;
-		}
-	}
-	
-	// search in table header
-/*	if (this instanceof TableWidget)
-	{
-		TableHeader header = ((TableWidget) this).getHeaderWidget();
-		if ((header != null) && ((found = header.findWidget(fname)) != null)) return found;
-	}*/
-	
-	// search in component's popupmenu
-//	PopupMenuWidget popupmenu = getPopupMenuWidget();
-//	if ((popupmenu != null) && ((found = popupmenu.findWidget(fname)) != null)) return found;
-	return null;
-}
 
 }

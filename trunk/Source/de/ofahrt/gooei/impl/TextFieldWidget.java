@@ -480,7 +480,7 @@ protected void processField(MouseInteraction mouseInteraction, MouseEvent event,
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 { processField(mouseInteraction, event, 0); }
 
-/** Paint a TextFieldWidget or descendant thereof. */
+/** Paint a TextFieldWidget or PasswordFieldWidget. */
 public void paintField(LwjglRenderer renderer,
 		int width, int height, boolean enabled, int left)
 {
@@ -516,7 +516,7 @@ public void paintField(LwjglRenderer renderer,
 		
 		// draw caret
 		renderer.setColor(renderer.c_focus);
-		renderer.fillRect(1 + left - offset + caret, 1, 1, height - 2);
+		renderer.fillRect(2 + left - offset + caret, 1, 1, height - 2);
 	}
 
 	// draw content

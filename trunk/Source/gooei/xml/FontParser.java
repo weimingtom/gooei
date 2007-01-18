@@ -1,17 +1,16 @@
 package gooei.xml;
 
+import gooei.Desktop;
 import gooei.font.Font;
 
 import java.util.StringTokenizer;
 
-import de.ofahrt.gooei.impl.ThinletDesktop;
-
 public class FontParser
 {
 
-private final ThinletDesktop desktop;
+private final Desktop desktop;
 
-public FontParser(ThinletDesktop desktop)
+public FontParser(Desktop desktop)
 {
 	this.desktop = desktop;
 }

@@ -1,23 +1,22 @@
 package de.ofahrt.gooei.demo;
 
-import de.ofahrt.gooei.impl.ThinletDesktop;
-import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 import gooei.UIController;
+import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 
 public class FontTest implements UIController
 {
 
 public static void main(String[] args) throws Exception
 {
-	ThinletDesktop desktop = new LwjglDesktop();
+	LwjglDesktop desktop = new LwjglDesktop();
 	desktop.parseAndAdd(new FontTest(desktop), "de/ofahrt/gooei/demo/font.xml");
 	desktop.show();
 }
 
 @SuppressWarnings("unused")
-private final ThinletDesktop desktop;
+private final LwjglDesktop desktop;
 
-public FontTest(ThinletDesktop desktop)
+public FontTest(LwjglDesktop desktop)
 { this.desktop = desktop; }
 
 }

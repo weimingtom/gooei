@@ -28,7 +28,6 @@ import de.ofahrt.gooei.awt.AWTClipboard;
 import de.ofahrt.gooei.font.BmpFontProvider;
 import de.ofahrt.gooei.font.TriFontProvider;
 import de.ofahrt.gooei.font.TtFontProvider;
-import de.ofahrt.gooei.impl.ThinletDesktop;
 import de.yvert.camera.CameraTools;
 import de.yvert.camera.TargetCamera;
 import de.yvert.geometry.Plane;
@@ -38,7 +37,7 @@ import de.yvert.jingle.ImageReader;
 import de.yvert.jingle.ReaderWriterFactory;
 import de.yvert.jingle.ldr.LdrImage2D;
 
-public final class LwjglDesktop extends ThinletDesktop
+public final class LwjglDesktop extends AbstractDesktop
 {
 
 private final boolean useCamera = false;
