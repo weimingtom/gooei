@@ -81,35 +81,13 @@ protected void initGL()
 	GL11.glShadeModel(GL11.GL_SMOOTH);
 	GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	GL11.glClearDepth(1.0);
-	GL11.glEnable(GL11.GL_DEPTH_TEST);
-	GL11.glEnable(GL11.GL_NORMALIZE);
 	
 	GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	GL11.glEnable(GL11.GL_BLEND);
 	
 	GL11.glDisable(GL11.GL_DEPTH_TEST);
 	
-//	GL11.glEnable(GL11.GL_LIGHTING);
-//	GL11.glEnable(GL11.GL_TEXTURE_2D);
-	
-//	setTo(floatBuffer, ambientColor);
-//	GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, floatBuffer);
-//	GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, 1);
-	
-//	setTo(floatBuffer, 1, 1, 1, 1);
-//	GL11.glMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT, floatBuffer);
-	
-//	setTo(floatBuffer, 1, 1, 1, 1);
-//	GL11.glMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_DIFFUSE, floatBuffer);
-	
-//	GL11.glCullFace(GL11.GL_BACK);
-//	if (fixedScene.isOneSided())
-//		GL11.glEnable(GL11.GL_CULL_FACE);
-//	else
-//		GL11.glDisable(GL11.GL_CULL_FACE);
-	
-//	GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
-//	GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_NICEST);
+	GL11.glEnable(GL11.GL_NORMALIZE);
 }
 
 private void gameLoop()

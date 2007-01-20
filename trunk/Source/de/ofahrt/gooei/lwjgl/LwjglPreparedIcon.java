@@ -7,14 +7,11 @@ public class LwjglPreparedIcon implements PreparedIcon
 {
 
 private final LdrImage2D image;
-private final int id;
+private int id = -1;
 private boolean dirty = true;
 
 public LwjglPreparedIcon(LdrImage2D image)
-{
-	this.image = image;
-	this.id = OpenGLHelper.getId();
-}
+{ this.image = image; }
 
 public LdrImage2D getImage()
 { return image; }
@@ -26,7 +23,10 @@ public int getWidth()
 { return image.getWidth(); }
 
 public int getId()
-{ return id; }
+{
+	if (id == -1) id = OpenGLHelper.getId();
+	return id;
+}
 
 public boolean isDirty()
 { return dirty; }

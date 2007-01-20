@@ -1,9 +1,11 @@
-// arch-tag: 75584b7b-3eb3-4a76-947a-e12aabc7f987
 package de.ofahrt.gooei.lwjgl;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.EXTTextureRectangle;
 import org.lwjgl.opengl.GL11;
@@ -20,7 +22,7 @@ private static int width;
 private static int height;
 private static ByteBuffer byteBuffer = BufferUtils.createByteBuffer(4*1024*1024);
 //private static byte[] byteArray = new byte[4*1024*1024];
-private static int currentId = 1;
+private static IntBuffer intBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
 
 private static int nearestPower(int value)
 {
@@ -45,7 +47,11 @@ private static void toRGBAByteBuffer(LdrImage2D image, ByteBuffer target)
 }
 
 public static int getId()
-{ return currentId++; }
+{
+	intBuffer.clear();
+	GL11.glGenTextures(intBuffer);
+	return intBuffer.get();
+}
 
 private static void toBuffer(LdrImage2D image)
 {
@@ -243,8 +249,6 @@ public static int upload(int id, LdrImage2D image, boolean mipmaps)
 public static int upload(LdrImage2D image, boolean mipmaps)
 { return upload(getId(), image, mipmaps); }
 
-private static int display_id = getId();
-
 public static void upload(int id, LdrImage2D image)
 {
 	GL11.glBindTexture(EXTTextureRectangle.GL_TEXTURE_RECTANGLE_EXT, id);
@@ -272,8 +276,11 @@ public static void display(int id, int x, int y, int w, int h)
 	Util.checkGLError();
 }
 
+private static int display_id;
+
 public static void display(LdrImage2D image, int x, int y)
 {
+	if (display_id == 0) display_id = getId();
 	int w = image.getWidth();
 	int h = image.getHeight();
 	if (true)
