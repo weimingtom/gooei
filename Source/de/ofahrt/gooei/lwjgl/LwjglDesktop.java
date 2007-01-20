@@ -204,7 +204,7 @@ public void setSize(int width, int height)
 public void showContainer()
 {
 	LwjglWindow window = new LwjglWindow(this);
-	new Thread(window).start();
+	window.run();
 }
 
 protected int mx, my;
