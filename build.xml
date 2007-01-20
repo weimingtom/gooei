@@ -43,6 +43,29 @@
 		<signjar jar="${jarfile}" alias="me" storepass="123456" keystore="/home/ulfjack/Playground/data/myKeyStore" />
 	</target>
 	
+	<target name="javadoc">
+		<delete dir="JavaDoc"/>
+		<mkdir dir="JavaDoc"/>
+		<javadoc destdir="JavaDoc"
+               classpath="${classpath}"
+               author="true"
+               version="true"
+               use="true"
+               locale="de_DE"
+               private="true"
+               charset="ISO-8859-1"
+               source="1.5"
+               windowtitle="Gooei Widget Toolkit"
+               packagenames="gooei.*"
+               classpathref="project.classpath">
+			<sourcepath>
+				<pathelement path="Source"/>
+			</sourcepath>
+			
+			<link href="http://java.sun.com/j2se/1.5/docs/api/"/>
+		</javadoc>
+	</target>
+		
 	<target name="compile_test" depends="compile_source" description="compile the tests">
 		<javac srcdir="Test" destdir="${build}"
 			encoding="ISO-8859-1" source="1.5" target="1.5" debug="true">
