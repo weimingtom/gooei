@@ -4,6 +4,7 @@ import gooei.font.Font;
 import gooei.font.FontDrawInterface;
 import gooei.font.FontMetrics;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -57,9 +58,12 @@ public int drawGlyph(FontDrawInterface graphics, char c, int x, int y)
 
 public static BmpFont load(String name) throws IOException
 {
-	InputStream in = Test.class.getClassLoader().getResourceAsStream("de/ofahrt/fonts/kevsdemo/demo.fnt");
+	int i = name.lastIndexOf('/');
+	String base = i < 0 ? "" : name.substring(0, i+1);
+	InputStream in = Test.class.getClassLoader().getResourceAsStream(name);
 	BmpData data = new BmpFontParser().parse(in);
-	in = Test.class.getClassLoader().getResourceAsStream("de/ofahrt/fonts/kevsdemo/demo_00.tga");
+	in = Test.class.getClassLoader().getResourceAsStream(base+data.filename);
+	if (in == null) throw new FileNotFoundException(base+data.filename);
 	LdrImage2D image = new ImageReader_tga().load(in);
 	return new BmpFont(data, image);
 }

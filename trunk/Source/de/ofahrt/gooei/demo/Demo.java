@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import de.ofahrt.gooei.font.BitstreamVeraTriFontRegistry;
 import de.ofahrt.gooei.impl.ButtonWidget;
 import de.ofahrt.gooei.impl.ComboBoxItem;
 import de.ofahrt.gooei.impl.ComboBoxWidget;
@@ -31,7 +32,7 @@ public class Demo implements UIController
 
 public static void main(String[] args) throws Exception
 {
-	LwjglDesktop desktop = new LwjglDesktop();
+	LwjglDesktop desktop = new LwjglDesktop(new BitstreamVeraTriFontRegistry());
 	desktop.parseAndAdd(new Demo(desktop), "de/ofahrt/gooei/demo/demo.xml");
 	desktop.show();
 }

@@ -1,5 +1,8 @@
 package de.ofahrt.gooei.font.tri;
 
+import java.io.IOException;
+
+import de.ofahrt.gooei.font.ttf.TtfData;
 import gooei.font.Font;
 import gooei.font.FontMetrics;
 import gooei.font.FontTriangleInterface;
@@ -51,6 +54,13 @@ int drawGlyph(FontTriangleInterface graphics, char c, int x, int y)
 	graphics.drawTriangles(x, y, cfak, glyph);
 	
 	return advanceWidth;
+}
+
+public static TriFont load(String name, int pixelSize) throws IOException
+{
+	TriData data = new TriData(TtfData.load(name));
+	float size = data.pixelToPointSize(pixelSize);
+	return new TriFont(data, size);
 }
 
 }

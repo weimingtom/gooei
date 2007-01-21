@@ -33,7 +33,7 @@ private static DoubleBuffer doubleBuffer = byteBuffer.asDoubleBuffer();
 
 private final LwjglDesktop desktop;
 
-private Font font;
+private Font defaultFont;
 public GLColor c_bg;
 public GLColor c_text;
 public GLColor c_textbg;
@@ -59,9 +59,9 @@ public LwjglRenderer(LwjglDesktop desktop, Font defaultFont)
 	
 	setColors(0xe6e6e6, 0x000000, 0xffffff, 0x909090, 
 			0xb0b0b0, 0xededed, 0xb9b9b9, 0x89899a, 0xc5c5dd);
-	setDefaultFont(defaultFont);
 	
-	currentFont = font;
+	if (defaultFont != null)
+		setDefaultFont(defaultFont);
 	currentColor = c_bg;
 }
 
@@ -69,12 +69,13 @@ public int getBlockSize()
 { return block; }
 
 public Font getDefaultFont()
-{ return font; }
+{ return defaultFont; }
 
 public void setDefaultFont(Font font)
 {
 	block = desktop.getFontMetrics(font).getHeight();
-	this.font = font;
+	this.defaultFont = font;
+	this.currentFont = font;
 }
 
 private GLColor createColor(int color)
@@ -681,7 +682,7 @@ public void paintIconAndText(final IconAndText component, int x, int y, int widt
 	}
 	
 	if (customfont != null) // restore the default font
-		setCurrentFont(font);
+		setCurrentFont(defaultFont);
 }
 
 }

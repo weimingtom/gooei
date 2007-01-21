@@ -1,6 +1,7 @@
 package de.ofahrt.gooei.tilt;
 
 import gooei.UIController;
+import de.ofahrt.gooei.font.bmp.BmpFont;
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 
@@ -10,6 +11,7 @@ public class TiltDemo implements UIController
 public static void main(String[] args) throws Exception
 {
 	LwjglDesktop desktop = new LwjglDesktop(new TiltWidgetFactory(), 800, 800);
+	desktop.addFont("default", BmpFont.load("de/ofahrt/fonts/kevsdemo/demo.fnt"));
 	desktop.setBackground(GLColor.BLACK);
 	desktop.parseAndAdd(new TiltDemo(desktop), "de/ofahrt/gooei/tilt/demo.xml");
 	desktop.show();

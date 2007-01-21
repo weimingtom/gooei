@@ -467,17 +467,6 @@ private void read(Buffer in) throws IOException
 	readGlyphs(in);
 }
 
-private static HashMap<String,String> systemFonts = initSystemFonts();
-
-private static HashMap<String,String> initSystemFonts()
-{
-	HashMap<String,String> result = new HashMap<String,String>();
-	result.put("SansSerif", "de/ofahrt/fonts/bitstreamvera/Vera.ttf");
-	result.put("Monospaced", "de/ofahrt/fonts/bitstreamvera/VeraMono.ttf");
-	result.put("Serif", "de/ofahrt/fonts/bitstreamvera/VeraSe.ttf");
-	return result;
-}
-
 private static TtfData load(String name, byte[] data) throws IOException
 {
 	Buffer in = new Buffer(data);
@@ -497,25 +486,6 @@ private static TtfData load(String name, InputStream in) throws IOException
 }
 
 public static TtfData load(String name) throws IOException
-{
-	String resname = systemFonts.get(name);
-	if (resname != null)
-		return load(name, TtfData.class.getClassLoader().getResourceAsStream(resname));
-	
-	String filename = "Fonts/"+name+".ttf";
-	File f = new File(filename);
-	byte[] data = new byte[(int) f.length()];
-	FileInputStream fin = new FileInputStream(f);
-	
-	int amount = 0;
-	while (amount < data.length)
-	{
-		int count = fin.read(data, amount, data.length-amount);
-		if (count <= 0) throw new IOException("ARGH!");
-		amount += count;
-	}
-	
-	return load(name, data);
-}
+{ return load(name, TtfData.class.getClassLoader().getResourceAsStream(name)); }
 
 }

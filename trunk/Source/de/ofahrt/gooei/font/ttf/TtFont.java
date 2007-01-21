@@ -4,6 +4,7 @@ import gooei.font.Font;
 import gooei.font.FontDrawInterface;
 import gooei.font.FontMetrics;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -203,5 +204,12 @@ public void testFont()
 	// "Hallihallog und so weiter!"
 //result.testGlyph('%');
 }*/
+
+public static TtFont load(String name, int pixelSize) throws IOException
+{
+	TtfData data = TtfData.load(name);
+	float size = data.pixelToPointSize(pixelSize);
+	return new TtFont(data, size);
+}
 
 }

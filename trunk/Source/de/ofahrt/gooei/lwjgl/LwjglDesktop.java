@@ -1,9 +1,10 @@
 package de.ofahrt.gooei.lwjgl;
 
 import gooei.SimpleClipboard;
+import gooei.font.DefaultFontRegistry;
 import gooei.font.Font;
 import gooei.font.FontMetrics;
-import gooei.font.FontProvider;
+import gooei.font.FontRegistry;
 import gooei.input.InputEvent;
 import gooei.input.InputEventType;
 import gooei.input.KeyboardEvent;
@@ -25,9 +26,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import de.ofahrt.gooei.awt.AWTClipboard;
-import de.ofahrt.gooei.font.BmpFontProvider;
-import de.ofahrt.gooei.font.TriFontProvider;
-import de.ofahrt.gooei.font.TtFontProvider;
 import de.yvert.camera.CameraTools;
 import de.yvert.camera.TargetCamera;
 import de.yvert.geometry.Plane;
@@ -41,9 +39,8 @@ public final class LwjglDesktop extends AbstractDesktop
 {
 
 private final boolean useCamera = false;
-private final boolean useTriFont = true;
 
-protected final FontProvider fontProvider;
+protected final FontRegistry fontRegistry;
 protected int offsetX = 0;
 protected int offsetY = 0;
 protected final Dimension size = new Dimension();
@@ -52,31 +49,31 @@ protected final TargetCamera camera;
 
 private final LwjglInputSource inputSource = new LwjglInputSource();
 
-public LwjglDesktop(WidgetFactory factory, int width, int height)
+public LwjglDesktop(FontRegistry fontRegistry, WidgetFactory factory, int width, int height)
 {
 	super(factory);
-	if (true)
-		fontProvider = new BmpFontProvider();
-	else
-	{
-		if (useTriFont)
-			fontProvider = new TriFontProvider();
-		else
-			fontProvider = new TtFontProvider();
-	}
-	Font defaultFont = createFont("SansSerif", 0, 18);
-	renderer = new LwjglRenderer(this, defaultFont);
+	this.fontRegistry = fontRegistry;
+	renderer = new LwjglRenderer(this, fontRegistry.getDefaultFont());
 	camera = new TargetCamera(new Vector3(260, 260, 0), 300);
 	
 	setPosition(0, 0);
 	setSize(width, height);
 }
 
+public LwjglDesktop(FontRegistry fontRegistry, int width, int height)
+{ this(fontRegistry, new LwjglWidgetFactory(), width, height); }
+
+public LwjglDesktop(FontRegistry fontRegistry)
+{ this(fontRegistry, new LwjglWidgetFactory(), 640, 480); }
+
+public LwjglDesktop(WidgetFactory factory, int width, int height)
+{ this(new DefaultFontRegistry(), factory, width, height); }
+
 public LwjglDesktop(WidgetFactory factory)
-{ this(factory, 640, 480); }
+{ this(new DefaultFontRegistry(), factory, 640, 480); }
 
 public LwjglDesktop()
-{ this(new LwjglWidgetFactory(), 640, 480); }
+{ this(new DefaultFontRegistry(), new LwjglWidgetFactory(), 640, 480); }
 
 @Override
 public void setTimer(TimerEventType type, long delay)
@@ -91,15 +88,16 @@ public Font getDefaultFont()
 public FontMetrics getFontMetrics(Font font)
 { return font.getMetrics(); }
 
-@Override
-public Font createFont(String name, int style, int pixelSize)
-{
-	try
-	{ return fontProvider.getFont(name, style, pixelSize); }
-	catch (IOException e)
-	{ throw new RuntimeException(name, e); }
-}
+public FontRegistry getFontRegistry()
+{ return fontRegistry; }
 
+public void addFont(String name, Font font)
+{
+	if (!(fontRegistry instanceof DefaultFontRegistry)) throw new UnsupportedOperationException();
+	if (renderer.getDefaultFont() == null)
+		renderer.setDefaultFont(font);
+	((DefaultFontRegistry) fontRegistry).addFont(name, font);
+}
 
 public GLColor createColor(float red, float green, float blue, float alpha)
 { return new GLColor(red, green, blue, alpha); }

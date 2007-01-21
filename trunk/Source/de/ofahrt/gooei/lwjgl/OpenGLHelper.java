@@ -5,7 +5,6 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.EXTTextureRectangle;
 import org.lwjgl.opengl.GL11;

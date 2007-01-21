@@ -7,6 +7,7 @@ import gooei.ElementContainer;
 import gooei.UIController;
 import gooei.Widget;
 import gooei.font.Font;
+import gooei.font.FontRegistry;
 import gooei.utils.Icon;
 import gooei.utils.MethodInvoker;
 import gooei.utils.TLColor;
@@ -60,6 +61,7 @@ private final UIController controller;
 private final WidgetFactory factory;
 private final ResourceBundle bundle;
 private final ArrayList<MethodFixup> methodFixups = new ArrayList<MethodFixup>();
+private final FontRegistry fontRegistry;
 
 public SimpleXMLParser(Desktop desktop, UIController container,
 		WidgetFactory factory, ResourceBundle bundle)
@@ -68,6 +70,7 @@ public SimpleXMLParser(Desktop desktop, UIController container,
 	this.controller = container;
 	this.factory = factory;
 	this.bundle = bundle;
+	this.fontRegistry = desktop.getFontRegistry();
 }
 
 private Method findMethod(Class<?> c, String mname)
@@ -274,6 +277,13 @@ private Object findEnum(Class<?> c, String value)
 	return result;
 }
 
+private Font findFont(String name)
+{
+	Font result = fontRegistry.getFont(name);
+	if (result == null) throw new NullPointerException("Font "+name+" not found!");
+	return result;
+}
+
 private void setAttribute(Object parent, Object component, String key, String value)
 {
 	// replace value found in the bundle
@@ -318,7 +328,7 @@ private void setAttribute(Object parent, Object component, String key, String va
 				}
 				if (c == Font.class)
 				{
-					Font font = new FontParser(desktop).parse(value);
+					Font font = findFont(value);
 					m.invoke(component, font);
 					return;
 				}
@@ -384,7 +394,7 @@ private void setAttribute(Object parent, Object component, String key, String va
 					}
 					if (c == Font.class)
 					{
-						Font font = new FontParser(desktop).parse(value);
+						Font font = findFont(value);
 						m.invoke(parent, component, font);
 						return;
 					}
