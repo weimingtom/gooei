@@ -153,7 +153,7 @@
 				<spacer colspan="3" />
 				<label text="P R E V I E W" alignment="center" colspan="3"
 					name="rgb_label" weighty="1"
-					background="#000000" foreground="#ffffff" font="bold">
+					background="#000000" foreground="#ffffff" font="Monospaced">
 					<popupmenu>
 						<menuitem text="Test" /><separator /><menu text="Submenu"><menuitem text="Blub" /></menu>
 					</popupmenu>

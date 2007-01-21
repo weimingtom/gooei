@@ -132,7 +132,6 @@ public final void paint(final LwjglRenderer renderer)
 public abstract void setTimer(TimerEventType type, long delay);
 public abstract Font getDefaultFont();
 public abstract FontMetrics getFontMetrics(Font font);
-public abstract Font createFont(String name, int style, int size);
 public abstract TLColor createColor(int red, int green, int blue);
 public abstract TLColor createColor(int red, int green, int blue, int alpha);
 public abstract int getBlockSize();

@@ -67,7 +67,7 @@ public BmpData parse(InputStream inStream) throws IOException
 			data.base = getInt(map, "base");
 		} else if ("page".equals(id))
 		{
-			// Ok for now.
+			data.filename = getString(map, "file");
 		} else if ("char".equals(id))
 		{
 			int cid = Integer.parseInt(map.get("id"));

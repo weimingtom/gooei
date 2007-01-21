@@ -4,6 +4,7 @@ class BmpData
 {
 
 public String name;
+public String filename;
 public int pixelSize;
 public int lineHeight;
 public int base;

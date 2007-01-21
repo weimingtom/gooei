@@ -1,6 +1,7 @@
 package de.ofahrt.gooei.demo;
 
 import gooei.UIController;
+import de.ofahrt.gooei.font.BitstreamVeraTriFontRegistry;
 import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 
 public class MenuTest implements UIController
@@ -8,7 +9,7 @@ public class MenuTest implements UIController
 
 public static void main(String[] args) throws Exception
 {
-	LwjglDesktop desktop = new LwjglDesktop();
+	LwjglDesktop desktop = new LwjglDesktop(new BitstreamVeraTriFontRegistry());
 	desktop.parseAndAdd(new MenuTest(desktop), "de/ofahrt/gooei/demo/menu.xml");
 	desktop.show();
 }
