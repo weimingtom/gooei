@@ -2,7 +2,6 @@ package de.ofahrt.gooei.font.tri;
 
 import gooei.font.FontDrawInterface;
 import gooei.font.FontMetrics;
-import gooei.font.FontTriangleInterface;
 
 public class TriMetrics implements FontMetrics
 {
@@ -56,18 +55,12 @@ public int stringWidth(CharSequence csq)
 { return stringWidth(csq, 0, csq.length()); }
 
 public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq, int off, int len)
-{ throw new UnsupportedOperationException(); }
-
-public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq, int off, int len)
 {
 	for (int i = 0; i < len; i++)
 		x += font.drawGlyph(graphics, csq.charAt(off+i), x, y);
 }
 
 public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq)
-{ drawString(graphics, x, y, csq, 0, csq.length()); }
-
-public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq)
 { drawString(graphics, x, y, csq, 0, csq.length()); }
 
 }

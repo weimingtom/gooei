@@ -7,7 +7,6 @@ import gooei.Widget;
 import gooei.font.Font;
 import gooei.font.FontDrawInterface;
 import gooei.font.FontMetrics;
-import gooei.font.FontTriangleInterface;
 import gooei.utils.Alignment;
 import gooei.utils.Icon;
 import gooei.utils.PreparedIcon;
@@ -22,7 +21,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import de.ofahrt.gooei.font.tri.TriGlyph;
-import de.ofahrt.gooei.font.tri.TriMetrics;
 import de.yvert.geometry.Vector2;
 
 public final class LwjglRenderer implements Renderer
@@ -240,46 +238,37 @@ public void drawString(CharSequence csq, int off, int len, int atx, final int at
 {
 	FontMetrics metrics = getFontMetrics();
 	final int baseline = metrics.getDescent();
-	if (!(metrics instanceof TriMetrics))
-	{
-		metrics.drawString(new FontDrawInterface()
+	metrics.drawString(new FontDrawInterface()
+		{
+			public void drawPixel(int i, int j, float frac)
 			{
-				public void drawPixel(int i, int j, float frac)
-				{
-					int x = i+1;
-					int y = aty-j+baseline-1;
-					GL11.glColor4f(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), frac);
-					GL11.glBegin(GL11.GL_QUADS);
-						GL11.glVertex2f(x, y);
-						GL11.glVertex2f(x+1, y);
-						GL11.glVertex2f(x+1, y+1);
-						GL11.glVertex2f(x, y+1);
-					GL11.glEnd();
-					setColor(currentColor);
-				}
-			}, atx, 0, csq, off, len);
-	}
-	else
-	{
-		GL11.glBegin(GL11.GL_TRIANGLES);
-		((TriMetrics) metrics).drawString(new FontTriangleInterface()
+				int x = i+1;
+				int y = aty-j+baseline-1;
+				GL11.glColor4f(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), frac);
+				GL11.glBegin(GL11.GL_QUADS);
+					GL11.glVertex2f(x, y);
+					GL11.glVertex2f(x+1, y);
+					GL11.glVertex2f(x+1, y+1);
+					GL11.glVertex2f(x, y+1);
+				GL11.glEnd();
+				setColor(currentColor);
+			}
+			public void drawTriangles(float x, float y, float scale, TriGlyph glyph)
 			{
-				public void drawTriangles(float x, float y, float scale, TriGlyph glyph)
+				GL11.glBegin(GL11.GL_TRIANGLES);
+				for (int i = 0; i < glyph.triangles.length; i++)
 				{
-					for (int i = 0; i < glyph.triangles.length; i++)
+					for (int j = 0; j < 3; j++)
 					{
-						for (int j = 0; j < 3; j++)
-						{
-							Vector2 v = glyph.vertices[glyph.triangles[i][j]];
-							double vx = x+v.getX()*scale;
-							double vy = aty+y-v.getY()*scale;
-							GL11.glVertex2f((float) vx, (float) vy);
-						}
+						Vector2 v = glyph.vertices[glyph.triangles[i][j]];
+						double vx = x+v.getX()*scale;
+						double vy = aty+y-v.getY()*scale;
+						GL11.glVertex2f((float) vx, (float) vy);
 					}
 				}
-			}, atx, 0, csq, off, len);
-		GL11.glEnd();
-	}
+				GL11.glEnd();
+			}
+		}, atx, 0, csq, off, len);
 }
 
 public void drawString(CharSequence csq, int atx, final int aty)

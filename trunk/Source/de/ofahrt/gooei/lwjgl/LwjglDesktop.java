@@ -288,6 +288,7 @@ public void handleInput()
 	}
 }
 
+// FIXME: use y-flipping only with camera
 public void render2()
 {
 	if (useCamera)

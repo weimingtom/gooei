@@ -13,7 +13,5 @@ int charWidth(char c);
 
 void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq);
 void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq, int off, int len);
-void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq);
-void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq, int off, int len);
 
 }

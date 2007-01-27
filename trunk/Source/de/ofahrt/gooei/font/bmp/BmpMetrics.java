@@ -2,7 +2,6 @@ package de.ofahrt.gooei.font.bmp;
 
 import gooei.font.FontDrawInterface;
 import gooei.font.FontMetrics;
-import gooei.font.FontTriangleInterface;
 
 public class BmpMetrics implements FontMetrics
 {
@@ -54,13 +53,7 @@ public void drawString(FontDrawInterface graphics, int x, int y, CharSequence cs
 		x += font.drawGlyph(graphics, csq.charAt(i), x, y);
 }
 
-public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq, int off, int len)
-{ throw new UnsupportedOperationException(); }
-
 public void drawString(FontDrawInterface graphics, int x, int y, CharSequence csq)
-{ drawString(graphics, x, y, csq, 0, csq.length()); }
-
-public void drawString(FontTriangleInterface graphics, int x, int y, CharSequence csq)
 { drawString(graphics, x, y, csq, 0, csq.length()); }
 
 }
