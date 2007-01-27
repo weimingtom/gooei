@@ -1,11 +1,12 @@
 package de.ofahrt.gooei.font.tri;
 
+import gooei.font.Font;
+import gooei.font.FontDrawInterface;
+import gooei.font.FontMetrics;
+
 import java.io.IOException;
 
 import de.ofahrt.gooei.font.ttf.TtfData;
-import gooei.font.Font;
-import gooei.font.FontMetrics;
-import gooei.font.FontTriangleInterface;
 
 public class TriFont implements Font
 {
@@ -40,7 +41,7 @@ public Font deriveFontByPixelSize(int pixelSize)
 	return new TriFont(fontData, size);
 }
 
-int drawGlyph(FontTriangleInterface graphics, char c, int x, int y)
+int drawGlyph(FontDrawInterface graphics, char c, int x, int y)
 {
 	TriGlyph glyph = fontData.getGlyph(c);
 	

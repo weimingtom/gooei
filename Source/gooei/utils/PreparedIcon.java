@@ -1,9 +1,8 @@
 package gooei.utils;
 
-public interface PreparedIcon
+public interface PreparedIcon extends Icon
 {
 
-int getWidth();
-int getHeight();
+// Ok
 
 }
