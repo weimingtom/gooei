@@ -3,7 +3,6 @@ package de.ofahrt.gooei.menu;
 import gooei.Desktop;
 import gooei.MouseInteraction;
 import gooei.Widget;
-import de.ofahrt.gooei.impl.AbstractContainerWidget;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
 /**
