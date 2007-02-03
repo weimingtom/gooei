@@ -268,6 +268,16 @@ public void drawString(CharSequence csq, int off, int len, int atx, final int at
 				}
 				GL11.glEnd();
 			}
+			public void drawTexturedQuad( PreparedIcon icon, int x, int y, int width, int height, float u0, float v0, float u1, float v1 )
+			{
+				LwjglPreparedIcon i = (LwjglPreparedIcon) icon;
+				if (i.isDirty())
+				{
+					i.clearDirty();
+					OpenGLHelper.upload(i.getId(), i.getImage(), false);
+				}
+				OpenGLHelper.displaySubImage(i.getId(), x, y, width, height, u0, v0, u1, v1);
+			}
 		}, atx, 0, csq, off, len);
 }
 

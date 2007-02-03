@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.ofahrt.gooei.lwjgl.LwjglPreparedIcon;
 import de.yvert.jingle.impl.reader.ImageReader_tga;
 import de.yvert.jingle.ldr.LdrImage2D;
 
@@ -15,12 +16,12 @@ public class BmpFont implements Font
 {
 
 private final BmpData data;
-private final LdrImage2D image;
+private final LwjglPreparedIcon preparedIcon;
 
 public BmpFont(BmpData data, LdrImage2D image)
 {
 	this.data = data;
-	this.image = image;
+	this.preparedIcon= new LwjglPreparedIcon(image);
 }
 
 BmpData getData()
@@ -47,12 +48,22 @@ public FontMetrics getMetrics()
 public int drawGlyph(FontDrawInterface graphics, char c, int x, int y)
 {
 	CharInfo info = data.charInfos[c];
-	for (int i = 0; i < info.width; i++)
-		for (int j = 0; j < info.height; j++)
-		{
-			float frac = image.getAlpha(i+info.x, j+info.y)/255.0f;
-			graphics.drawPixel(x+i+info.xoffset, y+data.lineHeight-(j+info.yoffset), frac);
-		}
+	
+	float u0 = info.x / (float)preparedIcon.getWidth();
+	float v0 = info.y / (float)preparedIcon.getHeight();
+	float u1 = ( info.x + info.width ) / (float)preparedIcon.getWidth();
+	float v1 = ( info.y + info.height ) / (float)preparedIcon.getHeight();
+	
+	graphics.drawTexturedQuad(
+	    preparedIcon,
+	    x+info.xoffset,
+	    //y+data.lineHeight-(info.yoffset),
+	    y+info.yoffset,
+	    info.width,
+	    info.height,
+	    u0, v0, u1, v1
+	);
+    
 	return info.xadvance;
 }
 

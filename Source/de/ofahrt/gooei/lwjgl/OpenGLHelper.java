@@ -308,4 +308,42 @@ public static void display(LdrImage2D image, int x, int y)
 	}
 }
 
+/**
+ * draws a textured quad with the given id (id) at the given position (x,y) with
+ * the size (width x height) using texture coordinates (u0,v0,u1,v1)
+ * 
+ * @param id
+ * @param x
+ * @param y
+ * @param w
+ * @param h
+ * @param u0
+ * @param v0
+ * @param u1
+ * @param v1
+ */
+public static void displaySubImage(int id, int x, int y, int w, int h, float u0, float v0, float u1, float v1)
+{
+  GL11.glBindTexture( GL11.GL_TEXTURE_2D, id );
+  GL11.glEnable( GL11.GL_TEXTURE_2D );
+    
+    GL11.glTranslatef(x, y, 0);
+    GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(u0, v0);
+        GL11.glVertex2f(0, 0);
+        
+        GL11.glTexCoord2f(u1, v0);
+        GL11.glVertex2f(w, 0);
+        
+        GL11.glTexCoord2f(u1, v1);
+        GL11.glVertex2f(w, h);
+        
+        GL11.glTexCoord2f(u0, v1);
+        GL11.glVertex2f(0, h);
+    GL11.glEnd();
+    GL11.glTranslatef(-x, -y, 0);
+    GL11.glDisable( GL11.GL_TEXTURE_2D );
+    Util.checkGLError();
+}
+
 }
