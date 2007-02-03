@@ -12,7 +12,6 @@ import gooei.utils.PreparedIcon;
 
 import java.awt.Dimension;
 
-import de.ofahrt.gooei.impl.AbstractWidget;
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
