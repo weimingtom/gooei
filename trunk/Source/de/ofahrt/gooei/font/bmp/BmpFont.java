@@ -69,11 +69,12 @@ public int drawGlyph(FontDrawInterface graphics, char c, int x, int y)
 
 public static BmpFont load(String name) throws IOException
 {
+	ClassLoader classLoader = BmpFont.class.getClassLoader();
 	int i = name.lastIndexOf('/');
 	String base = i < 0 ? "" : name.substring(0, i+1);
-	InputStream in = Test.class.getClassLoader().getResourceAsStream(name);
+	InputStream in = classLoader.getResourceAsStream(name);
 	BmpData data = new BmpFontParser().parse(in);
-	in = Test.class.getClassLoader().getResourceAsStream(base+data.filename);
+	in = classLoader.getResourceAsStream(base+data.filename);
 	if (in == null) throw new FileNotFoundException(base+data.filename);
 	LdrImage2D image = new ImageReader_tga().load(in);
 	return new BmpFont(data, image);

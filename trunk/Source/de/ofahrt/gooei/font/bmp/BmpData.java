@@ -8,6 +8,7 @@ public String filename;
 public int pixelSize;
 public int lineHeight;
 public int base;
+public int charCount;
 public CharInfo[] charInfos = new CharInfo[256];
 
 }

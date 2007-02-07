@@ -9,19 +9,8 @@ import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import de.ofahrt.gooei.font.BitstreamVeraTriFontRegistry;
-import de.ofahrt.gooei.impl.ButtonWidget;
-import de.ofahrt.gooei.impl.ComboBoxItem;
-import de.ofahrt.gooei.impl.ComboBoxWidget;
-import de.ofahrt.gooei.impl.DialogWidget;
-import de.ofahrt.gooei.impl.LabelWidget;
-import de.ofahrt.gooei.impl.ListItem;
-import de.ofahrt.gooei.impl.ListWidget;
-import de.ofahrt.gooei.impl.ProgressBarWidget;
-import de.ofahrt.gooei.impl.SliderWidget;
-import de.ofahrt.gooei.impl.SpinBoxWidget;
-import de.ofahrt.gooei.impl.TextAreaWidget;
-import de.ofahrt.gooei.impl.TextFieldWidget;
+import de.ofahrt.gooei.font.BmpFontRegistry;
+import de.ofahrt.gooei.impl.*;
 import de.ofahrt.gooei.lwjgl.LwjglDesktop;
 
 /**
@@ -32,7 +21,7 @@ public class Demo implements UIController
 
 public static void main(String[] args) throws Exception
 {
-	LwjglDesktop desktop = new LwjglDesktop(new BitstreamVeraTriFontRegistry());
+	LwjglDesktop desktop = new LwjglDesktop(new BmpFontRegistry());
 	desktop.parseAndAdd(new Demo(desktop), "de/ofahrt/gooei/demo/demo.xml");
 	desktop.show();
 }
