@@ -57,16 +57,16 @@ public boolean acceptChild(Element node)
 @Override
 public void remove()
 {
-	Widget parent = (Widget) parent();
+	PopupMenuWidget parent = (PopupMenuWidget) parent();
 	parent.setPopupMenu(null);
 }
 
 public void closePopup()
 {
 	PopupWidgetImpl popup = getPopupWidget();
-	MenuElement selected = popup.getSelectedWidget(); // selected menu of the component
 	if (popup != null)
 	{
+		MenuElement selected = popup.getSelectedWidget(); // selected menu of the component
 		if (popup.getMenuWidget() == selected) return; // but the currect one
 		popup.setSelectedWidget(null);
 		popup.repaint();
@@ -153,9 +153,9 @@ public boolean handleKeyPress(KeyboardEvent event)
 	else if ((keycode == Keys.RETURN) ||
 			(keycode == Keys.SPACE) || (keycode == Keys.ESCAPE))
 	{
-		if ((keycode != Keys.ESCAPE) && selected.isEnabled())
+		if ((keycode != Keys.ESCAPE) && (selected != null) && selected.isEnabled())
 		{
-			if ((selected != null) && (selected instanceof CheckBoxMenuElement))
+			if (selected instanceof CheckBoxMenuElement)
 				((CheckBoxMenuElement) selected).changeCheck();
 			else
 				((ActionMenuElement) selected).invokeAction();

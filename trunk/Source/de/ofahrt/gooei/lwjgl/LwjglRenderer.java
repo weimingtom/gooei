@@ -49,7 +49,7 @@ private GLColor currentColor;
 private int block;
 //private int tx, ty;
 
-private ClipStack stateStack = new ClipStack();
+private StateStack stateStack = new StateStack();
 
 public LwjglRenderer(LwjglDesktop desktop, Font defaultFont)
 {
@@ -153,12 +153,11 @@ private void updateClip()
 	GL11.glClipPlane(GL11.GL_CLIP_PLANE3, doubleBuffer);
 }
 
-// FIXME: Implement
 public void updateEnabled(boolean enabled)
-{}
+{ stateStack.updateEnabled(enabled); }
 
 public boolean isEnabled()
-{ return true; }
+{ return stateStack.getEnabled(); }
 
 /** Set clip to intersection of current clip and given clip. */
 public void clip(int x, int y, int width, int height)
@@ -234,6 +233,29 @@ public boolean moveCoordSystem(Rectangle bounds)
 	return true;
 }
 
+/**
+ * Move the coordinate system origin to (port.x, port.y)
+ * and adjust the clip according to the port and old clip.
+ * Then, move the coordinate system according to the view.
+ */
+public boolean moveCoordSystem(Rectangle port, Rectangle view)
+{
+	final int clipx = getClipX(), clipy = getClipY();
+	final int clipwidth = getClipWidth(), clipheight = getClipHeight();
+	final int x = Math.max(clipx, port.x);
+	final int y = Math.max(clipy, port.y);
+	final int nw = Math.min(clipx + clipwidth, port.x + port.width)-x;
+	final int nh = Math.min(clipy + clipheight, port.y + port.height)-y;
+	if ((nw > 0) && (nh > 0))
+	{
+		int dx = port.x-view.x, dy = port.y-view.y;
+		clip(x, y, nw, nh);
+		translate(dx, dy);
+		return true;
+	}
+	return false;
+}
+
 public void drawString(CharSequence csq, int off, int len, int atx, final int aty)
 {
 	FontMetrics metrics = getFontMetrics();
@@ -243,7 +265,7 @@ public void drawString(CharSequence csq, int off, int len, int atx, final int at
 			public void drawPixel(int i, int j, float frac)
 			{
 				int x = i+1;
-				int y = aty-j+baseline-1;
+				int y = 2*aty-j+baseline-1;
 				GL11.glColor4f(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue(), frac);
 				GL11.glBegin(GL11.GL_QUADS);
 					GL11.glVertex2f(x, y);
@@ -262,13 +284,13 @@ public void drawString(CharSequence csq, int off, int len, int atx, final int at
 					{
 						Vector2 v = glyph.vertices[glyph.triangles[i][j]];
 						double vx = x+v.getX()*scale;
-						double vy = aty+y-v.getY()*scale;
+						double vy = y-v.getY()*scale;
 						GL11.glVertex2f((float) vx, (float) vy);
 					}
 				}
 				GL11.glEnd();
 			}
-			public void drawTexturedQuad( PreparedIcon icon, int x, int y, int width, int height, float u0, float v0, float u1, float v1 )
+			public void drawTexturedQuad(PreparedIcon icon, int x, int y, int width, int height, float u0, float v0, float u1, float v1 )
 			{
 				LwjglPreparedIcon i = (LwjglPreparedIcon) icon;
 				if (i.isDirty())
@@ -278,7 +300,7 @@ public void drawString(CharSequence csq, int off, int len, int atx, final int at
 				}
 				OpenGLHelper.displaySubImage(i.getId(), x, y, width, height, u0, v0, u1, v1);
 			}
-		}, atx, 0, csq, off, len);
+		}, atx, aty, csq, off, len);
 }
 
 public void drawString(CharSequence csq, int atx, final int aty)
@@ -615,12 +637,11 @@ public void paintIconAndText(final IconAndText component, int x, int y, int widt
 	Font customfont = (text != null) ? component.getFont(getDefaultFont()) : null;
 	if (customfont != null) setCurrentFont(customfont);
 	
-	FontMetrics fm = null;
 	int tw = 0, th = 0;
 	int ta = 0;
 	if (text != null)
 	{
-		fm = getFontMetrics();
+		FontMetrics fm = getFontMetrics();
 		tw = fm.stringWidth(text);
 		ta = fm.getAscent();
 		th = fm.getDescent() + ta;
@@ -666,6 +687,7 @@ public void paintIconAndText(final IconAndText component, int x, int y, int widt
 			int imnemonic = ((Mnemonic) component).getMnemonic();
 			if ((imnemonic != -1) && (imnemonic < text.length()))
 			{
+				FontMetrics fm = getFontMetrics();
 				int mx = cx + fm.stringWidth(text.substring(0, imnemonic));
 				drawLine(mx, cy + 1, mx + fm.charWidth(text.charAt(imnemonic)), cy + 1);
 			}

@@ -58,7 +58,7 @@ public int drawGlyph(FontDrawInterface graphics, char c, int x, int y)
 	    preparedIcon,
 	    x+info.xoffset,
 	    //y+data.lineHeight-(info.yoffset),
-	    y+info.yoffset,
+	    y+info.yoffset-data.lineHeight,
 	    info.width,
 	    info.height,
 	    u0, v0, u1, v1

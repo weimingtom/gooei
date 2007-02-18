@@ -7,6 +7,7 @@ import gooei.ModalWidget;
 import gooei.MouseInteraction;
 import gooei.MouseRouterWidget;
 import gooei.MouseableWidget;
+import gooei.TopLevelWidget;
 import gooei.Widget;
 import gooei.input.InputEventType;
 import gooei.input.Keys;
@@ -125,6 +126,30 @@ public void doLayout()
 					Math.max(0, (bounds.height - d.height) / 2),
 					Math.min(d.width, bounds.width),
 					Math.min(d.height, bounds.height));
+		}
+		else if (comp instanceof TopLevelWidget)
+		{
+			TopLevelWidget tlwidget = (TopLevelWidget) comp;
+			Rectangle r = tlwidget.getPreferredLayout();
+			switch (tlwidget.getPolicy())
+			{
+				case NORMAL :
+					comp.setBounds(0, 0, bounds.width, bounds.height);
+					break;
+				case CENTERED :
+					{
+						int x = (bounds.width-r.width)/2;
+						int y = (bounds.height-r.height)/2;
+						comp.setBounds(x, y, bounds.width, bounds.height);
+					}
+					break;
+				case FIXED :
+					comp.setBounds(r.x, r.y, r.width, r.height);
+					break;
+				default :
+					comp.setBounds(0, 0, bounds.width, bounds.height);
+					break;
+			}
 		}
 		else if (!(comp instanceof ModalWidget))
 			comp.setBounds(0, 0, bounds.width, bounds.height);

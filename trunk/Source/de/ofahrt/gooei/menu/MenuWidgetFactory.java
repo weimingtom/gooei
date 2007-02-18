@@ -13,6 +13,7 @@ private void init()
 	add("panel", Panel.class);
 	add("label", Label.class);
 	add("stack", Stack.class);
+	add("list", List.class);
 }
 
 }

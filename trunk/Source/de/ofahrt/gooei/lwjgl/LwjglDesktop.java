@@ -21,7 +21,6 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
@@ -46,8 +45,6 @@ protected int offsetY = 0;
 protected final Dimension size = new Dimension();
 protected final LwjglRenderer renderer;
 protected final TargetCamera camera;
-
-private final LwjglInputSource inputSource = new LwjglInputSource();
 
 public LwjglDesktop(FontRegistry fontRegistry, WidgetFactory factory, int width, int height)
 {
@@ -257,8 +254,10 @@ public void handleEvent(InputEvent event)
 	if (event instanceof MouseEvent)
 	{
 		MouseEvent mouseevent = (MouseEvent) event;
+		int kx = mouseevent.getX(), ky = mouseevent.getY();
 		convertPosition(mouseevent);
 		onMouse(mouseevent);
+		mouseevent.translate(kx-mouseevent.getX(), ky-mouseevent.getY());
 	}
 	else if (event instanceof KeyboardEvent)
 	{
@@ -268,7 +267,7 @@ public void handleEvent(InputEvent event)
 	}
 }
 
-public void handleInput()
+/*public void handleInput()
 {
 	if (useCamera)
 	{
@@ -279,17 +278,10 @@ public void handleInput()
 		}
 		camera.zoomIn(Mouse.getDWheel()/10.0);
 	}
-	
-	inputSource.update();
-	while (inputSource.hasNext())
-	{
-		InputEvent event = inputSource.next();
-		handleEvent(event);
-	}
-}
+}*/
 
 // FIXME: use y-flipping only with camera
-public void render2()
+public void render()
 {
 	if (useCamera)
 		GLTools.setCamera(camera);
@@ -313,11 +305,11 @@ public void render2()
 	renderer.render();
 }
 
-public void render()
+/*public void render()
 {
 	GL11.glClearColor(0, 0, 0, 0);
 	GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 	render2();
-}
+}*/
 
 }

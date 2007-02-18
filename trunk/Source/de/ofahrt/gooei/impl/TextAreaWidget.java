@@ -148,7 +148,7 @@ public void doLayout()
 		}
 	}
 	layoutScroll(w + 2, h - fm.getLeading() + 2, 0, 0, 0, 0, hasBorder(), 0);
-	scrollToVisible(caretx, carety, 2, fm.getAscent() + fm.getDescent() + 2); //?
+	getScrollbarSupport().scrollToVisible(caretx, carety, 2, fm.getAscent() + fm.getDescent() + 2);
 }
 
 @Override
@@ -208,12 +208,12 @@ public boolean handleKeyPress(KeyboardEvent event)
 }
 
 public void findComponent(MouseInteraction mouseInteraction, int x, int y)
-{ findScroll(mouseInteraction, x, y); }
+{ getScrollbarSupport().findScroll(mouseInteraction, x, y); }
 
 @Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
-	if (!processScroll(mouseInteraction, event, part))
+	if (!getScrollbarSupport().handleMouseEvent(part, mouseInteraction, event))
 		processField(mouseInteraction, event, 0);
 }
 

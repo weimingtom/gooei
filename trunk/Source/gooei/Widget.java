@@ -48,21 +48,13 @@ boolean isEnabled();
  * Returns this components bounds relative to the parent component.
  * If the parent component is scrollable, the bounds are relative to the
  * parents scrollable area.
- * <p>
- * May return null if the bounds have never been set.
+ * 
  * @see ScrollableWidget
  */
 Rectangle getBounds();
 
 /** Sets this components bounds. */
 void setBounds(int x, int y, int width, int height);
-
-
-/** Gets this components popup menu. */
-PopupMenuElement getPopupMenu();
-
-/** Sets this components popup menu. */
-void setPopupMenu(PopupMenuElement popupmenuElement);
 
 
 /**

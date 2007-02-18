@@ -116,7 +116,7 @@ public boolean handleKeyPress(KeyboardEvent event)
 
 @Override
 public void findComponent(MouseInteraction mouseInteraction, int x, int y)
-{ findScroll(mouseInteraction, x, y); }
+{ getScrollbarSupport().findScroll(mouseInteraction, x, y); }
 
 @Override
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
@@ -125,7 +125,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 	boolean shiftdown = event.isModifierDown(Modifiers.SHIFT);
 	boolean controldown = event.isModifierDown(Modifiers.CTRL);
 	
-	if (!processScroll(mouseInteraction, event, part))
+	if (!getScrollbarSupport().handleMouseEvent(part, mouseInteraction, event))
 	{
 		if (((id == InputEventType.MOUSE_PRESSED) ||
 				((id == InputEventType.MOUSE_DRAGGED) && !shiftdown && !controldown)))
@@ -139,7 +139,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 				{
 					if (id == InputEventType.MOUSE_DRAGGED)
 					{
-						scrollToVisible(r.x, r.y, 0, r.height);
+						getScrollbarSupport().scrollToVisible(r.x, r.y, 0, r.height);
 					}
 					
 					if ((id != InputEventType.MOUSE_DRAGGED) || !item.isSelected())
@@ -147,7 +147,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 						if (id != InputEventType.MOUSE_DRAGGED)
 						{
 							if (setFocus())
-								repaintScrollablePart(item);
+								getScrollbarSupport().repaintScrollablePart(item);
 						}
 						if (!event.isPopupTrigger() || !item.isSelected())
 						{ // don't update selection

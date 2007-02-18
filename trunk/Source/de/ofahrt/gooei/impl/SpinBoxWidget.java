@@ -67,21 +67,6 @@ public void doLayout()
 protected boolean isFilter()
 { return true; }
 
-private void repaintComponent(Object part)
-{
-	int block = desktop.getBlockSize();
-	Rectangle b = getBounds();
-	if ("text".equals(part))
-	{ // spinbox textfield content
-		repaint(b.x, b.y, b.width - block, b.height);
-	}
-	else
-	{ // spinbox increase or decrease button
-		repaint(b.x + b.width - block,
-			(part == "up") ? b.y : (b.y + b.height - b.height / 2), block, b.height / 2);
-	}
-}
-
 public boolean processSpin(Object part)
 {
 	String text = getText();
@@ -96,7 +81,7 @@ public boolean processSpin(Object part)
 			setText(val);
 			setStart(val.length());
 			setEnd(0);
-			repaintComponent("text");
+			repaint();
 			invokeAction();
 			return true;
 		}
@@ -151,7 +136,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 				if (id == InputEventType.MOUSE_RELEASED)
 					desktop.setTimer(null, 0L);
 			}
-			repaintComponent(part);
+			repaint();
 		}
 	}
 }

@@ -84,11 +84,10 @@ public void doLayout()
 	
 	final Widget comp1 = getChild(0);
 	final Widget comp2 = getChild(1);
-	final boolean visible1 = (comp1 != null) && comp1.isVisible();
 	if (div == -1)
 	{
 		int d1 = 0;
-		if (visible1)
+		if ((comp1 != null) && comp1.isVisible())
 		{
 			Dimension d = comp1.getPreferredSize();
 			d1 = horizontal ? d.width : d.height;
@@ -99,7 +98,7 @@ public void doLayout()
 	else if (div > maxdiv)
 		setDivider(div);
 	
-	if (visible1)
+	if ((comp1 != null) && comp1.isVisible())
 	{
 		comp1.setBounds(0, 0, horizontal ? div : bounds.width,
 			horizontal ? bounds.height : div);

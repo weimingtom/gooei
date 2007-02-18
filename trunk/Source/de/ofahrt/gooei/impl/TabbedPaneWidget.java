@@ -258,11 +258,7 @@ public boolean checkMnemonic(Object checked, Keys keycode, int modifiers)
 }
 
 private void repaintComponent(TabWidget part)
-{
-	Rectangle b = getBounds();
-	Rectangle r = part.getBounds();
-	repaint(b.x + r.x, b.y + r.y, r.width, r.height);
-}
+{ repaint(part.getBounds()); }
 
 public boolean handleKeyPress(KeyboardEvent event)
 {

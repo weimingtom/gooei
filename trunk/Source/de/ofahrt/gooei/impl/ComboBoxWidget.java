@@ -267,14 +267,6 @@ void closeCombo(ComboListWidget combolist, ComboBoxItem item)
 public void closePopup()
 { closeCombo(getComboListWidget(), null); }
 
-private void repaintComponent(Object part)
-{
-	int block = desktop.getBlockSize();
-	Rectangle b = getBounds();
-	// combobox down arrow
-	repaint(b.x + b.width - block, b.y, block, b.height); // icon?+
-}
-
 private ComboBoxItem getListItem(ComboListWidget scrollpane, Keys keycode, ComboBoxItem lead)
 {
 	ComboBoxItem result = null;
@@ -444,7 +436,7 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 		if (((id == InputEventType.MOUSE_ENTERED) ||
 				(id == InputEventType.MOUSE_EXITED)) && (mouseInteraction.mousepressed == null))
 		{
-			if (editable) repaintComponent(part); // hover the arrow button
+			if (editable) repaint(); // hover the arrow button
 			else repaint(); // hover the whole combobox
 		}
 		else if (id == InputEventType.MOUSE_PRESSED)

@@ -161,7 +161,7 @@ public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 	if (this instanceof ScrollableWidget)
 	{
 		ScrollableWidget sw = (ScrollableWidget) this;
-		if (findScroll(mouseInteraction, x, y)) return;
+		if (getScrollbarSupport().findScroll(mouseInteraction, x, y)) return;
 		
 		Rectangle port = sw.getPort();
 		if (port != null)

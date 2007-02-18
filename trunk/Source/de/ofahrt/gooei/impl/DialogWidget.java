@@ -83,13 +83,15 @@ public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, Mou
 			int my = Math.max(0, Math.min(event.getY() - mouseInteraction.referencey, parents.height - bounds.height));
 			if ((bounds.x != mx) || (bounds.y != my))
 			{ // repaint the union of the previous and next bounds
-				repaint(Math.min(bounds.x, mx), Math.min(bounds.y, my),
+				Rectangle r = new Rectangle(Math.min(bounds.x, mx), Math.min(bounds.y, my),
 					bounds.width + Math.abs(mx - bounds.x), bounds.height + Math.abs(my - bounds.y));
-				bounds.x = mx; bounds.y = my;
+				desktop.repaint(this, r);
+				bounds.x = mx;
+				bounds.y = my;
 			}
 		}
 	}
-	else if (!processScroll(mouseInteraction, event, part) && (part != null))
+	else if (!getScrollbarSupport().handleMouseEvent(part, mouseInteraction, event) && (part != null))
 	{
 		if (id == InputEventType.MOUSE_PRESSED)
 		{

@@ -8,6 +8,7 @@ import gooei.MnemonicWidget;
 import gooei.MouseInteraction;
 import gooei.MouseableWidget;
 import gooei.PopupMenuElement;
+import gooei.PopupMenuWidget;
 import gooei.PopupOwner;
 import gooei.PopupWidget;
 import gooei.ScrollableWidget;
@@ -229,8 +230,12 @@ public Widget parse(UIController controller, String path, ResourceBundle bundle)
 public Widget parse(UIController controller, String path) throws IOException
 { return parse(controller, path, null); }
 
-public void parseAndAdd(UIController controller, String path) throws IOException
-{ pane.addChild(parse(controller, path, null), 0); }
+public Widget parseAndAdd(UIController controller, String path) throws IOException
+{
+	Widget w = parse(controller, path, null);
+	pane.addChild(w, 0);
+	return w;
+}
 
 
 
@@ -374,9 +379,9 @@ private void handleMouseEvent(MouseableWidget component, Object part, MouseInter
 	
 	component.handleMouseEvent(part, mouseInteraction, event);
 	
-	if (event.isPopupTrigger())
+	if (event.isPopupTrigger() && (component instanceof PopupMenuWidget))
 	{
-		PopupMenuElement popupmenu = component.getPopupMenu();
+		PopupMenuElement popupmenu = ((PopupMenuWidget) component).getPopupMenu();
 		if (popupmenu != null)
 		{
 			PopupWidget popup = popupmenu.popupPopup(event.getX(), event.getY());
@@ -606,11 +611,11 @@ public void onMouse(MouseEvent event)
 				if (port.x + port.width < bounds.width)
 				{ // has vertical scrollbar
 					// TODO scroll panels too
-					scrollable.processScroll(rotation > 0 ? "down" : "up");
+					scrollable.handleScrollEvent(rotation > 0 ? "down" : "up");
 				}
 				else if (port.y + port.height < bounds.height)
 				{ // has horizontal scrollbar
-					scrollable.processScroll(rotation > 0 ? "right" : "left");
+					scrollable.handleScrollEvent(rotation > 0 ? "right" : "left");
 				}
 			}
 		}
@@ -724,7 +729,7 @@ public void onTimer(TimerEventType timerType)
 	if (timerType == TimerEventType.SCROLL)
 	{
 		ScrollableWidget scrollable = (ScrollableWidget) currentMouseInteraction.mousepressed;
-		if (scrollable.processScroll(currentMouseInteraction.pressedpart))
+		if (scrollable.handleScrollEvent(currentMouseInteraction.pressedpart))
 			setTimer(TimerEventType.SCROLL, 60L);
 	}
 	else if (timerType == TimerEventType.SPIN)

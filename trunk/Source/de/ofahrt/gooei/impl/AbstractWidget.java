@@ -5,21 +5,19 @@ import gooei.Desktop;
 import gooei.Element;
 import gooei.ElementContainer;
 import gooei.FocusableWidget;
-import gooei.MouseInteraction;
 import gooei.PopupMenuElement;
+import gooei.PopupMenuWidget;
 import gooei.Renderer;
 import gooei.ScrollableWidget;
 import gooei.ToolTipOwner;
 import gooei.Widget;
 import gooei.font.Font;
-import gooei.input.InputEventType;
 import gooei.input.Keys;
 import gooei.input.Modifiers;
-import gooei.input.MouseEvent;
 import gooei.utils.MethodInvoker;
+import gooei.utils.ScrollbarSupport;
 import gooei.utils.SortOrder;
 import gooei.utils.TLColor;
-import gooei.utils.TimerEventType;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -27,8 +25,9 @@ import java.util.Iterator;
 
 import de.ofahrt.gooei.lwjgl.GLColor;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
+import de.ofahrt.gooei.lwjgl.LwjglScrollbarSupport;
 
-public abstract class AbstractWidget implements Widget, ToolTipOwner
+public abstract class AbstractWidget implements Widget, ToolTipOwner, PopupMenuWidget
 {
 
 protected final Desktop desktop;
@@ -56,6 +55,8 @@ private Rectangle horizontal, vertical;
 private PopupMenuElement popupmenuWidget;
 
 private MethodInvoker initMethod, focusgainedMethod, focuslostMethod;
+
+private ScrollbarSupport scrollbarSupport;
 
 public AbstractWidget(Desktop desktop)
 { this.desktop = desktop; }
@@ -97,13 +98,13 @@ public Dimension getPreferredSize()
 	throw new IllegalArgumentException(this.toString());
 }
 
-// FIXME: Make this relative to the component
+/** Repaint area relative to this component. */
 public void repaint(Rectangle area)
-{ desktop.repaint(this, area); }
+{ desktop.repaint(this, new Rectangle(bounds.x+area.x, bounds.y+area.y, area.width, area.height)); }
 
-// FIXME: Make this relative to the component
+/** Repaint area relative to this component. */
 public void repaint(int x, int y, int w, int h)
-{ repaint(new Rectangle(x, y, w, h)); }
+{ desktop.repaint(this, new Rectangle(bounds.x+x, bounds.y+y, w, h)); }
 
 /**
  * Convenience method to repaint this component.
@@ -114,7 +115,7 @@ public void repaint(int x, int y, int w, int h)
  * </code></pre>
  */
 public void repaint()
-{ desktop.repaint(this, getBounds()); }
+{ desktop.repaint(this); }
 
 public abstract void paint(LwjglRenderer renderer);
 
@@ -332,77 +333,11 @@ public void setVertical(Rectangle vertical)
 public void setVertical(int x, int y, int width, int height)
 { vertical = updateRect(vertical, x, y, width, height); }
 
-protected final void repaintScrollablePart(Element part)
+protected ScrollbarSupport getScrollbarSupport()
 {
-	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-	Rectangle b = getBounds();
-	// repaint the whole line of its subcomponent
-	Rectangle p = getPort();
-	Rectangle v = getView();
-	Rectangle r = part.getBounds();
-	if ((r.y + r.height >= v.y) && (r.y <= v.y + p.height))
-	{
-		Rectangle area = new Rectangle();
-		area.x = b.x + p.x;
-		area.y = b.y + p.y - v.y + r.y;
-		area.width = p.width;
-		area.height = r.height;
-		repaint(area);
-		//? need cut item rectangle above/below viewport
-	}
-}
-
-protected final void repaintScrollablePart(String part)
-{
-	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-	int block = desktop.getBlockSize();
-	Rectangle b = getBounds();
-	if ("left".equals(part) || "right".equals(part))
-	{ // horizontal scrollbar button
-		Rectangle area = new Rectangle(getHorizontal());
-		area.x = "left".equals(part) ? area.x : (area.x + area.width - block);
-		area.width = block;
-		area.translate(b.x, b.y);
-		repaint(area);
-	}
-	else if ("up".equals(part) || "down".equals(part))
-	{ // vertical scrollbar button
-		Rectangle r = getVertical();
-		repaint(b.x + r.x, b.y + ((part == "up") ? r.y : (r.y + r.height - block)), r.width, block);
-	}
-	else if ("text".equals(part) || "horizontal".equals(part) || "vertical".equals(part))
-	{
-		Rectangle p = getPort(); // textarea or content
-		repaint(b.x + p.x, b.y + p.y, p.width, p.height);
-		if ("horizontal".equals(part))
-		{
-			Rectangle r = getHorizontal();
-			repaint(b.x + r.x, b.y + r.y, r.width, r.height);
-			repaint(b.x + r.x, b.y, r.width, p.y); // paint header too
-		}
-		else if ("vertical".equals(part))
-		{
-			Rectangle r = getVertical();
-			repaint(b.x + r.x, b.y + r.y, r.width, r.height);
-		}
-	}
-	else
-		throw new UnsupportedOperationException();
-}
-
-protected final void scrollToVisible(int x, int y, int w, int h)
-{
-	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-	Rectangle v = getView();
-	Rectangle p = getPort();
-	int vx = Math.max(x + w - p.width, Math.min(v.x, x));
-	int vy = Math.max(y + h - p.height, Math.min(v.y, y));
-	if ((v.x != vx) || (v.y != vy))
-	{
-		repaint(); // horizontal | vertical
-		v.x = vx;
-		v.y = vy;
-	}
+	if (scrollbarSupport == null)
+		scrollbarSupport = new LwjglScrollbarSupport(desktop, (ScrollableWidget) this);
+	return scrollbarSupport;
 }
 
 /**
@@ -436,7 +371,7 @@ protected final boolean layoutScroll(int contentwidth, int contentheight,
 	int portheight = b.height - top - topgap - bottom - 2 * iborder; // vertical space
 	boolean hneed = contentwidth > portwidth; // horizontal scrollbar required
 	boolean vneed = contentheight > portheight - (hneed ? iscroll : 0); // vertical scrollbar needed
-	if (vneed) { portwidth -= iscroll; } // subtract by vertical scrollbar width
+	if (vneed) portwidth -= iscroll; // subtract by vertical scrollbar width
 	hneed = hneed || (vneed && (contentwidth > portwidth));
 	if (hneed) portheight -= iscroll; // subtract by horizontal scrollbar height
 	
@@ -469,192 +404,10 @@ protected final boolean layoutScroll(int contentwidth, int contentheight,
 	return vneed || hneed;
 }
 
-/**
- * @param p x or y relative to the scrollbar begin
- * @param size scrollbar width or height
- * @param portsize viewport width or height
- * @param viewp view x or y
- * @param viewsize view width or height
- * @param horiz if true horizontal, vertical otherwise
- */
-private void findScroll(MouseInteraction mouseInteraction, int p, int size, int portsize, int viewp, int viewsize, boolean horiz)
+public final boolean handleScrollEvent(Object part)
 {
 	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-	int block = desktop.getBlockSize();
-	if (p < block)
-		mouseInteraction.insidepart = horiz ? "left" : "up";
-	else if (p > size - block)
-		mouseInteraction.insidepart = horiz ? "right" : "down";
-	else
-	{
-		int track = size - 2 * block;
-		if (track < 10)
-		{
-			mouseInteraction.insidepart = "corner";
-			return;
-		} // too small
-		int knob = Math.max(track * portsize / viewsize, 10);
-		int decrease = viewp * (track - knob) / (viewsize - portsize);
-		if (p < block + decrease) mouseInteraction.insidepart = horiz ? "lefttrack" : "uptrack";
-		else if (p < block + decrease + knob) mouseInteraction.insidepart = horiz ? "hknob" : "vknob";
-		else mouseInteraction.insidepart = horiz ? "righttrack" : "downtrack";
-	}
-}
-
-/** Determine if the mouse is inside one of the scrollbars. */
-protected final boolean findScroll(MouseInteraction mouseInteraction, int x, int y)
-{
-	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-//	Rectangle port = getPort();
-	if ((port == null) || port.contains(x, y)) return false;
-//	Rectangle view = getView();
-//	Rectangle horizontal = getHorizontal();
-//	Rectangle vertical = getVertical();
-	if ((horizontal != null) && horizontal.contains(x, y))
-		findScroll(mouseInteraction, x - horizontal.x, horizontal.width, port.width, view.x, view.width, true);
-	else if ((vertical != null) && vertical.contains(x, y))
-		findScroll(mouseInteraction, y - vertical.y, vertical.height, port.height, view.y, view.height, false);
-	else
-		mouseInteraction.insidepart = "corner";
-	return true;
-}
-
-/** Process scrollbar mouse event. */
-protected final boolean processScroll(MouseInteraction mouseInteraction, MouseEvent event, Object part)
-{
-	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-//	final ScrollableWidget component = (ScrollableWidget) this;
-	InputEventType id = event.getType();
-	int x = event.getX(), y = event.getY();
-	int block = desktop.getBlockSize();
-	if (("up".equals(part)) || ("down".equals(part)) ||
-			("left".equals(part)) || ("right".equals(part)))
-	{
-		if ((id == InputEventType.MOUSE_ENTERED) ||
-				(id == InputEventType.MOUSE_EXITED) ||
-				(id == InputEventType.MOUSE_PRESSED) ||
-				(id == InputEventType.MOUSE_RELEASED))
-		{
-			if (id == InputEventType.MOUSE_PRESSED)
-			{
-				if (processScroll(part))
-				{
-					desktop.setTimer(TimerEventType.SCROLL, 300L);
-					return true;
-				}
-			}
-			else
-			{
-				if (id == InputEventType.MOUSE_RELEASED)
-					desktop.setTimer(null, 0L);
-				repaintScrollablePart((String) part);
-			}
-		}
-	}
-	else if (("uptrack".equals(part)) || ("downtrack".equals(part)) ||
-			("lefttrack".equals(part)) || ("righttrack".equals(part)))
-	{
-		if (id == InputEventType.MOUSE_PRESSED)
-		{
-			if (processScroll(part))
-			{
-				desktop.setTimer(TimerEventType.SCROLL, 300L);
-			}
-		}
-		else if (id == InputEventType.MOUSE_RELEASED)
-		{
-			desktop.setTimer(null, 0L);
-		}
-	}
-	else if (("vknob".equals(part)) || ("hknob".equals(part)))
-	{
-		if (id == InputEventType.MOUSE_PRESSED)
-		{
-//			Rectangle port = getPort();
-//			Rectangle view = getView();
-			if (part == "hknob")
-				mouseInteraction.referencex = x - view.x * (port.width - 2 * block) / view.width;
-			else
-				mouseInteraction.referencey = y - view.y * (port.height - 2 * block) / view.height;
-		}
-		else if (id == InputEventType.MOUSE_DRAGGED)
-		{
-//			Rectangle port = getPort();
-//			Rectangle view = getView();
-			if (part == "hknob")
-			{
-				int viewx = (x - mouseInteraction.referencex) * view.width / (port.width - 2 * block);
-				viewx = Math.max(0, Math.min(viewx, view.width - port.width));
-				if (view.x != viewx)
-				{
-					view.x = viewx;
-					repaintScrollablePart("horizontal");
-				}
-			}
-			else
-			{ // (part == "vknob")
-				int viewy = (y - mouseInteraction.referencey) * view.height / (port.height - 2 * block);
-				viewy = Math.max(0, Math.min(viewy, view.height - port.height));
-				if (view.y != viewy)
-				{
-					view.y = viewy;
-					repaintScrollablePart("vertical");
-				}
-			}
-		}
-	}
-	else if (part == "corner")
-	{
-		part = "corner"; // compiler bug
-	}
-	else
-	{
-		if (id == InputEventType.MOUSE_PRESSED)
-		{
-//			Rectangle port = getPort();
-			if (port != null) mouseInteraction.setReference(this, port.x, port.y);
-		}
-		return false;
-	}
-	return true;
-}
-
-public final boolean processScroll(Object part)
-{
-	if (!(this instanceof ScrollableWidget)) throw new UnsupportedOperationException();
-//	Rectangle view = getView();
-	Rectangle iport = ("left".equals(part) || "up".equals(part)) ? null : getPort();
-	int dx = 0;
-	int dy = 0;
-	if (part == "left") dx = -10;
-	else if (part == "lefttrack") dx = -iport.width;
-	else if (part == "right") dx = 10;
-	else if (part == "righttrack") dx = iport.width;
-	else if (part == "up") dy = -10;
-	else if (part == "uptrack") dy = -iport.height;
-	else if (part == "down") dy = 10;
-	else if (part == "downtrack") dy = iport.height;
-	if (dx != 0)
-	{
-		dx = (dx < 0) ? Math.max(-view.x, dx) :
-			Math.min(dx, view.width - iport.width - view.x);
-	}
-	else if (dy != 0)
-	{
-		dy = (dy < 0) ? Math.max(-view.y, dy) :
-			Math.min(dy, view.height - iport.height - view.y);
-	}
-	else
-		return false;
-	if ((dx == 0) && (dy == 0)) return false;
-	view.x += dx; view.y += dy;
-	repaintScrollablePart((dx != 0) ? "horizontal" : "vertical");
-	return (((part == "left") || (part == "lefttrack")) && (view.x > 0)) ||
-		(((part == "right") || (part == "righttrack")) &&
-			(view.x < view.width - iport.width)) ||
-		(((part == "up") || (part == "uptrack")) && (view.y > 0)) ||
-		(((part == "down") || (part == "downtrack")) &&
-			(view.y < view.height - iport.height));
+	return getScrollbarSupport().handleScrollEvent(part);
 }
 
 protected void paintScrollableContent(LwjglRenderer renderer)
@@ -672,94 +425,10 @@ public final void paintScroll(LwjglRenderer renderer, boolean drawfocus)
 	final boolean pressed = isMousePressed();
 	final boolean inside = isMouseInside();
 	final boolean isenabled = isEnabled() && renderer.isEnabled();
-	final int block = desktop.getBlockSize();
-	
-	final int clipx = renderer.getClipX(), clipy = renderer.getClipY();
-	final int clipwidth = renderer.getClipWidth(), clipheight = renderer.getClipHeight();
-	
 	final boolean focus = hasFocus();
-//	Rectangle port = getPort();
-//	Rectangle horizontal = getHorizontal();
-//	Rectangle vertical = getVertical();
-//	Rectangle view = getView();
 	
-	// draw horizontal scrollbar
-	if (horizontal != null)
-	{
-		int x = horizontal.x;
-		int y = horizontal.y;
-		int w = horizontal.width;
-		int h = horizontal.height;
-		renderer.paintArrow(x, y, block, h,
-			'W', isenabled, inside, pressed, "left", true, true, true, false, true);
-		renderer.paintArrow(x + w - block, y, block, h,
-			'E', isenabled, inside, pressed, "right", true, false, true, true, true);
-		
-		int track = w - (2 * block);
-		if (track < 10)
-		{
-			renderer.paintRect(x + block, y, track, h,
-				isenabled ? renderer.c_border : renderer.c_disable, renderer.c_bg, true, true, true, true, true);
-		}
-		else
-		{
-			int knob = Math.max(track * port.width / view.width, 10);
-			int decrease = view.x * (track - knob) / (view.width - port.width);
-			renderer.paintRect(x + block, y, decrease, h,
-				isenabled ? renderer.c_border : renderer.c_disable, renderer.c_bg, false, true, true, false, true);
-			renderer.paintRect(x + block + decrease, y, knob, h,
-				isenabled ? renderer.c_border : renderer.c_disable, isenabled ? renderer.c_ctrl : renderer.c_bg, true, true, true, true, true);
-			int n = Math.min(5, (knob - 4) / 3);
-			renderer.setColor(isenabled ? renderer.c_border : renderer.c_disable);
-			int cx = (x + block + decrease) + (knob + 2 - n * 3) / 2;
-			for (int i = 0; i < n; i++ )
-			{
-				renderer.drawLine(cx + i * 3, y + 3, cx + i * 3, y + h - 5);
-			}
-			int increase = track - decrease - knob;
-			renderer.paintRect(x + block + decrease + knob, y, increase, h,
-				isenabled ? renderer.c_border : renderer.c_disable, renderer.c_bg, false, false, true, true, true);
-		}
-	}
-	
-	// draw vertical scrollbar
-	if (vertical != null)
-	{
-		int x = vertical.x;
-		int y = vertical.y;
-		int w = vertical.width;
-		int h = vertical.height;
-		renderer.paintArrow(x, y, w, block,
-			'N', isenabled, inside, pressed, "up", true, true, false, true, false);
-		renderer.paintArrow(x, y + h - block, w, block,
-			'S', isenabled, inside, pressed, "down", false, true, true, true, false);
-			
-		int track = h - (2 * block);
-		if (track < 10)
-		{
-			renderer.paintRect(x, y + block, w, track,
-				isenabled ? renderer.c_border : renderer.c_disable, renderer.c_bg, true, true, true, true, false);
-		}
-		else
-		{
-			int knob = Math.max(track * port.height / view.height, 10);
-			int decrease = view.y * (track - knob) / (view.height - port.height);
-			renderer.paintRect(x, y + block, w, decrease,
-				isenabled ? renderer.c_border : renderer.c_disable, renderer.c_bg, true, false, false, true, false);
-			renderer.paintRect(x, y + block + decrease, w, knob,
-				isenabled ? renderer.c_border : renderer.c_disable, isenabled ? renderer.c_ctrl : renderer.c_bg, true, true, true, true, false);
-			int n = Math.min(5, (knob - 4) / 3);
-			renderer.setColor(isenabled ? renderer.c_border : renderer.c_disable);
-			int cy = (y + block + decrease) + (knob + 2 - n * 3) / 2;
-			for (int i = 0; i < n; i++ )
-			{
-				renderer.drawLine(x + 3, cy + i * 3, x + w - 5, cy + i * 3);
-			}
-			int increase = track - decrease - knob;
-			renderer.paintRect(x, y + block + decrease + knob, w, increase,
-				isenabled ? renderer.c_border : renderer.c_disable, renderer.c_bg, false, false, true, true, false);
-		}
-	}
+	// draw scrollbars
+	getScrollbarSupport().paintScrollbars(renderer, pressed, inside, isenabled);
 	
 	// draw border
 	if (!(this instanceof PanelWidget) &&
@@ -795,6 +464,7 @@ public final void paintScroll(LwjglRenderer renderer, boolean drawfocus)
 				SortOrder sort = column.getSort(); // "none", "ascent", "descent"
 				if (sort != SortOrder.NONE)
 				{
+					final int block = desktop.getBlockSize();
 					renderer.paintArrow(x - view.x + w - block, 0, block, port.y,
 						(sort == SortOrder.ASCENDING) ? 'S' : 'N');
 				}
@@ -806,24 +476,10 @@ public final void paintScroll(LwjglRenderer renderer, boolean drawfocus)
 	}
 	
 	// draw content
-	final int x = Math.max(clipx, port.x);
-	final int y = Math.max(clipy, port.y);
-	final int nw = Math.min(clipx + clipwidth, port.x + port.width)-x;
-	final int nh = Math.min(clipy + clipheight, port.y + port.height)-y;
-	if ((nw > 0) && (nh > 0))
-	{
-		int dx = port.x-view.x, dy = port.y-view.y;
-		renderer.pushState();
-		renderer.clip(x, y, nw, nh);
-		renderer.translate(dx, dy);
-		final int nx = x-dx, ny = y-dy;
-		if (nx != renderer.getClipX()) throw new IllegalStateException(this+" "+nx+" "+renderer.getClipX());
-		if (ny != renderer.getClipY()) throw new IllegalStateException(this+" "+ny+" "+renderer.getClipY());
-		if (nw != renderer.getClipWidth()) throw new IllegalStateException(this+" "+nw+" "+renderer.getClipWidth());
-		if (nh != renderer.getClipHeight()) throw new IllegalStateException(this+" "+nh+" "+renderer.getClipHeight());
+	renderer.pushState();
+	if (renderer.moveCoordSystem(port, view))
 		paintScrollableContent(renderer);
-		renderer.popState();
-	}
+	renderer.popState();
 	
 	// draw focus
 	if (focus && drawfocus)
