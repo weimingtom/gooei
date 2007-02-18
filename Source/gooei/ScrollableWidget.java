@@ -25,9 +25,9 @@ Rectangle getPort();
 
 /**
  * Returns the rectangle on the underlying rectangular area that is visible
- * through the port. The width and height must be identical to those of the
- * port. The x, y coordinates are relative to the origin of the
- * underlying rectangular area.
+ * through the port. The x, y coordinates are relative to the origin of the
+ * underlying rectangular area. The width and height must be larger or equal
+ * to those of the port.
  */
 Rectangle getView();
 
@@ -35,6 +35,11 @@ Rectangle getView();
  * Part is one of "up", "down", "left", "right", or any object associated with
  * a scroll timer.
  */
-boolean processScroll(Object part);
+boolean handleScrollEvent(Object part);
+
+Rectangle getHorizontal();
+
+Rectangle getVertical();
+
 
 }

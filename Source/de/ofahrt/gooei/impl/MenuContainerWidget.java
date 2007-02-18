@@ -95,11 +95,7 @@ public PopupWidgetImpl popupMenu()
 }
 
 protected void repaintComponent(MenuElement part)
-{
-	Rectangle b = getBounds();
-	Rectangle r = part.getBounds();
-	repaint(b.x + r.x, b.y + r.y, b.width, r.height);
-}
+{ repaint(part.getBounds()); }
 
 /*@Override
 public boolean handleKeyPress(KeyboardEvent event)

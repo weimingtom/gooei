@@ -6,6 +6,7 @@ public abstract class InputEvent
 protected final InputEventType type;
 protected final long time;
 protected final int modifiers;
+protected boolean consumed = false;
 
 protected InputEvent(InputEventType type, long time, int modifiers)
 {
@@ -31,5 +32,11 @@ public final boolean isModifierUp(int modifier)
 
 public boolean isPopupTrigger()
 { return false; }
+
+public boolean isConsumed()
+{ return consumed; }
+
+public void consume()
+{ consumed = true; }
 
 }

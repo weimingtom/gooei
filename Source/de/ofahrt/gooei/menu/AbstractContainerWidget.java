@@ -6,6 +6,7 @@ import gooei.MnemonicWidget;
 import gooei.MouseInteraction;
 import gooei.MouseRouterWidget;
 import gooei.MouseableWidget;
+import gooei.ScrollableWidget;
 import gooei.Widget;
 import gooei.input.Keys;
 
@@ -140,6 +141,9 @@ public void paintAll(LwjglRenderer renderer)
 public abstract void paint(LwjglRenderer renderer);
 
 
+protected boolean findScroll(MouseInteraction mouseInteraction, int x, int y)
+{ return false; }
+
 protected boolean findComponent(Widget comp, MouseInteraction mouseInteraction, int x, int y)
 {
 	if (!comp.isVisible()) return false;
@@ -157,7 +161,7 @@ protected boolean findComponent(Widget comp, MouseInteraction mouseInteraction, 
 
 public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
-/*	if (this instanceof ScrollableWidget)
+	if (this instanceof ScrollableWidget)
 	{
 		ScrollableWidget sw = (ScrollableWidget) this;
 		if (findScroll(mouseInteraction, x, y)) return;
@@ -169,7 +173,7 @@ public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 			x += view.x - port.x;
 			y += view.y - port.y;
 		}
-	}*/
+	}
 	
 	for (final Widget comp : this)
 	{

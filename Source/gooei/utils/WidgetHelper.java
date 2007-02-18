@@ -6,9 +6,12 @@ import gooei.Widget;
 public class WidgetHelper
 {
 
+private static String getName(Widget current)
+{ return current.getName(); }
+
 public static Widget findWidget(Widget current, String name)
 {
-	if (name.equals(current.getName())) return current;
+	if (name.equals(getName(current))) return current;
 	Widget found;
 	
 	// otherwise search in its subcomponents

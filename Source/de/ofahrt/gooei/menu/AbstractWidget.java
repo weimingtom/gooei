@@ -3,8 +3,6 @@ package de.ofahrt.gooei.menu;
 import gooei.ContainerWidget;
 import gooei.Desktop;
 import gooei.Element;
-import gooei.ElementContainer;
-import gooei.PopupMenuElement;
 import gooei.Renderer;
 import gooei.ToolTipOwner;
 import gooei.Widget;
@@ -13,9 +11,7 @@ import gooei.utils.MethodInvoker;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.util.Iterator;
 
-import de.ofahrt.gooei.impl.PopupMenuElementImpl;
 import de.ofahrt.gooei.lwjgl.LwjglRenderer;
 
 public abstract class AbstractWidget implements Widget, ToolTipOwner
@@ -39,42 +35,10 @@ protected ContainerWidget<?> parentWidget;
 private Rectangle bounds = new Rectangle();
 private Rectangle tooltipbounds;
 
-private PopupMenuElement popupmenuWidget;
-
 private MethodInvoker initMethod;
 
 public AbstractWidget(Desktop desktop)
 { this.desktop = desktop; }
-
-public PopupMenuElement getPopupMenu()
-{ return popupmenuWidget; }
-
-public void setPopupMenu(PopupMenuElement newpopup)
-{
-	if (popupmenuWidget != null)
-	{
-		popupmenuWidget.setParent(null);
-		popupmenuWidget = null;
-	}
-	if (newpopup != null)
-	{
-		if (newpopup.parent() != null) throw new IllegalArgumentException();
-		popupmenuWidget = newpopup;
-		popupmenuWidget.setParent(new ElementContainer<PopupMenuElementImpl>()
-			{
-				public Iterator<PopupMenuElementImpl> iterator()
-				{ throw new UnsupportedOperationException(); }
-				public void validate()
-				{/*OK*/}
-				public void addChild(Element child, int index)
-				{ throw new UnsupportedOperationException(); }
-				public void removeChild(Element element)
-				{ throw new UnsupportedOperationException(); }
-				public int getElementCount()
-				{ throw new UnsupportedOperationException(); }
-			});
-	}
-}
 
 public Dimension getPreferredSize()
 {

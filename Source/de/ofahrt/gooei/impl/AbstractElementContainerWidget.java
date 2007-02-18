@@ -252,7 +252,7 @@ protected void selectAll(boolean selected)
 		if (!((SelectableElement) item).isSelected() ^ selected)
 		{
 			((SelectableElement) item).setSelected(selected);
-			repaintScrollablePart(item);
+			getScrollbarSupport().repaintScrollablePart(item);
 			changed = true;
 		}
 	}
@@ -272,7 +272,7 @@ protected void selectItem(Element row)
 		if (((SelectableElement) item).isSelected() ^ (item == row))
 		{
 			((SelectableElement) item).setSelected(item == row);
-			repaintScrollablePart(item);
+			getScrollbarSupport().repaintScrollablePart(item);
 			changed = true;
 		}
 	}
@@ -293,7 +293,7 @@ protected void extend(Element lead, Element row)
 		if (((SelectableElement) item).isSelected() ^ (select != 'n'))
 		{
 			((SelectableElement) item).setSelected(select != 'n');
-			repaintScrollablePart(item);
+			getScrollbarSupport().repaintScrollablePart(item);
 			changed = true;
 		}
 		if (select == 'r')
@@ -313,11 +313,11 @@ protected void setLead(Element oldlead, Element lead)
 {
 	if (oldlead != lead)
 	{
-		if (oldlead != null) repaintScrollablePart(oldlead);
+		if (oldlead != null) getScrollbarSupport().repaintScrollablePart(oldlead);
 		setLeadWidget(lead);
-		repaintScrollablePart(lead);
+		getScrollbarSupport().repaintScrollablePart(lead);
 		Rectangle r = lead.getBounds();
-		scrollToVisible(r.x, r.y, 0, r.height);
+		getScrollbarSupport().scrollToVisible(r.x, r.y, 0, r.height);
 	}
 }
 
@@ -334,7 +334,7 @@ protected void select(Element row, boolean shiftdown, boolean controldown)
 		if (controldown && (selection == SelectionType.MULTIPLE))
 		{
 			((SelectableElement) row).setSelected(!((SelectableElement) row).isSelected());
-			repaintScrollablePart(row);
+			getScrollbarSupport().repaintScrollablePart(row);
 			invokeAction(row);
 			setAnchorWidget(null);
 		}
@@ -349,7 +349,7 @@ protected void select(Element row, boolean shiftdown, boolean controldown)
 				if (((SelectableElement) item).isSelected())
 				{
 					((SelectableElement) item).setSelected(false);
-					repaintScrollablePart(item);
+					getScrollbarSupport().repaintScrollablePart(item);
 				}
 			}
 			invokeAction(row);
@@ -386,9 +386,9 @@ protected boolean processList(KeyboardEvent event)
 		}
 	}
 	else if (keycode == Keys.LEFT)
-		return processScroll("left");
+		return handleScrollEvent("left");
 	else if (keycode == Keys.RIGHT)
-		return processScroll("right");
+		return handleScrollEvent("right");
 	else if (keycode == Keys.SPACE)
 	{ // select the current item
 		select(getLeadWidget(), shiftdown, controldown);

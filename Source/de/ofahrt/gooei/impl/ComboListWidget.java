@@ -50,22 +50,22 @@ void setInside(ComboBoxItem part, boolean scroll)
 {
 	ComboBoxItem previous = getLeadWidget();
 	if (previous != null)
-		repaintScrollablePart(previous);
+		getScrollbarSupport().repaintScrollablePart(previous);
 	setLeadWidget(part);
 	if (part != null)
 	{
-		repaintScrollablePart(part);
+		getScrollbarSupport().repaintScrollablePart(part);
 		if (scroll)
 		{
 			Rectangle r = part.getBounds();
-			scrollToVisible(r.x, r.y, 0, r.height);
+			getScrollbarSupport().scrollToVisible(r.x, r.y, 0, r.height);
 		}
 	}
 }
 
 public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 {
-	if (!findScroll(mouseInteraction, x, y))
+	if (!getScrollbarSupport().findScroll(mouseInteraction, x, y))
 	{
 		y += getView().y;
 		for (final ComboBoxItem choice : getComboBoxWidget())
@@ -82,9 +82,9 @@ public void findComponent(MouseInteraction mouseInteraction, int x, int y)
 
 public void handleMouseEvent(Object part, MouseInteraction mouseInteraction, MouseEvent event)
 {
-	InputEventType id = event.getType();
-	if (!processScroll(mouseInteraction, event, part))
+	if (!getScrollbarSupport().handleMouseEvent(part, mouseInteraction, event))
 	{
+		InputEventType id = event.getType();
 		if ((id == InputEventType.MOUSE_ENTERED) || (id == InputEventType.DRAG_ENTERED))
 		{
 			if (part != null)

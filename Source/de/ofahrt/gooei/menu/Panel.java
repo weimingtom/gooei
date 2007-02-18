@@ -77,15 +77,20 @@ public void doLayout()
 	needsLayout = false;
 }
 
-@Override
-public void paint(LwjglRenderer renderer)
+public void paintBackground(LwjglRenderer renderer)
 {
-	if (needsLayout()) doLayout();
 	if (backgroundImage != null)
 	{
 		renderer.setColor(GLColor.WHITE);
 		renderer.drawImage(backgroundImage, 0, 0);
 	}
+}
+
+@Override
+public void paint(LwjglRenderer renderer)
+{
+	if (needsLayout()) doLayout();
+	paintBackground(renderer);
 	paintAll(renderer);
 }
 

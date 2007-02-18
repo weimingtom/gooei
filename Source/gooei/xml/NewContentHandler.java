@@ -1,5 +1,11 @@
 package gooei.xml;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
 import gooei.ContainerWidget;
 import gooei.Desktop;
 import gooei.Element;
@@ -14,16 +20,10 @@ import gooei.utils.MethodInvoker;
 import gooei.utils.TLColor;
 import gooei.utils.WidgetHelper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 import de.ofahrt.gooei.impl.ComboBoxItem;
 import de.ofahrt.gooei.impl.ComboBoxWidget;
@@ -37,7 +37,7 @@ import de.ofahrt.gooei.impl.TableWidget;
 import de.ofahrt.gooei.impl.TreeNode;
 import de.ofahrt.gooei.impl.TreeWidget;
 
-public class SimpleXMLParser
+public class NewContentHandler implements ContentHandler
 {
 
 	static class MethodFixup
@@ -64,7 +64,11 @@ private final ResourceBundle bundle;
 private final ArrayList<MethodFixup> methodFixups = new ArrayList<MethodFixup>();
 private final FontRegistry fontRegistry;
 
-public SimpleXMLParser(Desktop desktop, UIController container,
+private Widget root;
+private Stack<Object> widgetStack = new Stack<Object>();
+private Object current;
+
+public NewContentHandler(Desktop desktop, UIController container,
 		WidgetFactory factory, ResourceBundle bundle)
 {
 	this.desktop = desktop;
@@ -74,6 +78,11 @@ public SimpleXMLParser(Desktop desktop, UIController container,
 	this.fontRegistry = desktop.getFontRegistry();
 }
 
+public Widget getRoot()
+{ return root; }
+
+
+// private support code
 private Method findMethod(Class<?> c, String mname)
 {
 	if (c == null) return null;
@@ -99,7 +108,7 @@ private Method findMethod(Class<?> c, String mname)
  * - ("constant", string object, null) for constant number
  * (int, long, double, float) or string given as 'text'.
  */
-private MethodInvoker parseMethod(Object thisWidget, String value, Widget root)
+private MethodInvoker parseMethod(Object thisWidget, String value)
 {
 	StringTokenizer st = new StringTokenizer(value, "(, \r\n\t)");
 	String methodname = st.nextToken();
@@ -205,47 +214,6 @@ private MethodInvoker parseMethod(Object thisWidget, String value, Widget root)
 	{
 		throw new IllegalArgumentException(exc);
 	}
-}
-
-/**
- * Fix forward references.
- * Calls init methods and fixes widget references (which may refer to widgets
- * unknown at parse time).
- */
-private void finishParse(Widget root)
-{
-	for (MethodFixup fixup : methodFixups)
-	{
-		Object component = fixup.w;
-		String value = fixup.value;
-		
-		if ("method".equals(fixup.type))
-		{
-			MethodInvoker method = parseMethod(component, value, root);
-			if ("init".equals(fixup.key))
-				method.invoke(null);
-			else
-			{
-				try
-				{
-					fixup.m.invoke(component, method);
-				}
-				catch (Exception e)
-				{ throw new RuntimeException(e); }
-			}
-		}
-		else
-		{ // ("component" == definition[0])
-			Widget reference = WidgetHelper.findWidget(root, value); //+start find from the component
-			if (reference == null) throw new IllegalArgumentException(value + " not found"); 
-			try
-			{ fixup.m.invoke(component, reference); }
-			catch (Exception e)
-			{ throw new RuntimeException(e); }
-		}
-	}
-	
-	// TODO: invoke all init methods
 }
 
 private Object addElement(Object parent, String name)
@@ -429,209 +397,114 @@ private void setAttribute(Object parent, Object component, String key, String va
 	throw new RuntimeException("no method found for "+key+" on "+component);
 }
 
-@SuppressWarnings("null")
-public Widget parse(InputStream inputstream) throws IOException
+
+// ContentHandler interface
+public void characters(char[] arg0, int arg1, int arg2) throws SAXException
 {
-	Reader reader = new BufferedReader(new InputStreamReader(inputstream));
-	try
+	// TODO Auto-generated method stub
+	
+}
+
+public void endDocument() throws SAXException
+{
+	// Fix forward references.
+	// Calls init methods and fixes widget references (which may refer to widgets
+	// unknown at parse time).
+	for (MethodFixup fixup : methodFixups)
 	{
-		Object[] parentlist = null;
-		Object current = null;
-		StringBuffer text = new StringBuffer();
-//		String encoding = null; // encoding value of xml declaration
-		for (int c = reader.read(); c != -1;)
+		Object component = fixup.w;
+		String value = fixup.value;
+		
+		if ("method".equals(fixup.type))
 		{
-			if (c == '<')
-			{
-				if ((c = reader.read()) == '/')
-				{ //endtag
-					if ((text.length() > 0) && (text.charAt(text.length() - 1) == ' '))
-					{
-						text.setLength(text.length() - 1); // trim last space
-					}
-					if (text.length() > 0)
-					{
-						text.setLength(0);
-					}
-					String tagname = (String) parentlist[2];
-					for (int i = 0; i < tagname.length(); i++)
-					{ // check current tag's name
-						if ((c = reader.read()) != tagname.charAt(i))
-							throw new IllegalArgumentException(tagname);
-					}
-					while (" \t\n\r".indexOf(c = reader.read()) != -1) {/*read whitespace*/}
-					if (c != '>') throw new IllegalArgumentException(); // read '>'
-					if (parentlist[0] == null)
-					{
-						reader.close();
-						finishParse((Widget) current);
-						return (Widget) current;
-					}
-					c = reader.read();
-					current = parentlist[0];
-					parentlist = (Object[]) parentlist[1];
-				}
-				else if (c == '!')
-				{ // doctype
-					while ((c = reader.read()) != '>') {/*read to '>'*/}
-					c = reader.read();
-				}
-				else
-				{ // start or standalone tag
-					text.setLength(0);
-					boolean iscomment = false;
-					while (">/ \t\n\r".indexOf(c) == -1)
-					{ // to next whitespace or '/'
-						text.append((char) c);
-						if ((text.length() == 3) && (text.charAt(0) == '!') &&
-								(text.charAt(1) == '-') && (text.charAt(2) == '-'))
-						{ // comment
-							int m = 0;
-							while (true)
-							{ // read to '-->'
-								c = reader.read();
-								if (c == '-') { m++; }
-								else if ((c == '>') && (m >= 2)) { break; }
-								else { m = 0; }
-							}
-							iscomment = true;
-						}
-						c = reader.read();
-					}
-					if (iscomment) continue;
-					if (text.length() == 0) throw new IllegalArgumentException();
-					boolean pi = (text.charAt(0) == '?'); // processing instruction
-					String tagname = text.toString();
-					if (!pi)
-					{ // tagname is available
-						parentlist = new Object[] { current, parentlist, tagname };
-						current = (current != null) ? addElement(current, tagname) : factory.createWidget(desktop, tagname);
-					}
-					text.setLength(0);
-					while (true)
-					{ // read attributes
-						boolean whitespace = false;
-						while (" \t\n\r".indexOf(c) != -1)
-						{ // read whitespaces
-							c = reader.read();
-							whitespace = true;
-						}
-						if (pi && (c == '?'))
-						{ // end of processing instruction
-							if ((c = reader.read()) != '>')
-							{
-								throw new IllegalArgumentException(); // read '>'
-							}
-						}
-						else if (c == '>')
-						{ // end of tag start
-						}
-						else if (c == '/')
-						{ // standalone tag
-							if ((c = reader.read()) != '>')
-							{
-								throw new IllegalArgumentException(); // read '>'
-							}
-							if (parentlist[0] == null)
-							{
-								reader.close();
-								finishParse((Widget) current);
-								return (Widget) current;
-							}
-							current = parentlist[0];
-							parentlist = (Object[]) parentlist[1];
-						}
-						else if (whitespace)
-						{
-							while ("= \t\n\r".indexOf(c) == -1)
-							{ // read to key's end
-								text.append((char) c);
-								c = reader.read();
-							}
-							String key = text.toString();
-							text.setLength(0);
-							while (" \t\n\r".indexOf(c) != -1) c = reader.read();
-							if (c != '=') throw new IllegalArgumentException();
-							while (" \t\n\r".indexOf(c = reader.read()) != -1) {/*Skip whitespace*/}
-							char quote = (char) c;
-							if ((c != '\"') && (c != '\'')) throw new IllegalArgumentException();
-							while (quote != (c = reader.read()))
-							{
-								if (c == '&')
-								{
-									StringBuffer eb = new StringBuffer();
-									while (';' != (c = reader.read())) { eb.append((char) c); }
-									String entity = eb.toString();
-									if ("lt".equals(entity)) { text.append('<'); }
-									else if ("gt".equals(entity)) { text.append('>'); }
-									else if ("amp".equals(entity)) { text.append('&'); }
-									else if ("quot".equals(entity)) { text.append('"'); }
-									else if ("apos".equals(entity)) { text.append('\''); }
-									else if (entity.startsWith("#"))
-									{
-										boolean hexa = (entity.charAt(1) == 'x');
-										text.append((char) Integer.parseInt(entity.substring(hexa ? 2 : 1), hexa ? 16 : 10));
-									}
-									else throw new IllegalArgumentException("unknown " + "entity " + entity);
-								}
-								else text.append((char) c);
-							}
-							if (pi)
-							{
-								if ("?xml".equals(tagname) && "encoding".equals(key))
-								{
-									try
-									{
-										String enc = text.toString();
-										new String(new byte[0], 0, 0, enc);
-//										encoding = new String(enc);
-									}
-									catch (UnsupportedEncodingException uee)
-									{
-										System.err.println(uee.getMessage());
-									}
-								}
-							}
-							else
-							{ // GUI parser
-								setAttribute(parentlist[0], current, key, text.toString());
-							}
-							//'<![CDATA[' ']]>'
-							text.setLength(0);
-							c = reader.read();
-							continue;
-						}
-						else throw new IllegalArgumentException();
-						c = reader.read();
-						break;
-					}
-				}
-			}
+			MethodInvoker method = parseMethod(component, value);
+			if ("init".equals(fixup.key))
+				method.invoke(null);
 			else
 			{
-				if (" \t\n\r".indexOf(c) != -1)
+				try
 				{
-					if ((text.length() > 0) && (text.charAt(text.length() - 1) != ' '))
-					{
-						text.append(' ');
-					}
+					fixup.m.invoke(component, method);
 				}
-				else
-				{
-					text.append((char) c);
-				}
-				c = reader.read();
-			} 
+				catch (Exception e)
+				{ throw new RuntimeException(e); }
+			}
 		}
-		throw new IllegalArgumentException();
+		else
+		{ // ("component" == definition[0])
+			Widget reference = WidgetHelper.findWidget(root, value); //+start find from the component
+			if (reference == null) throw new IllegalArgumentException(value + " not found"); 
+			try
+			{ fixup.m.invoke(component, reference); }
+			catch (Exception e)
+			{ throw new RuntimeException(e); }
+		}
 	}
-	finally
+}
+
+public void endElement(String arg0, String arg1, String arg2) throws SAXException
+{
+	current = widgetStack.pop();
+}
+
+public void endPrefixMapping(String arg0) throws SAXException
+{
+	// TODO Auto-generated method stub
+	
+}
+
+public void ignorableWhitespace(char[] arg0, int arg1, int arg2) throws SAXException
+{
+	// TODO Auto-generated method stub
+	
+}
+
+public void processingInstruction(String arg0, String arg1) throws SAXException
+{
+	// TODO Auto-generated method stub
+	
+}
+
+public void setDocumentLocator(Locator arg0)
+{
+	// TODO Auto-generated method stub
+	
+}
+
+public void skippedEntity(String arg0) throws SAXException
+{
+	// TODO Auto-generated method stub
+	
+}
+
+public void startDocument() throws SAXException
+{
+	// TODO Auto-generated method stub
+	
+}
+
+public void startElement(String uri, String localname, String qname, Attributes attributes) throws SAXException
+{
+	if (current != null)
+		widgetStack.push(current);
+	
+	Object parent = current;
+	if (root == null)
 	{
-		try
-		{ reader.close(); }
-		catch (IOException e)
-		{/*IGNORED*/}
+		root = (Widget) factory.createWidget(desktop, localname);
+		current = root;
 	}
+	else
+		current = addElement(current, localname);
+	
+	for (int i = 0; i < attributes.getLength(); i++)
+		setAttribute(parent, current, attributes.getLocalName(i), attributes.getValue(i));
+}
+
+public void startPrefixMapping(String arg0, String arg1) throws SAXException
+{
+	// TODO Auto-generated method stub
+	
 }
 
 }

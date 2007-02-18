@@ -1,5 +1,7 @@
 package de.ofahrt.gooei.lwjgl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -12,6 +14,8 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.Util;
 import org.lwjgl.opengl.glu.GLU;
 
+import de.yvert.jingle.ImageReader;
+import de.yvert.jingle.ReaderWriterFactory;
 import de.yvert.jingle.ldr.LdrImage2D;
 
 public class OpenGLHelper
@@ -19,7 +23,7 @@ public class OpenGLHelper
 
 private static int width;
 private static int height;
-private static ByteBuffer byteBuffer = BufferUtils.createByteBuffer(4*1024*1024);
+private static ByteBuffer byteBuffer = BufferUtils.createByteBuffer(4*2048*2048);
 //private static byte[] byteArray = new byte[4*1024*1024];
 private static IntBuffer intBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder()).asIntBuffer();
 
@@ -344,6 +348,52 @@ public static void displaySubImage(int id, int x, int y, int w, int h, float u0,
     GL11.glTranslatef(-x, -y, 0);
     GL11.glDisable( GL11.GL_TEXTURE_2D );
     Util.checkGLError();
+}
+
+public static int loadAndUpload(String fname)
+{
+	int result = getId();
+	try
+	{
+//		System.out.println("READING IMAGE");
+		InputStream in = OpenGLHelper.class.getClassLoader().getResourceAsStream(fname);
+		if (in == null) throw new NullPointerException(fname);
+		int i = fname.lastIndexOf('.');
+		String extension = fname.substring(i+1);
+		ImageReader reader = ReaderWriterFactory.getReader(extension);
+		LdrImage2D image = (LdrImage2D) reader.load(in);
+		
+		toBuffer(image);
+		uploadBuffer(result);
+	}
+	catch (IOException e)
+	{
+		e.printStackTrace();
+		throw new RuntimeException("ARGH!");
+	}
+	return result;
+}
+
+public static int loadAndUpload2(String fname)
+{
+	int result = getId();
+	try
+	{
+//		System.out.println("READING IMAGE");
+		InputStream in = OpenGLHelper.class.getClassLoader().getResourceAsStream(fname);
+		if (in == null) throw new NullPointerException(fname);
+		int i = fname.lastIndexOf('.');
+		String extension = fname.substring(i+1);
+		ImageReader reader = ReaderWriterFactory.getReader(extension);
+		LdrImage2D image = (LdrImage2D) reader.load(in);
+		upload(result, image);
+	}
+	catch (IOException e)
+	{
+		e.printStackTrace();
+		throw new RuntimeException("ARGH!");
+	}
+	return result;
 }
 
 }

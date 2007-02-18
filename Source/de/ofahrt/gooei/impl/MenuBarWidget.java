@@ -225,9 +225,9 @@ public boolean handleKeyPress(KeyboardEvent event)
 	}
 	else if ((keycode == Keys.RETURN) || (keycode == Keys.SPACE) || (keycode == Keys.ESCAPE))
 	{
-		if ((keycode != Keys.ESCAPE) && selected.isEnabled())
+		if ((keycode != Keys.ESCAPE) && (selected != null) && selected.isEnabled())
 		{
-			if ((selected != null) && (selected instanceof CheckBoxMenuElement))
+			if (selected instanceof CheckBoxMenuElement)
 				((CheckBoxMenuElement) selected).changeCheck();
 			else
 				((ActionMenuElement) selected).invokeAction();

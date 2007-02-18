@@ -1,11 +1,12 @@
 package de.ofahrt.gooei.lwjgl;
 
+import gooei.input.InputEvent;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
-
 
 public class LwjglWindow implements Runnable
 {
@@ -13,6 +14,7 @@ public class LwjglWindow implements Runnable
 private final int FRAMERATE = 60;
 
 private final LwjglDesktop desktop;
+private final LwjglInputSource inputSource = new LwjglInputSource();
 
 public LwjglWindow(LwjglDesktop desktop)
 {
@@ -90,6 +92,23 @@ protected void initGL()
 	GL11.glEnable(GL11.GL_NORMALIZE);
 }
 
+private void handleInput()
+{
+	inputSource.update();
+	while (inputSource.hasNext())
+	{
+		InputEvent event = inputSource.next();
+		desktop.handleEvent(event);
+	}
+}
+
+public void render()
+{
+	GL11.glClearColor(0, 0, 0, 0);
+	GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+	desktop.render();
+}
+
 private void gameLoop()
 {
 //	Renderer renderer = new GameRenderer(resourceManager, field);
@@ -102,14 +121,14 @@ private void gameLoop()
 		}
 		else if (Display.isActive())
 		{
-			desktop.handleInput();
-			desktop.render();
+			handleInput();
+			render();
 		}
 		else
 		{
-			desktop.handleInput();
+			handleInput();
 			if (Display.isVisible() || Display.isDirty())
-				desktop.render();
+				render();
 		}
 		Display.update();
 		
